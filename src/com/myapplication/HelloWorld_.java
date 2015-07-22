@@ -11,7 +11,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 //Extend HttpServlet class
-public class HelloWorld extends HttpServlet {
+public class HelloWorld_ extends HttpServlet {
     /**
     *
     */
@@ -40,8 +40,7 @@ public class HelloWorld extends HttpServlet {
 
     public void init() throws ServletException
     {
-        // Do required initialization
-        message = "Hello World";
+
     }
     
     public synchronized void processRequest (HttpServletRequest request, HttpServletResponse response)
@@ -56,15 +55,17 @@ public class HelloWorld extends HttpServlet {
 	      
         // Actual logic goes here.		
         try {
-    		pass = request.getParameter("pswrd");				
-			hash1 = SQLAccess.hash(pass);
+			
+			hash1 = SQLAccess.hash();
 		
 		} catch (Exception e) {
 			
     		response.sendRedirect("https://localhost/javaScript/mainpage.html");
-
+			//RequestDispatcher rd = getServletContext().getRequestDispatcher("https://localhost/javaScript/mainpage.html");
+			//rd.include(request, response);
 		}
 
+		pass = request.getParameter("pswrd");				
 		user = request.getParameter("user");			
 		
 			if(pass.equals(hash1)){

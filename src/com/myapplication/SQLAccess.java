@@ -1,5 +1,10 @@
 package com.myapplication;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,7 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
 
-
+import org.apache.commons.io.IOUtils;
 
 public class SQLAccess {
 	
@@ -21,8 +26,6 @@ public class SQLAccess {
 	private static PreparedStatement preparedStatement = null;
 	private static ResultSet resultSet = null;
 	private volatile static UUID idOne;
-	private volatile static String user;
-	private static String nouser;
 	public static String hash;
 	
 	//public static boolean genSumRep;
@@ -57,15 +60,6 @@ public class SQLAccess {
 		  return idOne;
 	         
 	  }
-	  
-	  public synchronized final static String user() throws Exception{
-
-          if (user == null) {
-	     SQLAccess.user = SQLAccess.user_hash(HelloWorld.pass);
-          	}
-	  return user;
-         
-  }
 	          
 	public static void SetUpDataBase() throws Exception {
 
@@ -83,24 +77,30 @@ public class SQLAccess {
 
 	}
 	
-	public static String user_hash(String pass) throws Exception {
-						
-				preparedStatement = connect.prepareCall("{call `user_hash`(?)}");
-				preparedStatement.setString(3, pass);
-			      
-				ResultSet rs = preparedStatement.executeQuery();
-								
-				while (rs.next()) {
-			        user = rs.getString("user_hash");
-			        
-			        if (user.isEmpty()) {
-			        	nouser = "no user";
-			        	return nouser;
-			        }
-				}
+	public static boolean new_hash(String pass) throws Exception {
+		
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName(dbDriverClass);
 
-			return user;
-		}
+			// Setup the connection with the DB
+			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+			
+		String sql = "insert into  login.logins values (default, ?)";
+
+		InputStream in = IOUtils.toInputStream(pass, "UTF-8");
+	    Reader reader = new BufferedReader(new InputStreamReader(in));
+	    
+				preparedStatement = connect.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+				preparedStatement.setCharacterStream(1, reader);
+			      
+				preparedStatement.executeUpdate();
+			
+				preparedStatement.closeOnCompletion();
+			
+		reader.close();
+		
+			return true;
+	}
 	
 	public static boolean sessionId() throws Exception {
 
@@ -115,7 +115,7 @@ public class SQLAccess {
 				long time = System.currentTimeMillis();
 				java.sql.Timestamp timestamp = new java.sql.Timestamp(time);
 				
-			String sql = "insert into  feedback.Sessions values (default, ?, ?, ?)";
+			String sql = "insert into  login.logins values (default, ?)";
 				
 			preparedStatement = connect.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setString(1,SQLAccess.uuId().toString());
@@ -125,6 +125,8 @@ public class SQLAccess {
 			preparedStatement.executeUpdate();
 			ResultSet rs = preparedStatement.getGeneratedKeys();
 			while (rs.next()) {
+				
+				
 			}
 			preparedStatement.closeOnCompletion();
 		} catch (SQLException ex) {
@@ -138,7 +140,7 @@ public class SQLAccess {
 		return true;
 	}
 	
-	public static boolean hash() throws Exception {
+	public static String hash() throws Exception {
 
 		
 		try {
@@ -151,12 +153,13 @@ public class SQLAccess {
 			String sql = "select hash_ from login.logins";
 				
 			preparedStatement = connect.prepareStatement(sql);
-			
+			//preparedStatement = connect.prepareCall("{call `get_hash`(?)}");
 			ResultSet rs = preparedStatement.executeQuery();
 			while (rs.next()) {
 				
-				hash =rs.getString(2);
+				hash =rs.getString(1);
 			}
+			
 		} catch (SQLException ex) {
 		      SQLAccess.printSQLException(ex);
 
@@ -165,7 +168,43 @@ public class SQLAccess {
 			close();
 
 		}
-		return true;
+		return hash;
+	}
+	
+	public static String hash(String pass) throws Exception {
+
+		
+		try {
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName(dbDriverClass);
+
+			// Setup the connection with the DB
+			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+								
+			InputStream in = IOUtils.toInputStream(pass, "UTF-8");
+		    Reader reader = new BufferedReader(new InputStreamReader(in));
+		    
+		    connect.setCatalog("login");
+			CallableStatement callableStatement = connect.prepareCall("{call `get_hash`(?)}");
+
+				callableStatement.setCharacterStream(1, reader);
+							
+			ResultSet rs = callableStatement.executeQuery();
+			while (rs.next()) {
+				
+				hash =rs.getString(1);
+				System.out.println(hash);
+			}
+			
+		} catch (SQLException ex) {
+		      SQLAccess.printSQLException(ex);
+
+		} finally {
+			
+			close();
+
+		}
+		return hash;
 	}
 
 

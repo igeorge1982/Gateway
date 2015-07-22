@@ -52,18 +52,19 @@ public class AdminServlet extends HttpServlet {
 
 		HttpSession session = request.getSession();
 
-    	HelloWorld.user = null;
+    	HelloWorld_.user = null;
     	
     	if(session.getAttribute("user") == null){
     	
-    		response.sendRedirect("http://localhost/javaScript/mainpage.html");
+    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
     	
-    	}else HelloWorld.user = (String) session.getAttribute("user");
+    	}else HelloWorld_.user = (String) session.getAttribute("user");
     
     	
     	Cookie[] cookies = request.getCookies();
     	if(cookies !=null){
-    	for(Cookie cookie : cookies){
+    	
+    		for(Cookie cookie : cookies){
     	
     		if(cookie.getName().equals("user")) userName = cookie.getValue();
     		if(cookie.getName().equals("JSESSIONID")) sessionID = cookie.getValue();
