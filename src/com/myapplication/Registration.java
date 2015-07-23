@@ -57,7 +57,7 @@ public class Registration extends HttpServlet {
     	pass = request.getParameter("pswrd");
 
         try {
-			if (SQLAccess.new_hash(pass)) {
+			if (SQLAccess.new_hash(pass, user)) {
 				
 				HttpSession session = request.getSession();
 				session.setAttribute("user", "myuserid");
@@ -66,7 +66,7 @@ public class Registration extends HttpServlet {
 				session.setMaxInactiveInterval(30*60);
 				Cookie userName = new Cookie("user", user);
 				response.addCookie(userName);
-				String encodedURL = response.encodeRedirectURL("https://localhost/login/HelloWorld");
+				String encodedURL = response.encodeRedirectURL("https://localhost/login/admin");
 				response.sendRedirect(encodedURL);
 				
 			}

@@ -77,30 +77,35 @@ public class SQLAccess {
 
 	}
 	
-	public static boolean new_hash(String pass) throws Exception {
+	public static boolean new_hash(String pass, String user) throws Exception {
 		
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
+		// This will load the MySQL driver, each DB has its own driver
+		Class.forName(dbDriverClass);
 
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
-			
-		String sql = "insert into  login.logins values (default, ?)";
-
-		InputStream in = IOUtils.toInputStream(pass, "UTF-8");
-	    Reader reader = new BufferedReader(new InputStreamReader(in));
-	    
-				preparedStatement = connect.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
-				preparedStatement.setCharacterStream(1, reader);
-			      
-				preparedStatement.executeUpdate();
-			
-				preparedStatement.closeOnCompletion();
-			
-		reader.close();
+		// Setup the connection with the DB
+		connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
 		
-			return true;
-	}
+	String sql = "insert into  login.logins values (default, ?, ?, default)";
+
+	InputStream ps = IOUtils.toInputStream(pass, "UTF-8");
+    Reader readerP = new BufferedReader(new InputStreamReader(ps));
+    
+	InputStream us = IOUtils.toInputStream(user, "UTF-8");
+    Reader readerU = new BufferedReader(new InputStreamReader(us));
+    
+			preparedStatement = connect.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+			preparedStatement.setCharacterStream(1, readerP);
+			preparedStatement.setCharacterStream(2, readerU);
+		      
+			preparedStatement.executeUpdate();
+		
+			preparedStatement.closeOnCompletion();
+		
+	readerP.close();
+	readerU.close();
+	
+		return true;
+}
 	
 	public static boolean sessionId() throws Exception {
 
