@@ -102,6 +102,30 @@ public class AdminServlet extends HttpServlet {
     		sessionID = session.getId();
     	}
     	
+        out.println("<!DOCTYPE html");  // HTML 5
+        out.println("<html><head>");
+        out.println("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>");
+        String title_ = rb.getString("requestinfo.title");
+        out.println("<head><title>" + title_ + "</title></head>");
+        out.println("<body>");
+        out.println("<h3>" + title_ + "</h3>");
+
+        // Tabulate the request information 
+        out.println("<table>");
+        out.println("<tr><td>" + rb.getString("requestinfo.label.protocol") + "</td>");
+        out.println("<td>" + request.getProtocol() + "</td></tr>");
+        out.println("<tr><td>" + rb.getString("requestinfo.label.method") + "</td>");
+        out.println("<td>" + request.getMethod() + "</td></tr>");
+        out.println("</td></tr><tr><td>");
+        out.println("<tr><td>" + rb.getString("requestinfo.label.requesturi") + "</td>");
+        out.println("<td>" + HTMLFilter.filter(request.getRequestURI()) + "</td></tr>");
+        out.println("<tr><td>" + rb.getString("requestinfo.label.pathinfo") + "</td>");
+        out.println("<td>" + HTMLFilter.filter(request.getPathInfo()) + "</td></tr>");
+        out.println("<tr><td>Path Translated:</td>");
+        out.println("<td>" + request.getPathTranslated() + "</td></tr>");
+        out.println("<tr><td>" + rb.getString("requestinfo.label.remoteaddr") + "</td>");
+        out.println("<td>" + request.getRemoteAddr() + "</td></tr>");
+    	
     	// Display session information
         out.println(rb.getString("sessions.id") + " " + session.getId() + "<br />");
         out.println(rb.getString("sessions.created") + " ");

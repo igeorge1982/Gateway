@@ -78,25 +78,30 @@ public class Registration extends HttpServlet {
 	        }
         	
 			if (SQLAccess.new_hash(pass, user)) {
+				//if(SQLAccess.register_voucher(voucher)){
 				
-				session.setAttribute("user", user);
-				
-				
-				
+				session.setAttribute("user", user);				
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60);
 				Cookie userName = new Cookie("user", user);
 				response.addCookie(userName);
+				
 				String encodedURL = response.encodeRedirectURL("https://localhost/login/admin");
 				response.sendRedirect(encodedURL);
-				
+				//}
+			}
+			
+			else {
+				SQLAccess.reset_voucher(voucher);
+				session.invalidate();
+	    		response.sendRedirect("https://localhost/javaScript/voucher.html");
 			}
 		
 		} catch (Exception e) {
 			
 			HttpSession session = request.getSession();
 			session.invalidate();
-    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
+    		response.sendRedirect("https://localhost/javaScript/voucher.html");
 
 		}
 

@@ -218,12 +218,39 @@ public class SQLAccess {
 
 				callableStatement.setCharacterStream(1, reader);
 							
-			ResultSet rs = callableStatement.executeQuery();
-			while (rs.next()) {
-				
-				voucher =rs.getString(1);
-			}
+			callableStatement.executeQuery();
+	
+		} catch (SQLException ex) {
+		      SQLAccess.printSQLException(ex);
+
+		} finally {
 			
+			close();
+
+		}
+		return true;
+	}
+	
+	public static boolean register_voucher(String voucher) throws Exception {
+
+		
+		try {
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName(dbDriverClass);
+
+			// Setup the connection with the DB
+			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+				
+			InputStream in = IOUtils.toInputStream(voucher, "UTF-8");
+		    Reader reader = new BufferedReader(new InputStreamReader(in));
+		    
+		    connect.setCatalog("login");
+			CallableStatement callableStatement = connect.prepareCall("{call `register_voucher`(?)}");
+
+				callableStatement.setCharacterStream(1, reader);
+							
+			callableStatement.executeQuery();
+	
 		} catch (SQLException ex) {
 		      SQLAccess.printSQLException(ex);
 

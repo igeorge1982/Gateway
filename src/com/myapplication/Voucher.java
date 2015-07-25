@@ -57,26 +57,18 @@ public class Voucher extends HttpServlet {
         try {
         	//TODO: retrieve ENUM states
 			if (SQLAccess.voucher(voucher)) {
-				
-				//HttpSession session = request.getSession();
-				//session.setAttribute("voucher", voucher);
-
-				//setting session to expiry in 30 mins
-				//session.setMaxInactiveInterval(30*60);
-				//Cookie userName = new Cookie("voucher", voucher);
-				//response.addCookie(userName);
 								
 				String encodedURL = response.encodeRedirectURL("https://localhost/javaScript/register.html?voucher="+voucher);
 				response.sendRedirect(encodedURL);
 				
 			}
 			else {
-				response.sendRedirect("https://localhost/javaScript/mainpage.html");
+				response.sendRedirect("https://localhost/javaScript/index.html");
 				
 			}
 		} catch (Exception e) {
 			
-    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
+    		response.sendRedirect("https://localhost/javaScript/index.html");
 
 		}
 
