@@ -1,6 +1,5 @@
 package com.myapplication;
 
-//Import required java libraries
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -11,7 +10,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 //Extend HttpServlet class
-public class HelloWorld_ extends HttpServlet {
+public class Voucher extends HttpServlet {
     /**
     *
     */
@@ -24,9 +23,7 @@ public class HelloWorld_ extends HttpServlet {
 	public final static String dbUserName = "sqluser";
 	public final static String dbPassWord = "sqluserpw";
 	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
-	public volatile static String pass;
-	public volatile static String user;
-	public volatile static String hash1;
+	public volatile static String voucher;
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -40,7 +37,8 @@ public class HelloWorld_ extends HttpServlet {
 
     public void init() throws ServletException
     {
-
+        // Do required initialization
+        message = "Hello World";
     }
     
     public synchronized void processRequest (HttpServletRequest request, HttpServletResponse response)
@@ -53,42 +51,35 @@ public class HelloWorld_ extends HttpServlet {
     	// Set response content type
         response.setContentType("text/html");
 	      
-        // Actual logic goes here.		
+        // Actual logic goes here.
+		voucher = request.getParameter("voucher");			
+
         try {
-			
-			hash1 = SQLAccess.hash();
-		
+        	//TODO: retrieve ENUM states
+			if (SQLAccess.voucher(voucher)) {
+				
+				//HttpSession session = request.getSession();
+				//session.setAttribute("voucher", voucher);
+
+				//setting session to expiry in 30 mins
+				//session.setMaxInactiveInterval(30*60);
+				//Cookie userName = new Cookie("voucher", voucher);
+				//response.addCookie(userName);
+								
+				String encodedURL = response.encodeRedirectURL("https://localhost/javaScript/register.html?voucher="+voucher);
+				response.sendRedirect(encodedURL);
+				
+			}
+			else {
+				response.sendRedirect("https://localhost/javaScript/mainpage.html");
+				
+			}
 		} catch (Exception e) {
 			
     		response.sendRedirect("https://localhost/javaScript/mainpage.html");
-			//RequestDispatcher rd = getServletContext().getRequestDispatcher("https://localhost/javaScript/mainpage.html");
-			//rd.include(request, response);
+
 		}
 
-		pass = request.getParameter("pswrd");				
-		user = request.getParameter("user");			
-		
-			if(pass.equals(hash1)){
-
-				HttpSession session = request.getSession();
-				session.setAttribute("user", "myuserid");
-
-				//setting session to expiry in 30 mins
-				session.setMaxInactiveInterval(30*60);
-				Cookie userName = new Cookie("user", user);
-				response.addCookie(userName);
-				String encodedURL = response.encodeRedirectURL("https://localhost/login/admin");
-				response.sendRedirect(encodedURL);
-
-			}else{
-	    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
-	    		
-	    		/*
-				RequestDispatcher rd = getServletContext().getRequestDispatcher("https://localhost/javaScript/mainpage.html");
-				rd.include(request, response);
-				out.println("<font color=red>User is not found</font>");
-				*/
-			}
         
     }
     

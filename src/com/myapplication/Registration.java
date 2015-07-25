@@ -25,6 +25,7 @@ public class Registration extends HttpServlet {
 	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
 	public volatile static String pass;
 	public volatile static String user;
+	public volatile static String voucher;
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -52,16 +53,36 @@ public class Registration extends HttpServlet {
     	// Set response content type
         response.setContentType("text/html");
 	      
+        
+        
         // Actual logic goes here.
 		user = request.getParameter("user");			
     	pass = request.getParameter("pswrd");
 
         try {
+			
+        	HttpSession session = request.getSession();
+			
+			// Set an attribute (name-value pair) if present in the request
+	        voucher = request.getParameter("voucher");
+	        
+	        if (voucher != null) voucher = voucher.trim();
+	        		        
+	        if (voucher != null && !voucher.equals("") && voucher != null && !voucher.equals("") ) {
+	           
+	        	// synchronized session object to prevent concurrent update
+	           synchronized(session) {
+	        	   
+	              session.setAttribute("voucher", voucher);
+	           }
+	        }
+        	
 			if (SQLAccess.new_hash(pass, user)) {
 				
-				HttpSession session = request.getSession();
-				session.setAttribute("user", "myuserid");
-
+				session.setAttribute("user", user);
+				
+				
+				
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60);
 				Cookie userName = new Cookie("user", user);
@@ -73,6 +94,8 @@ public class Registration extends HttpServlet {
 		
 		} catch (Exception e) {
 			
+			HttpSession session = request.getSession();
+			session.invalidate();
     		response.sendRedirect("https://localhost/javaScript/mainpage.html");
 
 		}

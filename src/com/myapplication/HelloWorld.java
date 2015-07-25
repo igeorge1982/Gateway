@@ -70,7 +70,7 @@ public class HelloWorld extends HttpServlet {
 			if(pass.equals(hash1)){
 
 				HttpSession session = request.getSession();
-				session.setAttribute("user", "myuserid");
+				session.setAttribute("user", user);
 
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60);

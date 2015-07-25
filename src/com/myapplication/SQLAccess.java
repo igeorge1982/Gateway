@@ -27,6 +27,8 @@ public class SQLAccess {
 	private static ResultSet resultSet = null;
 	private volatile static UUID idOne;
 	public static String hash;
+	public static String voucher;
+
 	
 	//public static boolean genSumRep;
 	
@@ -145,7 +147,7 @@ public class SQLAccess {
 		return true;
 	}
 	
-	public static String hash() throws Exception {
+	public static boolean voucher(String voucher_) throws Exception {
 
 		
 		try {
@@ -155,14 +157,71 @@ public class SQLAccess {
 			// Setup the connection with the DB
 			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
 				
-			String sql = "select hash_ from login.logins";
-				
-			preparedStatement = connect.prepareStatement(sql);
-			//preparedStatement = connect.prepareCall("{call `get_hash`(?)}");
-			ResultSet rs = preparedStatement.executeQuery();
+			InputStream in = IOUtils.toInputStream(voucher_, "UTF-8");
+		    Reader reader = new BufferedReader(new InputStreamReader(in));
+		    
+		    connect.setCatalog("login");
+			CallableStatement callableStatement = connect.prepareCall("{call `get_voucher`(?)}");
+
+			callableStatement.setCharacterStream(1, reader);				
+			ResultSet rs = callableStatement.executeQuery();
+			reader.close();
 			while (rs.next()) {
 				
-				hash =rs.getString(1);
+				String voucher =rs.getString(1);
+				System.out.println(voucher_);
+				System.out.println(voucher);
+
+				if (voucher_.equals(voucher)) {
+			System.out.println(voucher_);
+	
+			InputStream in_ = IOUtils.toInputStream(voucher_, "UTF-8");
+		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
+		    
+			connect.setCatalog("login");
+			CallableStatement callableStatement_ = connect.prepareCall("{call `set_voucher`(?)}");
+			callableStatement_.setCharacterStream(1, reader_);				
+			callableStatement_.executeQuery();
+			reader_.close();
+				}
+				
+				close();
+				return true;
+			} 
+			
+		} catch (SQLException ex) {
+		      SQLAccess.printSQLException(ex);
+
+		} finally {
+			
+			close();
+
+		}
+		return false;
+	}
+	
+	public static boolean reset_voucher(String voucher) throws Exception {
+
+		
+		try {
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName(dbDriverClass);
+
+			// Setup the connection with the DB
+			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+				
+			InputStream in = IOUtils.toInputStream(voucher, "UTF-8");
+		    Reader reader = new BufferedReader(new InputStreamReader(in));
+		    
+		    connect.setCatalog("login");
+			CallableStatement callableStatement = connect.prepareCall("{call `reset_voucher`(?)}");
+
+				callableStatement.setCharacterStream(1, reader);
+							
+			ResultSet rs = callableStatement.executeQuery();
+			while (rs.next()) {
+				
+				voucher =rs.getString(1);
 			}
 			
 		} catch (SQLException ex) {
@@ -173,7 +232,7 @@ public class SQLAccess {
 			close();
 
 		}
-		return hash;
+		return true;
 	}
 	
 	public static String hash(String pass) throws Exception {

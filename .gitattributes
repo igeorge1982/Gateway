@@ -12,10 +12,11 @@
 .settings/org.eclipse.wst.validation.prefs -text
 /pom.xml -text
 src/com/myapplication/AdminServlet.java -text
+src/com/myapplication/HTMLFilter.java -text
 src/com/myapplication/HelloWorld.java -text
-src/com/myapplication/HelloWorld_.java -text
 src/com/myapplication/Registration.java -text
 src/com/myapplication/SQLAccess.java -text
+src/com/myapplication/Voucher.java -text
 target/lib/bsh-2.0b4.jar -text
 target/lib/commons-io-2.4.jar -text svneol=unset#application/zip
 target/lib/javax.servlet-api-3.1.0.jar -text
