@@ -53,6 +53,8 @@ public class AdminServlet extends HttpServlet {
     public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
 
+    	//TODO: handle back button somehow
+    	
     	// Set the response message's MIME type
         response.setContentType("text/html;charset=UTF-8");
        

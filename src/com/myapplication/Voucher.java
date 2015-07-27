@@ -55,20 +55,19 @@ public class Voucher extends HttpServlet {
 		voucher = request.getParameter("voucher");			
 
         try {
-        	//TODO: retrieve ENUM states
 			if (SQLAccess.voucher(voucher)) {
 								
-				String encodedURL = response.encodeRedirectURL("https://localhost/javaScript/register.html?voucher="+voucher);
+				String encodedURL = response.encodeRedirectURL("https://localhost/javaScript/register.html?voucher_="+voucher);
 				response.sendRedirect(encodedURL);
 				
 			}
 			else {
-				response.sendRedirect("https://localhost/javaScript/index.html");
+				response.sendRedirect("https://localhost/javaScript/voucher.html");
 				
 			}
 		} catch (Exception e) {
 			
-    		response.sendRedirect("https://localhost/javaScript/index.html");
+    		response.sendRedirect("https://localhost/javaScript/voucher.html");
 
 		}
 

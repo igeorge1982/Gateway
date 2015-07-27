@@ -169,11 +169,8 @@ public class SQLAccess {
 			while (rs.next()) {
 				
 				String voucher =rs.getString(1);
-				System.out.println(voucher_);
-				System.out.println(voucher);
 
 				if (voucher_.equals(voucher)) {
-			System.out.println(voucher_);
 	
 			InputStream in_ = IOUtils.toInputStream(voucher_, "UTF-8");
 		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
