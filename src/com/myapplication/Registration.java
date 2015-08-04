@@ -26,6 +26,7 @@ public class Registration extends HttpServlet {
 	public volatile static String pass;
 	public volatile static String user;
 	public volatile static String voucher;
+	public volatile static String deviceId;
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -59,6 +60,7 @@ public class Registration extends HttpServlet {
 		user = request.getParameter("user");			
     	pass = request.getParameter("pswrd");
         voucher = request.getParameter("voucher_");
+        deviceId = request.getParameter("deviceId");
 
         try {
 			//TODO: this stage must be available if some token pair is matching the one generated in voucher servlet, else redirect 
@@ -74,15 +76,18 @@ public class Registration extends HttpServlet {
                synchronized(session) {
                   session.setAttribute("voucher", voucher);
                   
-        	//TODO: voucher could be tested here if it's still valid to avoid forgery - the same way when checking the voucher if it's free
-            //TODO: insert (with an update) the voucher code into vouchers table next to the triggered uuid 
-			if (SQLAccess.new_hash(pass, user) && SQLAccess.register_voucher(voucher)) {
+			if (SQLAccess.new_hash(pass, user) && SQLAccess.register_voucher(voucher) && SQLAccess.insert_voucher(voucher, user, pass)) {
 				
 				session.setAttribute("user", user);				
+				session.setAttribute("device", deviceId);
+				
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60);
-				Cookie userName = new Cookie("user", user);
-				response.addCookie(userName);
+
+				//set HTTP headers
+	        	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	        	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+	        	response.setDateHeader("Expires", 1);
 				
 				String encodedURL = response.encodeRedirectURL("https://localhost/login/admin");
 				response.sendRedirect(encodedURL);
@@ -103,6 +108,12 @@ public class Registration extends HttpServlet {
 			
 			//TODO: send some error toast
 			//TODO: clear url parameter
+			try {
+				SQLAccess.reset_voucher(voucher);
+			} catch (Exception e1) {
+			}
+        	HttpSession session = request.getSession();
+			session.invalidate();
     		response.sendRedirect("https://localhost/javaScript/voucher.html");
 
 		}

@@ -57,6 +57,11 @@ public class Voucher extends HttpServlet {
         try {
 			if (SQLAccess.voucher(voucher)) {
 								
+				//set HTTP headers
+	        	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	        	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+	        	response.setDateHeader("Expires", 1);
+	        	
 				String encodedURL = response.encodeRedirectURL("https://localhost/javaScript/register.html?voucher_="+voucher);
 				response.sendRedirect(encodedURL);
 				

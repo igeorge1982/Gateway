@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
-
 import org.apache.commons.io.IOUtils;
 
 public class SQLAccess {
@@ -185,6 +184,61 @@ public class SQLAccess {
 				close();
 				return true;
 			} 
+			
+		} catch (SQLException ex) {
+		      SQLAccess.printSQLException(ex);
+
+		} finally {
+			
+			close();
+
+		}
+		return false;
+	}
+	
+	public static boolean insert_voucher(String voucher_, String user, String pass) throws Exception {
+		
+		
+		try {
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName(dbDriverClass);
+
+			// Setup the connection with the DB
+			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+				
+			//InputStream in = IOUtils.toInputStream(voucher_, "UTF-8");
+		    //Reader reader = new BufferedReader(new InputStreamReader(in));
+		    
+		    //connect.setCatalog("login");
+			//CallableStatement callableStatement = connect.prepareCall("{call `check_voucher`(?)}");
+
+			//callableStatement.setCharacterStream(1, reader);				
+			//ResultSet rs = callableStatement.executeQuery();
+			//reader.close();
+			//while (rs.next()) {
+				
+			//	String voucher =rs.getString(1);
+
+			//	if (voucher_.equals(voucher)) {
+			 
+			InputStream in_ = IOUtils.toInputStream(voucher_, "UTF-8");
+		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
+		    
+			InputStream ins = IOUtils.toInputStream(pass, "UTF-8");
+		    Reader readers = new BufferedReader(new InputStreamReader(ins));
+		    
+			connect.setCatalog("login");
+			CallableStatement callableStatement_ = connect.prepareCall("{call `insert_voucher`(?, ?, ?)}");
+			callableStatement_.setCharacterStream(1, reader_);
+			callableStatement_.setString(2, user);
+			callableStatement_.setCharacterStream(3, readers);
+			callableStatement_.executeUpdate();
+			reader_.close();
+				//}
+				
+				close();
+				return true;
+			//} 
 			
 		} catch (SQLException ex) {
 		      SQLAccess.printSQLException(ex);

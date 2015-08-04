@@ -80,29 +80,27 @@ public class AdminServlet extends HttpServlet {
            // Return the existing session if there is one. Otherwise, create a new session
     	
 		HttpSession session = request.getSession();
-		
+		//TODO: add more attributes
     	HelloWorld.user = null;
     	
     	if(session.getAttribute("user") == null){
     	
     		response.sendRedirect("https://localhost/javaScript/mainpage.html");
     	
-    	}else HelloWorld.user = (String) session.getAttribute("user");
-    
-    	
-    	Cookie[] cookies = request.getCookies();
-    	if(cookies !=null){
-    	
-    		for(Cookie cookie : cookies){
-    	
-    		if(cookie.getName().equals("user")) userName = cookie.getValue();
-    		if(cookie.getName().equals("JSESSIONID")) sessionID = cookie.getValue();
+    	}else 
     		
-    		}
+    		HelloWorld.user = (String) session.getAttribute("user");
     	
-    	}else{
+    		//set HTTP headers
+        	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+        	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+        	response.setDateHeader("Expires", 0);
+        	
+			//get HTTP headers
+        	request.getHeader("Cache-Control"); // HTTP 1.1.
+        	request.getHeader("Pragma"); // HTTP 1.0.
+    
     		sessionID = session.getId();
-    	}
     	
         out.println("<!DOCTYPE html");  // HTML 5
         out.println("<html><head>");
@@ -134,7 +132,9 @@ public class AdminServlet extends HttpServlet {
         out.println(new Date(session.getCreationTime()) + "<br />");
         out.println(rb.getString("sessions.lastaccessed") + " ");
         out.println(new Date(session.getLastAccessedTime()) + "<br /><br />");
-
+        
+        //TODO: get system.property for unique identifier
+        
         // Set an attribute (name-value pair) if present in the request
         String attName = request.getParameter("attribute_name");
         

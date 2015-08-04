@@ -27,6 +27,7 @@ public class HelloWorld extends HttpServlet {
 	public volatile static String pass;
 	public volatile static String user;
 	public volatile static String hash1;
+	public volatile static String deviceId;
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -65,17 +66,23 @@ public class HelloWorld extends HttpServlet {
 
 		}
 
-		user = request.getParameter("user");			
+		user = request.getParameter("user");	
+		deviceId = request.getParameter("deviceId");
 		
 			if(pass.equals(hash1)){
 
 				HttpSession session = request.getSession();
 				session.setAttribute("user", user);
+				session.setAttribute("deviceId", deviceId);
 
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60);
-				Cookie userName = new Cookie("user", user);
-				response.addCookie(userName);
+				
+				//set HTTP headers
+	        	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	        	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+	        	response.setDateHeader("Expires", 1);
+	        	
 				String encodedURL = response.encodeRedirectURL("https://localhost/login/admin");
 				response.sendRedirect(encodedURL);
 
