@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: mbook
+Implementation-Version: 1
+Built-By: georgegaspar
+Specification-Title: mbook
+Implementation-Vendor-Id: com.jeet
+Build-Jdk: 1.8.0_45
+Specification-Version: 1
+Created-By: Maven Integration for Eclipse
+
