@@ -76,7 +76,7 @@ public class Registration extends HttpServlet {
                synchronized(session) {
                   session.setAttribute("voucher", voucher);
                   
-			if (SQLAccess.new_hash(pass, user) && SQLAccess.register_voucher(voucher) && SQLAccess.insert_voucher(voucher, user, pass)) {
+			if (SQLAccess.new_hash(pass, user) && SQLAccess.register_voucher(voucher) && SQLAccess.insert_voucher(voucher, user, pass) && SQLAccess.insert_device(deviceId, user)) {
 				
 				session.setAttribute("user", user);				
 				session.setAttribute("device", deviceId);
@@ -85,9 +85,9 @@ public class Registration extends HttpServlet {
 				session.setMaxInactiveInterval(30*60);
 
 				//set HTTP headers
-	        	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-	        	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-	        	response.setDateHeader("Expires", 1);
+	        	//response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	        	//response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+	    	 	//response.setDateHeader("Expires", System.currentTimeMillis(  ) + 1*1000);	 	
 				
 				String encodedURL = response.encodeRedirectURL("https://localhost/login/admin");
 				response.sendRedirect(encodedURL);

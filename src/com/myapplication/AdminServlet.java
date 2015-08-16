@@ -28,6 +28,7 @@ public class AdminServlet extends HttpServlet {
 	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
 	private static String userName = null;
 	private static String sessionID = null;
+	private volatile static String user; 
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -64,6 +65,7 @@ public class AdminServlet extends HttpServlet {
         // Use ResourceBundle to keep localized string in "LocalStrings_xx.properties"
         ResourceBundle rb = ResourceBundle.getBundle("LocalStrings",  request.getLocale());
    
+        
         // Write the response message, in an HTML page
         try {
            
@@ -80,7 +82,8 @@ public class AdminServlet extends HttpServlet {
            // Return the existing session if there is one. Otherwise, create a new session
     	
 		HttpSession session = request.getSession();
-    	HelloWorld.user = null;
+		user = request.getParameter("user");	
+    	//HelloWorld.user = null;
     	
     	if(session.getAttribute("user") == null){
     	
@@ -88,12 +91,13 @@ public class AdminServlet extends HttpServlet {
     	
     	}else 
     		
-    		HelloWorld.user = (String) session.getAttribute("user");
+    		//HelloWorld.user = (String) session.getAttribute("user");
+    		user = (String) session.getAttribute("user");
     	
     		//set HTTP headers
-        	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-        	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-        	response.setDateHeader("Expires", 1);
+        	//response.setHeader("Cache-Control", "no-cache, private, no-store, must-revalidate"); // HTTP 1.1.
+        	//response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+    	 	//response.setDateHeader("Expires", System.currentTimeMillis());	 	
         	
 			//get HTTP headers
         	request.getHeader("Cache-Control"); // HTTP 1.1.
@@ -173,17 +177,16 @@ public class AdminServlet extends HttpServlet {
         out.println("<input type='submit' value='SEND'>");
         out.println("</form><br />");
 
-        out.print("<a href='");
+        out.print("<a href=");
         // Encode URL by including the session ID (URL-rewriting)
         out.print(response.encodeURL(request.getRequestURI() + "?attribute_name=foo&attribute_value=bar"));
         out.println("'>Encode URL with session ID (URL re-writing)</a>");
         out.println("</body></html>");
         
         //TODO:logout
-        out.print("<a href=https://localhost/login/logut");
-        // Logout
-        out.print(response.encodeURL(request.getRequestURL() + ""));
-        out.println("'>Logout</a>");
+        out.print("<a href=/login/logout");
+
+        out.println(">Logout</a>");
         out.println("</body></html>");
         
         out.close();  // Always close the output writer

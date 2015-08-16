@@ -69,25 +69,6 @@
               <outputDirectory>${project.build.directory}/lib</outputDirectory>              
             </configuration>   
           </execution>
-                    <execution>
-            <id>copy-resources</id>
-            <!-- here the phase you need -->
-            <phase>install</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/</outputDirectory>
-              <resources>          
-                    <resource>
-        				<directory>${basedir}</directory>
-					        <includes>
-					           	<include>properties.properties</include>
-					        </includes>
-    				</resource>                 
-              </resources>              
-            </configuration>            
-          </execution>
           
         </executions>
       </plugin>

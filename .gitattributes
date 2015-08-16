@@ -15,8 +15,9 @@ src/com/myapplication/AdminServlet.java -text
 src/com/myapplication/DeviceManagement.java -text
 src/com/myapplication/HTMLFilter.java -text
 src/com/myapplication/HelloWorld.java -text
-src/com/myapplication/LogOut.java -text
+src/com/myapplication/Loggingout.java -text
 src/com/myapplication/Registration.java -text
+src/com/myapplication/RohadekFilter.java -text
 src/com/myapplication/SQLAccess.java -text
 src/com/myapplication/Voucher.java -text
 target/lib/bsh-2.0b4.jar -text

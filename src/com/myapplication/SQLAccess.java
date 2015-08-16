@@ -251,6 +251,45 @@ public class SQLAccess {
 		return false;
 	}
 	
+	public static boolean insert_device(String deviceId, String user) throws Exception {
+		
+		
+		try {
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName(dbDriverClass);
+
+			// Setup the connection with the DB
+			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+			 
+			InputStream in_ = IOUtils.toInputStream(deviceId, "UTF-8");
+		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
+		    
+			InputStream ins = IOUtils.toInputStream(user, "UTF-8");
+		    Reader readers = new BufferedReader(new InputStreamReader(ins));
+		    
+			connect.setCatalog("login");
+			CallableStatement callableStatement_ = connect.prepareCall("{call `insert_device_`(?, ?)}");
+			callableStatement_.setCharacterStream(1, reader_);
+			callableStatement_.setCharacterStream(2, readers);
+			callableStatement_.executeUpdate();
+			reader_.close();
+				//}
+				
+				close();
+				return true;
+			//} 
+			
+		} catch (SQLException ex) {
+		      SQLAccess.printSQLException(ex);
+
+		} finally {
+			
+			close();
+
+		}
+		return false;
+	}
+	
 	public static boolean reset_voucher(String voucher) throws Exception {
 
 		
