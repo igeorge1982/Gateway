@@ -12,8 +12,10 @@
 .settings/org.eclipse.wst.validation.prefs -text
 /pom.xml -text
 src/com/myapplication/AdminServlet.java -text
+src/com/myapplication/DeviceManagement.java -text
 src/com/myapplication/HTMLFilter.java -text
 src/com/myapplication/HelloWorld.java -text
+src/com/myapplication/LogOut.java -text
 src/com/myapplication/Registration.java -text
 src/com/myapplication/SQLAccess.java -text
 src/com/myapplication/Voucher.java -text

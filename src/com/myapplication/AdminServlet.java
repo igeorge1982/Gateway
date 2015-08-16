@@ -80,7 +80,6 @@ public class AdminServlet extends HttpServlet {
            // Return the existing session if there is one. Otherwise, create a new session
     	
 		HttpSession session = request.getSession();
-		//TODO: add more attributes
     	HelloWorld.user = null;
     	
     	if(session.getAttribute("user") == null){
@@ -94,7 +93,7 @@ public class AdminServlet extends HttpServlet {
     		//set HTTP headers
         	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
         	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-        	response.setDateHeader("Expires", 0);
+        	response.setDateHeader("Expires", 1);
         	
 			//get HTTP headers
         	request.getHeader("Cache-Control"); // HTTP 1.1.
@@ -178,6 +177,13 @@ public class AdminServlet extends HttpServlet {
         // Encode URL by including the session ID (URL-rewriting)
         out.print(response.encodeURL(request.getRequestURI() + "?attribute_name=foo&attribute_value=bar"));
         out.println("'>Encode URL with session ID (URL re-writing)</a>");
+        out.println("</body></html>");
+        
+        //TODO:logout
+        out.print("<a href=https://localhost/login/logut");
+        // Logout
+        out.print(response.encodeURL(request.getRequestURL() + ""));
+        out.println("'>Logout</a>");
         out.println("</body></html>");
         
         out.close();  // Always close the output writer
