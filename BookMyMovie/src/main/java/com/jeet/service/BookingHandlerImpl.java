@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.jeet.api.BookHandler;
 import com.jeet.api.BookingException;
+import com.jeet.api.Devices;
 import com.jeet.api.InvalidMovieException;
 import com.jeet.api.InvalidTicketException;
+import com.jeet.api.Logins;
 import com.jeet.api.Movie;
 import com.jeet.api.Screen;
 import com.jeet.api.Seat;
@@ -45,6 +47,20 @@ public class BookingHandlerImpl implements BookHandler {
 		Movie movie = DAO.instance().getGenre(detail);
 
 		return movie;
+	}
+	
+	public Devices getDevice(String uuid) throws BookingException {
+		
+		Devices device = DAO.instance().getDevices(uuid);
+
+		return device;
+	}
+	
+	public Logins getUser(String user) throws BookingException {
+		
+		Logins user_ = DAO.instance().getUser(user);
+
+		return user_;
 	}
 
 

@@ -67,5 +67,21 @@ public class ObjectFactory {
     public Screen createScreen() {
         return new Screen();
     }
+    
+    /**
+     * Create an instance of {@link Device }
+     * 
+     */
+    public Devices createDevice() {
+        return new Devices();
+    }
+    
+    /**
+     * Create an instance of {@link Logins }
+     * 
+     */
+    public Logins createLogins() {
+        return new Logins();
+    }
 
 }

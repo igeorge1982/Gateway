@@ -10,6 +10,8 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
+import com.jeet.api.Devices;
+import com.jeet.api.Logins;
 import com.jeet.api.Movie;
 import com.jeet.api.Screen;
 import com.jeet.api.Ticket;
@@ -76,6 +78,34 @@ public class DAO {
 		
 		@SuppressWarnings("unchecked")
 		List<Movie> list = query.list();
+		
+		return list.get(0);
+	}
+	
+	public Devices getDevices(String uuid){
+		
+		Session session = factory.openSession();
+		String hql = "from Devices where uuid = :mUuid";
+		
+		Query query = session.createQuery(hql);
+		query.setParameter("mUuid", uuid);
+		
+		@SuppressWarnings("unchecked")
+		List<Devices> list = query.list();
+		
+		return list.get(0);
+	}
+	
+	public Logins getUser(String user){
+		
+		Session session = factory.openSession();
+		String hql = "from Logins where user = :mUser";
+		
+		Query query = session.createQuery(hql);
+		query.setParameter("mUser", user);
+		
+		@SuppressWarnings("unchecked")
+		List<Logins> list = query.list();
 		
 		return list.get(0);
 	}
