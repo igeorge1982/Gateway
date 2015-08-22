@@ -17,9 +17,9 @@ public class RohadekFilter implements Filter
     {
     	  HttpServletResponse response_ = (HttpServletResponse) response;
 
-          response_.setHeader("Cache-Control", "no-cache, private, no-store, must-revalidate"); // HTTP 1.1.
+          response_.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
           response_.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-  	 	  response_.setDateHeader("Expires", System.currentTimeMillis());	 	
+  	 	  response_.setDateHeader("Expires", 0);	 	
 
           chain.doFilter(request, response);
     }

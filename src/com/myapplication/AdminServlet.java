@@ -20,7 +20,6 @@ public class AdminServlet extends HttpServlet {
     *
     */
     private static final long serialVersionUID = 1L;
-	private String message;
 	public final static String dbDriverClass = "com.mysql.jdbc.Driver";
 	public final static String dbUrl = "jdbc:mysql://localhost:3306";
 	public final static String dbUserName = "sqluser";
@@ -28,7 +27,8 @@ public class AdminServlet extends HttpServlet {
 	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
 	private static String userName = null;
 	private static String sessionID = null;
-	private volatile static String user; 
+	private volatile static String user;
+	protected volatile static HttpSession session;
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -43,22 +43,59 @@ public class AdminServlet extends HttpServlet {
     public void init() throws ServletException
     {
         // Do required initialization
-        message = "Hello World";
+
     }
     
     public synchronized void doPost(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException
     {
-        
+    	/*
+    	if(session.getAttribute("user") == null || response.getStatus()==500){
+        	
+    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
+    	
+    	}else {
+    		
+		performTask(request, response);
+    	}*/
     }
+    
+
+	private void performTask(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+			IOException {
+		
+		//response.setContentType("text/html");
+		
+		ServletContext otherContext = getServletContext().getContext("/mbook-1");
+		user = (String) session.getAttribute("user");	
+
+			RequestDispatcher rd = otherContext.getRequestDispatcher("/rest/user/"+user.trim().toString());
+			
+				rd.forward(request, response); 
+		
+		}
     
     public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
 
-    	//TODO: handle back button somehow
-    	
+
     	// Set the response message's MIME type
         response.setContentType("text/html;charset=UTF-8");
-       
+   
+        // Return current session  	
+		session = request.getSession();
+    	
+    	if(session.getAttribute("user") == null){
+    	
+    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
+    	
+    	}else 
+
+    		performTask(request, response);
+    		
+    		// user = (String) session.getAttribute("user");	 	   
+    	//TODO: store / update session id with creation time
+    	/*	sessionID = session.getId();
+    	
         // Allocate a output writer to write the response message into the network socket
         PrintWriter out = response.getWriter();
    
@@ -78,32 +115,6 @@ public class AdminServlet extends HttpServlet {
            out.println("<head><title>" + title + "</title></head>");
            out.println("<body>");
            out.println("<h3>" + title + "</h3>");
-   
-           // Return the existing session if there is one. Otherwise, create a new session
-    	
-		HttpSession session = request.getSession();
-		user = request.getParameter("user");	
-    	//HelloWorld.user = null;
-    	
-    	if(session.getAttribute("user") == null){
-    	
-    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
-    	
-    	}else 
-    		
-    		//HelloWorld.user = (String) session.getAttribute("user");
-    		user = (String) session.getAttribute("user");
-    	
-    		//set HTTP headers
-        	//response.setHeader("Cache-Control", "no-cache, private, no-store, must-revalidate"); // HTTP 1.1.
-        	//response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-    	 	//response.setDateHeader("Expires", System.currentTimeMillis());	 	
-        	
-			//get HTTP headers
-        	request.getHeader("Cache-Control"); // HTTP 1.1.
-        	request.getHeader("Pragma"); // HTTP 1.0.
-    
-    		sessionID = session.getId();
     	
         out.println("<!DOCTYPE html");  // HTML 5
         out.println("<html><head>");
@@ -190,14 +201,17 @@ public class AdminServlet extends HttpServlet {
         out.println("</body></html>");
         
         out.close();  // Always close the output writer
+        
+        
 
      } catch (Exception e) {
 
-    	 HttpSession session = request.getSession();
-    	 session.invalidate();
+    	 //HttpSession session = request.getSession(false);
+    	 //session.invalidate();
+ 		 //response.sendRedirect("https://localhost/javaScript/mainpage.html");
     	 out.close();  // Always close the output writer
 
-     }
+     }*/
     	
     	}
     

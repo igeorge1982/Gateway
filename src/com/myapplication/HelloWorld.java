@@ -78,14 +78,10 @@ public class HelloWorld extends HttpServlet {
 				HttpSession session = request.getSession();
 				session.setAttribute("user", user);
 				session.setAttribute("deviceId", deviceId);
+				request.removeAttribute("pswrd");
 
 				//setting session to expiry in 30 mins
-				session.setMaxInactiveInterval(30*60);
-				
-				//set HTTP headers
-	        	//response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-	        	//response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-	    	 	//response.setDateHeader("Expires", System.currentTimeMillis(  ) + 1*1000);	 	
+				session.setMaxInactiveInterval(30*60); 	
 	        	
 				String encodedURL = response.encodeRedirectURL("https://localhost/login/admin");
 				response.sendRedirect(encodedURL);

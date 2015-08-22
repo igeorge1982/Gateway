@@ -55,46 +55,22 @@ public class Loggingout extends HttpServlet {
   
   public synchronized void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
   {
-  		/*
-	  // Set response content type
-      response.setContentType("text/html");
 
-     HttpSession session = request.getSession();
-     
-	//set HTTP headers
- 	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
- 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
- 	response.setDateHeader("Expires", System.currentTimeMillis());	 		
-
-     if(session!=null) {
-
-    	 session.removeAttribute("user");
-
-    	 response.sendRedirect("https://localhost/javaScript/mainpage.html"); 
-     }
-     
-     session.invalidate();
-  		 */
   }
   
   public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-  {
-		
-	  	//set HTTP headers
-	 	//response.setHeader("Cache-Control", "no-cache, no-store, private, must-revalidate"); // HTTP 1.1.
-	 	//response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-	 	//response.setDateHeader("Expires", System.currentTimeMillis());	 	
+  {	 	
 	     
-	 	HttpSession session = request.getSession();
+	 	//HttpSession session = request.getSession();
 
-	     session.removeAttribute("user");
+	    // session.removeAttribute("user");
 	      	
-	     if(session.getAttribute("user") == null){
-		     session.invalidate();
-		     session.setMaxInactiveInterval(1);
+	   //  if(session.getAttribute("user") == null){
+	  		 AdminServlet.session.removeAttribute("user");
+		     AdminServlet.session.invalidate();
 	    	 response.setHeader("Referer", "https://localhost/javaScript/index.html");
 	    	 response.sendRedirect("https://localhost/javaScript/index.html");
-	     }
+	     //}
 
   }
   

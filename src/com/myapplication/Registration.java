@@ -61,11 +61,11 @@ public class Registration extends HttpServlet {
     	pass = request.getParameter("pswrd");
         voucher = request.getParameter("voucher_");
         deviceId = request.getParameter("deviceId");
+    	HttpSession session = request.getSession();
+
 
         try {
-			//TODO: this stage must be available if some token pair is matching the one generated in voucher servlet, else redirect 
-        	//or see below
-        	HttpSession session = request.getSession();
+			//TODO: make registration without voucher
 			
             // Set an attribute (name-value pair) if present in the request
             if (voucher != null) voucher = voucher.trim();
@@ -82,12 +82,7 @@ public class Registration extends HttpServlet {
 				session.setAttribute("device", deviceId);
 				
 				//setting session to expiry in 30 mins
-				session.setMaxInactiveInterval(30*60);
-
-				//set HTTP headers
-	        	//response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-	        	//response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-	    	 	//response.setDateHeader("Expires", System.currentTimeMillis(  ) + 1*1000);	 	
+				session.setMaxInactiveInterval(30*60);	
 				
 				String encodedURL = response.encodeRedirectURL("https://localhost/login/admin");
 				response.sendRedirect(encodedURL);
@@ -112,7 +107,6 @@ public class Registration extends HttpServlet {
 				SQLAccess.reset_voucher(voucher);
 			} catch (Exception e1) {
 			}
-        	HttpSession session = request.getSession();
 			session.invalidate();
     		response.sendRedirect("https://localhost/javaScript/voucher.html");
 

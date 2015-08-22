@@ -48,6 +48,7 @@ public class Voucher extends HttpServlet {
     
     public synchronized void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+    	//TODO: do something with left voucher registrations
     	// Set response content type
         response.setContentType("text/html");
 	      
@@ -55,12 +56,7 @@ public class Voucher extends HttpServlet {
 		voucher = request.getParameter("voucher");			
 
         try {
-			if (SQLAccess.voucher(voucher)) {
-								
-				//set HTTP headers
-	        	//response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-	        	//response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-	    	 	//response.setDateHeader("Expires", System.currentTimeMillis();	 	
+			if (SQLAccess.voucher(voucher)) { 	
 	        	
 				String encodedURL = response.encodeRedirectURL("https://localhost/javaScript/register.html?voucher_="+voucher);
 				response.sendRedirect(encodedURL);
@@ -71,8 +67,6 @@ public class Voucher extends HttpServlet {
 				
 			}
 		} catch (Exception e) {
-			
-    		response.sendRedirect("https://localhost/javaScript/voucher.html");
 
 		}
 
