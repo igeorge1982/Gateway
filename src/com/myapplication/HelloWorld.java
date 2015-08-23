@@ -29,6 +29,7 @@ public class HelloWorld extends HttpServlet {
 	public volatile static String hash1;
 	public volatile static String deviceId;
 	public volatile static boolean devices;
+	private volatile static long SessionCreated;
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -70,8 +71,6 @@ public class HelloWorld extends HttpServlet {
     		response.sendRedirect("https://localhost/javaScript/mainpage.html");
 
 		}
-
-
 		
 			if(pass.equals(hash1) && devices){
 
@@ -79,6 +78,13 @@ public class HelloWorld extends HttpServlet {
 				session.setAttribute("user", user);
 				session.setAttribute("deviceId", deviceId);
 				request.removeAttribute("pswrd");
+				SessionCreated = session.getCreationTime();
+				
+
+				try {
+					SQLAccess.insert_sessionCreated(deviceId, SessionCreated);
+				} catch (Exception e) {					
+				}
 
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60); 	

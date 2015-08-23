@@ -1,6 +1,7 @@
 package com.myapplication;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -27,6 +28,8 @@ public class SQLAccess {
 	private volatile static UUID idOne;
 	public static String hash;
 	public static String voucher;
+	public static String token;
+
 
 	
 	//public static boolean genSumRep;
@@ -164,7 +167,9 @@ public class SQLAccess {
 
 			callableStatement.setCharacterStream(1, reader);				
 			ResultSet rs = callableStatement.executeQuery();
+			callableStatement.closeOnCompletion();
 			reader.close();
+			
 			while (rs.next()) {
 				
 				String voucher =rs.getString(1);
@@ -178,6 +183,7 @@ public class SQLAccess {
 			CallableStatement callableStatement_ = connect.prepareCall("{call `set_voucher`(?)}");
 			callableStatement_.setCharacterStream(1, reader_);				
 			callableStatement_.executeQuery();
+			callableStatement_.closeOnCompletion();
 			reader_.close();
 				}
 				
@@ -233,7 +239,9 @@ public class SQLAccess {
 			callableStatement_.setString(2, user);
 			callableStatement_.setCharacterStream(3, readers);
 			callableStatement_.executeUpdate();
+			callableStatement_.closeOnCompletion();
 			reader_.close();
+			readers.close();
 				//}
 				
 				close();
@@ -272,6 +280,45 @@ public class SQLAccess {
 			callableStatement_.setCharacterStream(1, reader_);
 			callableStatement_.setCharacterStream(2, readers);
 			callableStatement_.executeUpdate();
+			callableStatement_.closeOnCompletion();
+			reader_.close();
+			readers.close();
+				//}
+				
+				close();
+				return true;
+			//} 
+			
+		} catch (SQLException ex) {
+		      SQLAccess.printSQLException(ex);
+
+		} finally {
+			
+			close();
+
+		}
+		return false;
+	}
+	
+	public static boolean insert_sessionCreated(String deviceId, long sessionCreated) throws ClassNotFoundException, IOException {
+		
+		
+		try {
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName(dbDriverClass);
+
+			// Setup the connection with the DB
+			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+			 
+			InputStream in_ = IOUtils.toInputStream(deviceId, "UTF-8");
+		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
+		    
+			connect.setCatalog("login");
+			CallableStatement callableStatement_ = connect.prepareCall("{call `insert_sessionCreated`(?, ?)}");
+			callableStatement_.setCharacterStream(1, reader_);
+			callableStatement_.setLong(2, sessionCreated);
+			callableStatement_.executeUpdate();
+			callableStatement_.closeOnCompletion();
 			reader_.close();
 				//}
 				
@@ -306,9 +353,11 @@ public class SQLAccess {
 		    connect.setCatalog("login");
 			CallableStatement callableStatement = connect.prepareCall("{call `reset_voucher`(?)}");
 
-				callableStatement.setCharacterStream(1, reader);
+			callableStatement.setCharacterStream(1, reader);
 							
 			callableStatement.executeQuery();
+			callableStatement.closeOnCompletion();
+			reader.close();
 	
 		} catch (SQLException ex) {
 		      SQLAccess.printSQLException(ex);
@@ -337,9 +386,11 @@ public class SQLAccess {
 		    connect.setCatalog("login");
 			CallableStatement callableStatement = connect.prepareCall("{call `register_voucher`(?)}");
 
-				callableStatement.setCharacterStream(1, reader);
+			callableStatement.setCharacterStream(1, reader);
 							
 			callableStatement.executeQuery();
+			callableStatement.closeOnCompletion();
+			reader.close();
 	
 		} catch (SQLException ex) {
 		      SQLAccess.printSQLException(ex);
@@ -371,6 +422,8 @@ public class SQLAccess {
 				callableStatement.setCharacterStream(1, reader);
 							
 			ResultSet rs = callableStatement.executeQuery();
+			callableStatement.closeOnCompletion();
+			reader.close();
 			while (rs.next()) {
 				
 				hash =rs.getString(1);
@@ -387,6 +440,43 @@ public class SQLAccess {
 		}
 		return hash;
 	}
+	
+	public static String token(String deviceId) throws Exception {
+
+		
+		try {
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName(dbDriverClass);
+
+			// Setup the connection with the DB
+			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+								
+			InputStream in_ = IOUtils.toInputStream(deviceId, "UTF-8");
+		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
+		    
+		    connect.setCatalog("login");
+			CallableStatement callableStatement = connect.prepareCall("{call `get_token`(?)}");
+
+				callableStatement.setCharacterStream(1, reader_);
+							
+			ResultSet rs = callableStatement.executeQuery();
+			callableStatement.closeOnCompletion();
+			reader_.close();
+			while (rs.next()) {
+				
+				token =rs.getString(1);
+			}
+			
+		} catch (SQLException ex) {
+		      SQLAccess.printSQLException(ex);
+
+		} finally {
+			
+			close();
+
+		}
+		return token;
+	}
 
 
 	// You need to close the resultSet
@@ -398,6 +488,10 @@ public class SQLAccess {
 
 			if (statement != null) {
 				statement.close();
+			}
+			
+			if (preparedStatement != null) {
+				preparedStatement.close();
 			}
 			
 			if (preparedStatement != null) {

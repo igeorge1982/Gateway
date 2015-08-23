@@ -28,6 +28,7 @@ public class AdminServlet extends HttpServlet {
 	private static String userName = null;
 	private static String sessionID = null;
 	private volatile static String user;
+	private volatile static String token_;
 	protected volatile static HttpSession session;
 	
     @BeforeClass
@@ -60,18 +61,28 @@ public class AdminServlet extends HttpServlet {
     }
     
 
-	private void performTask(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+	private synchronized void performTask(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		
 		//response.setContentType("text/html");
 		
+		try {
+			HelloWorld.deviceId = (String) session.getAttribute("deviceId");	
+			token_ = SQLAccess.token(HelloWorld.deviceId);
+		} catch (Exception e) {
+    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
+		}
+		
+		if(!token_.isEmpty()) {
 		ServletContext otherContext = getServletContext().getContext("/mbook-1");
 		user = (String) session.getAttribute("user");	
 
-			RequestDispatcher rd = otherContext.getRequestDispatcher("/rest/user/"+user.trim().toString());
+			RequestDispatcher rd = otherContext.getRequestDispatcher("/rest/user/"+user.trim().toString()+"/"+token_.trim().toString());
 			
 				rd.forward(request, response); 
-		
+			} else {
+	    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
+			}
 		}
     
     public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
