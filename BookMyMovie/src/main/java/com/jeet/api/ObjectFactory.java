@@ -83,5 +83,13 @@ public class ObjectFactory {
     public Logins createLogins() {
         return new Logins();
     }
+    
+    /**
+     * Create an instance of {@link Tokens }
+     * 
+     */
+    public Tokens createTokens() {
+        return new Tokens();
+    }
 
 }

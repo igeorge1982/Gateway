@@ -13,5 +13,6 @@
         <property name="show_sql">true</property>
         <mapping class="com.jeet.api.Devices" />
         <mapping class="com.jeet.api.Logins" />
+        <mapping class="com.jeet.api.Tokens" />
     </session-factory>
 </hibernate-configuration>

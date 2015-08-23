@@ -15,6 +15,7 @@ import com.jeet.api.Logins;
 import com.jeet.api.Movie;
 import com.jeet.api.Screen;
 import com.jeet.api.Ticket;
+import com.jeet.api.Tokens;
 
 public class DAO {
 
@@ -106,6 +107,20 @@ public class DAO {
 		
 		@SuppressWarnings("unchecked")
 		List<Logins> list = query.list();
+		
+		return list.get(0);
+	}
+	
+	public Tokens getToken(String token1){
+		
+		Session session = factory.openSession();
+		String hql = "from Tokens where token1 = :mToken1";
+		
+		Query query = session.createQuery(hql);
+		query.setParameter("mToken1", token1);
+		
+		@SuppressWarnings("unchecked")
+		List<Tokens> list = query.list();
 		
 		return list.get(0);
 	}

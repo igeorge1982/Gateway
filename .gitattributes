@@ -25,6 +25,7 @@ BookMyMovie/src/main/java/com/jeet/api/ObjectFactory.java -text
 BookMyMovie/src/main/java/com/jeet/api/Screen.java -text
 BookMyMovie/src/main/java/com/jeet/api/Seat.java -text
 BookMyMovie/src/main/java/com/jeet/api/Ticket.java -text
+BookMyMovie/src/main/java/com/jeet/api/Tokens.java -text
 BookMyMovie/src/main/java/com/jeet/api/Voucher_states.java -text
 BookMyMovie/src/main/java/com/jeet/api/Vouchers.java -text
 BookMyMovie/src/main/java/com/jeet/api/bookmymovie.xsd -text
@@ -55,13 +56,11 @@ BookMyMovie/target/classes/com/jeet/api/package-info.class -text svneol=unset#ap
 BookMyMovie/target/classes/com/jeet/db/DAO.class -text svneol=unset#application/x-java-applet
 BookMyMovie/target/classes/com/jeet/rest/BookingExceptionMapper.class -text svneol=unset#application/x-java-applet
 BookMyMovie/target/classes/com/jeet/service/BookingHandlerImpl.class -text svneol=unset#application/x-java-applet
-BookMyMovie/target/classes/hibernate.cfg.xml -text svneol=unset#application/xml
-BookMyMovie/target/classes/import.sql -text
-BookMyMovie/target/classes/logback.xml -text svneol=unset#application/xml
 BookMyMovie/target/maven-archiver/pom.properties -text
 BookMyMovie/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst -text
 BookMyMovie/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst -text
 BookMyMovie/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst -text
+BookMyMovie/target/mbook-1/WEB-INF/classes/bookmymovie.xsd -text svneol=unset#application/xml
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/api/BookHandler.class -text
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/api/BookingException.class -text
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/api/Device_states.class -text svneol=unset#application/x-java-applet
@@ -74,8 +73,10 @@ BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/api/ObjectFactory.class -tex
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/api/Screen.class -text
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/api/Seat.class -text
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/api/Ticket.class -text
+BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/api/Tokens.class -text svneol=unset#application/x-java-applet
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/api/Voucher_states.class -text svneol=unset#application/x-java-applet
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/api/Vouchers.class -text svneol=unset#application/x-java-applet
+BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/api/bookmymovie.xsd -text svneol=unset#application/xml
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/api/package-info.class -text
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/db/DAO.class -text
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/rest/BookController.class -text

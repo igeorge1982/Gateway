@@ -12,6 +12,7 @@ import com.jeet.api.Movie;
 import com.jeet.api.Screen;
 import com.jeet.api.Seat;
 import com.jeet.api.Ticket;
+import com.jeet.api.Tokens;
 import com.jeet.db.DAO;
 
 public class BookingHandlerImpl implements BookHandler {
@@ -61,6 +62,13 @@ public class BookingHandlerImpl implements BookHandler {
 		Logins user_ = DAO.instance().getUser(user);
 
 		return user_;
+	}
+	
+	public Tokens getToken(String token1) throws BookingException {
+		
+		Tokens token = DAO.instance().getToken(token1);
+
+		return token;
 	}
 
 
