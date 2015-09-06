@@ -12,6 +12,8 @@
 .settings/org.eclipse.wst.validation.prefs -text
 /pom.xml -text
 src/com/myapplication/AdminServlet.java -text
+src/com/myapplication/CustomHttpSessionListener.java -text
+src/com/myapplication/CustomServletContextListener.java -text
 src/com/myapplication/DeviceManagement.java -text
 src/com/myapplication/HTMLFilter.java -text
 src/com/myapplication/HelloWorld.java -text
@@ -24,6 +26,7 @@ target/lib/bsh-2.0b4.jar -text
 target/lib/commons-io-2.4.jar -text svneol=unset#application/zip
 target/lib/javax.servlet-api-3.1.0.jar -text
 target/lib/jcommander-1.48.jar -text
+target/lib/log4j-1.2.17.jar -text svneol=unset#application/java-archive
 target/lib/mysql-connector-java-5.1.35.jar -text
 target/lib/testng-6.9.4.jar -text
 target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst -text

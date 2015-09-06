@@ -73,13 +73,19 @@ public class HelloWorld extends HttpServlet {
 		}
 		
 			if(pass.equals(hash1) && devices){
-
+				
+				//Create session
 				HttpSession session = request.getSession();
+			
+				// synchronized session object to prevent concurrent update		        	   
+				synchronized(session) {
+
 				session.setAttribute("user", user);
 				session.setAttribute("deviceId", deviceId);
 				request.removeAttribute("pswrd");
 				SessionCreated = session.getCreationTime();
-				
+
+		           }
 
 				try {
 					SQLAccess.insert_sessionCreated(deviceId, SessionCreated);
@@ -89,7 +95,9 @@ public class HelloWorld extends HttpServlet {
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60); 	
 	        	
-				String encodedURL = response.encodeRedirectURL("https://localhost/login/admin");
+				//ServletContext otherContext = getServletContext().getContext("/exercise_");
+
+				String encodedURL = response.encodeRedirectURL("https://localhost/example/index.jsp");
 				response.sendRedirect(encodedURL);
 
 			}else{

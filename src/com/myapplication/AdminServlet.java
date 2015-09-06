@@ -2,15 +2,14 @@ package com.myapplication;
 
 //Import required java libraries
 import java.io.*;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.ResourceBundle;
+import java.util.HashMap;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import com.myapplication.SQLAccess;
 
+import org.apache.log4j.Logger;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
@@ -29,7 +28,13 @@ public class AdminServlet extends HttpServlet {
 	private static String sessionID = null;
 	private volatile static String user;
 	private volatile static String token_;
-	protected volatile static HttpSession session;
+	public volatile static String deviceId;
+	protected volatile static HttpSession session = null;
+	protected volatile static String sessionId;
+	
+	private static Logger log = Logger.getLogger(Logger.class.getName());
+	public static volatile HashMap<String, HttpSession> activeUsers;
+
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -49,40 +54,52 @@ public class AdminServlet extends HttpServlet {
     
     public synchronized void doPost(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException
     {
-    	/*
-    	if(session.getAttribute("user") == null || response.getStatus()==500){
-        	
-    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
-    	
-    	}else {
-    		
-		performTask(request, response);
-    	}*/
+
     }
     
 
 	private synchronized void performTask(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		
-		//response.setContentType("text/html");
-		
+		user = (String) session.getAttribute("user");	
+
 		try {
-			HelloWorld.deviceId = (String) session.getAttribute("deviceId");	
-			token_ = SQLAccess.token(HelloWorld.deviceId);
+			deviceId = (String) session.getAttribute("deviceId");	
+			token_ = SQLAccess.token(deviceId);
 		} catch (Exception e) {
-    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
+			
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login/logout");
+			rd.include(request, response);
+	        PrintWriter out = response.getWriter();
+			out.println("<font color=red>User is not found</font>");
+			
 		}
 		
-		if(!token_.isEmpty()) {
-		ServletContext otherContext = getServletContext().getContext("/mbook-1");
-		user = (String) session.getAttribute("user");	
+		if (deviceId == null || user == null) {
+			
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login/logout");
+			rd.include(request, response);
+	        PrintWriter out = response.getWriter();
+			out.println("<font color=red>User is not found</font>");
+		}
+		
+		else if(!token_.isEmpty()) {
+        		
+        ServletContext otherContext = getServletContext().getContext("/mbook-1");
 
 			RequestDispatcher rd = otherContext.getRequestDispatcher("/rest/user/"+user.trim().toString()+"/"+token_.trim().toString());
 			
 				rd.forward(request, response); 
-			} else {
-	    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
 			}
+		else {
+			
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login/logout");
+			rd.include(request, response);
+	        PrintWriter out = response.getWriter();
+			out.println("<font color=red>User is not found</font>");
+			
+				}
+
 		}
     
     public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -91,17 +108,43 @@ public class AdminServlet extends HttpServlet {
 
     	// Set the response message's MIME type
         response.setContentType("text/html;charset=UTF-8");
-   
+        
+        // If a persistent session cookie has been created
+        sessionId = request.getParameter("JSESSIONID");			
+       
+        
         // Return current session  	
 		session = request.getSession();
+		
+        log.info("admin SessionID:" + session.getId().toString());
     	
     	if(session.getAttribute("user") == null){
     	
-    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
+            if (sessionId != null) {
+                
+                // Get the existing session           	
+            	session = request.getSession(true);
+                ServletContext context = session.getServletContext();
+                activeUsers = (HashMap<String, HttpSession>)context.getAttribute("activeUsers");
+                session = activeUsers.get(sessionId);
+
+                if (session.getAttribute("user") == null) {
+
+                	response.sendError(HttpServletResponse.SC_BAD_REQUEST);;
+
+                }
+            
+            } else {
+    		
+            	response.sendError(HttpServletResponse.SC_BAD_GATEWAY);;
+
+            }
     	
     	}else 
-
-    		performTask(request, response);
+    		
+		            log.info("CurrentUserSessionId: " + sessionId);
+		            performTask(request, response);
+    		
     		
     		// user = (String) session.getAttribute("user");	 	   
     	//TODO: store / update session id with creation time
@@ -231,4 +274,6 @@ public class AdminServlet extends HttpServlet {
     {
         // do nothing.
     }
+  
+   
 }

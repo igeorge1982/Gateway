@@ -61,16 +61,19 @@ public class Loggingout extends HttpServlet {
   public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
   {	 	
 	     
-	 	//HttpSession session = request.getSession();
-
-	    // session.removeAttribute("user");
+	 	HttpSession session = request.getSession(false);
 	      	
-	   //  if(session.getAttribute("user") == null){
+	     if(session.getAttribute("user") != null){
 	  		 AdminServlet.session.removeAttribute("user");
 		     AdminServlet.session.invalidate();
 	    	 response.setHeader("Referer", "https://localhost/javaScript/index.html");
 	    	 response.sendRedirect("https://localhost/javaScript/index.html");
-	     //}
+	     }
+	     
+	     else {
+	    	 response.setHeader("Referer", "https://localhost/javaScript/index.html");
+	    	 response.sendRedirect("https://localhost/javaScript/index.html");
+	     }
 
   }
   
