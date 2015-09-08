@@ -1,6 +1,6 @@
 package com.myapplication;
 
-import java.sql.SQLException;
+import java.io.Serializable;
 import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
@@ -18,7 +18,9 @@ import org.apache.log4j.Logger;
  */
 
 
-public class CustomHttpSessionListener implements HttpSessionListener{
+public class CustomHttpSessionListener implements HttpSessionListener, Serializable{
+
+	private static final long serialVersionUID = -6951824749917799153L;
 	
 	private static Logger log = Logger.getLogger(Logger.class.getName());
 	public static volatile HashMap<String, HttpSession> activeUsers = null;
@@ -31,14 +33,16 @@ public class CustomHttpSessionListener implements HttpSessionListener{
      * Adds sessions to the context scoped HashMap when they begin.
      */
     public void sessionCreated(HttpSessionEvent event){
-        HttpSession    session = event.getSession();
+        
+    	HttpSession    session = event.getSession();
         ServletContext context = session.getServletContext();
         activeUsers = (HashMap<String, HttpSession>) context.getAttribute("activeUsers");
 
         activeUsers.put(session.getId(), session);
+        // TODO: sql can run here to insert user sessions into the dB
         log.info("New SessionID: " + session.getId().toString());
         context.setAttribute("activeUsers", activeUsers);
-        log.info("Users: " + activeUsers.keySet().toString());
+        log.info("Actice UserSessions: " + activeUsers.keySet().toString());
 
     }
 
@@ -47,15 +51,16 @@ public class CustomHttpSessionListener implements HttpSessionListener{
      * or are invalidated.
      */
     public void sessionDestroyed(HttpSessionEvent event){
-        HttpSession    session = event.getSession();
+        
+    	HttpSession    session = event.getSession();
         ServletContext context = session.getServletContext();
-        HashMap<String, HttpSession> activeUsers = (HashMap<String, HttpSession>)context.getAttribute("activeUsers");
+        activeUsers = (HashMap<String, HttpSession>)context.getAttribute("activeUsers");
         
-        log.info("SessionID destroyed: " + session.getId().toString());
+        log.info("SessionID destroyed: " + session.getId().toString());     
         
+        // TODO: sql can run to cleanup device / user sessions later in the dB
         activeUsers.remove(session.getId());
         
-
     }
     
 

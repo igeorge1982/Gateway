@@ -16,19 +16,19 @@ public class HelloWorld extends HttpServlet {
     *
     */
     private static final long serialVersionUID = 1L;
-    @SuppressWarnings("unused")
-	private String message;
 
 	public final static String dbDriverClass = "com.mysql.jdbc.Driver";
 	public final static String dbUrl = "jdbc:mysql://localhost:3306";
 	public final static String dbUserName = "sqluser";
 	public final static String dbPassWord = "sqluserpw";
 	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
-	public volatile static String pass;
-	public volatile static String user;
-	public volatile static String hash1;
-	public volatile static String deviceId;
-	public volatile static boolean devices;
+	
+	private volatile static String pass;
+	private volatile static String user;
+	private volatile static String hash1;
+	private volatile static String deviceId;
+	private volatile static HttpSession session;
+	private volatile static boolean devices;
 	private volatile static long SessionCreated;
 	
     @BeforeClass
@@ -44,7 +44,6 @@ public class HelloWorld extends HttpServlet {
     public void init() throws ServletException
     {
         // Do required initialization
-        message = "Hello World";
     }
     
     public synchronized void processRequest (HttpServletRequest request, HttpServletResponse response)
@@ -68,14 +67,14 @@ public class HelloWorld extends HttpServlet {
 		
 		} catch (Exception e) {
 			
-    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
+    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
 
 		}
 		
 			if(pass.equals(hash1) && devices){
 				
-				//Create session
-				HttpSession session = request.getSession();
+				// Create session
+				session = request.getSession();
 			
 				// synchronized session object to prevent concurrent update		        	   
 				synchronized(session) {
@@ -101,7 +100,7 @@ public class HelloWorld extends HttpServlet {
 				response.sendRedirect(encodedURL);
 
 			}else{
-	    		response.sendRedirect("https://localhost/javaScript/mainpage.html");
+	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
 	    		
 	    		/*
 				RequestDispatcher rd = getServletContext().getRequestDispatcher("https://localhost/javaScript/mainpage.html");

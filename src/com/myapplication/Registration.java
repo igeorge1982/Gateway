@@ -15,18 +15,17 @@ public class Registration extends HttpServlet {
     *
     */
     private static final long serialVersionUID = 1L;
-    @SuppressWarnings("unused")
-	private String message;
 
 	public final static String dbDriverClass = "com.mysql.jdbc.Driver";
 	public final static String dbUrl = "jdbc:mysql://localhost:3306";
 	public final static String dbUserName = "sqluser";
 	public final static String dbPassWord = "sqluserpw";
 	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
-	public volatile static String pass;
-	public volatile static String user;
-	public volatile static String voucher;
-	public volatile static String deviceId;
+	
+	private volatile static String pass;
+	private volatile static String user;
+	private volatile static String voucher;
+	private volatile static String deviceId;
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -41,7 +40,7 @@ public class Registration extends HttpServlet {
     public void init() throws ServletException
     {
         // Do required initialization
-        message = "Hello World";
+
     }
     
     public synchronized void processRequest (HttpServletRequest request, HttpServletResponse response)
@@ -93,23 +92,28 @@ public class Registration extends HttpServlet {
 			
 			else {
 				SQLAccess.reset_voucher(voucher);
-				session.invalidate();
-				//TODO: send some error toast
+				if (session != null) {								
+					session.invalidate();
+				}
 				//TODO: clear url parameter
-	    		response.sendRedirect("https://localhost/javaScript/voucher.html");
+				String encodedURL = response.encodeRedirectURL("https://localhost/login/logout");
+	    		response.sendRedirect(encodedURL);
 			}
 		
 		} catch (Exception e) {
 			
-			//TODO: send some error toast
 			//TODO: clear url parameter
 			try {
 				SQLAccess.reset_voucher(voucher);
 			} catch (Exception e1) {
+				}
+			
+			if (session != null) {								
+				session.invalidate();
 			}
-			session.invalidate();
-    		response.sendRedirect("https://localhost/javaScript/voucher.html");
-
+			
+			String encodedURL = response.encodeRedirectURL("https://localhost/login/logout");
+    		response.sendRedirect(encodedURL);
 		}
         
     }

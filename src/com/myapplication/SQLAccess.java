@@ -30,10 +30,7 @@ public class SQLAccess {
 	public static String voucher;
 	public static String token;
 
-
-	
-	//public static boolean genSumRep;
-	
+	//public static boolean genSumRep;	
 	 public volatile static boolean genSumRep;
 
 	public synchronized static boolean getGenSumRep() {
@@ -81,6 +78,14 @@ public class SQLAccess {
 
 	}
 	
+	/**
+	 * Inserts user and password.
+	 * 
+	 * @param pass
+	 * @param user
+	 * @return
+	 * @throws Exception
+	 */
 	public static boolean new_hash(String pass, String user) throws Exception {
 		
 		// This will load the MySQL driver, each DB has its own driver
@@ -101,8 +106,7 @@ public class SQLAccess {
 			preparedStatement.setCharacterStream(1, readerP);
 			preparedStatement.setCharacterStream(2, readerU);
 		      
-			preparedStatement.executeUpdate();
-		
+			preparedStatement.executeUpdate();		
 			preparedStatement.closeOnCompletion();
 		
 	readerP.close();
@@ -149,6 +153,14 @@ public class SQLAccess {
 		return true;
 	}
 	
+	/**
+	 * First checks the voucher state, and depending on the state of the voucher a @return will be set. 
+	 * It returns always true, if the voucher is available.
+	 * 
+	 * @param voucher_
+	 * @return
+	 * @throws Exception
+	 */
 	public static boolean voucher(String voucher_) throws Exception {
 
 		
@@ -202,6 +214,15 @@ public class SQLAccess {
 		return false;
 	}
 	
+	/**
+	 * Initial voucher insert in the first step of registration process.
+	 * 
+	 * @param voucher_
+	 * @param user
+	 * @param pass
+	 * @return true on success, otherwise false
+	 * @throws Exception
+	 */
 	public static boolean insert_voucher(String voucher_, String user, String pass) throws Exception {
 		
 		
@@ -259,6 +280,14 @@ public class SQLAccess {
 		return false;
 	}
 	
+	/**
+	 * Inserts a deviceId for the current user.
+	 * 
+	 * @param deviceId
+	 * @param user
+	 * @return
+	 * @throws Exception
+	 */
 	public static boolean insert_device(String deviceId, String user) throws Exception {
 		
 		
@@ -300,6 +329,17 @@ public class SQLAccess {
 		return false;
 	}
 	
+	
+	/**
+	 * Inserts session creation time for deviceId. 
+	 * This insert also triggers tokens into the Tokens table for the device (user), that can be used for API calls.
+	 * 
+	 * @param deviceId
+	 * @param sessionCreated
+	 * @return true on success, otherwise false
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	public static boolean insert_sessionCreated(String deviceId, long sessionCreated) throws ClassNotFoundException, IOException {
 		
 		
@@ -337,6 +377,13 @@ public class SQLAccess {
 		return false;
 	}
 	
+	/**
+	 * Resets the voucher to the first enum state.
+	 * 
+	 * @param voucher
+	 * @return true
+	 * @throws Exception
+	 */
 	public static boolean reset_voucher(String voucher) throws Exception {
 
 		
@@ -370,6 +417,13 @@ public class SQLAccess {
 		return true;
 	}
 	
+	/**
+	 *  Updates (finalizes) the voucher state in the last step of registration process.
+	 * 
+	 * @param voucher
+	 * @return true
+	 * @throws Exception
+	 */
 	public static boolean register_voucher(String voucher) throws Exception {
 
 		
@@ -403,6 +457,13 @@ public class SQLAccess {
 		return true;
 	}
 	
+	/**
+	 * Checks user password.
+	 * 
+	 * @param pass
+	 * @return hash
+	 * @throws Exception
+	 */
 	public static String hash(String pass) throws Exception {
 
 		
@@ -441,6 +502,13 @@ public class SQLAccess {
 		return hash;
 	}
 	
+	/**
+	 * Get token1 for current device. 
+	 * 
+	 * @param deviceId
+	 * @return token
+	 * @throws Exception
+	 */
 	public static String token(String deviceId) throws Exception {
 
 		

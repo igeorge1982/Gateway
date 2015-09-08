@@ -15,25 +15,24 @@ import org.testng.annotations.BeforeClass;
 
 //Extend HttpServlet class
 public class AdminServlet extends HttpServlet {
-    /**
-    *
-    */
+
     private static final long serialVersionUID = 1L;
+    
+    // TODO: put dB params in the web.xml
 	public final static String dbDriverClass = "com.mysql.jdbc.Driver";
 	public final static String dbUrl = "jdbc:mysql://localhost:3306";
 	public final static String dbUserName = "sqluser";
 	public final static String dbPassWord = "sqluserpw";
 	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
-	private static String userName = null;
-	private static String sessionID = null;
+	
 	private volatile static String user;
 	private volatile static String token_;
-	public volatile static String deviceId;
+	private volatile static String deviceId;
 	protected volatile static HttpSession session = null;
 	protected volatile static String sessionId;
 	
 	private static Logger log = Logger.getLogger(Logger.class.getName());
-	public static volatile HashMap<String, HttpSession> activeUsers;
+	private static volatile HashMap<String, HttpSession> activeUsers;
 
 	
     @BeforeClass
@@ -59,13 +58,19 @@ public class AdminServlet extends HttpServlet {
     
 
 	private synchronized void performTask(HttpServletRequest request, HttpServletResponse response) throws ServletException,
-			IOException {
-		
-		user = (String) session.getAttribute("user");	
+			IOException {	
 
 		try {
-			deviceId = (String) session.getAttribute("deviceId");	
+			
+			// Get deviceId from session
+			deviceId = (String) session.getAttribute("deviceId");
+			
+			// Get user from session
+			user = (String) session.getAttribute("user");
+			
+			// Get token1 from dB. token1 will be used to make a user related API call
 			token_ = SQLAccess.token(deviceId);
+		
 		} catch (Exception e) {
 			
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login/logout");
@@ -80,11 +85,22 @@ public class AdminServlet extends HttpServlet {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login/logout");
 			rd.include(request, response);
 	        PrintWriter out = response.getWriter();
+	        
+	        if (deviceId == null) {
+			out.println("<font color=red>deviceId is not found</font>");
+				}
+	        
+	        if (user == null) {
 			out.println("<font color=red>User is not found</font>");
+				}
 		}
 		
+		// Get user entity using API GET method, with user and token as request params
 		else if(!token_.isEmpty()) {
         		
+			// Get user from session
+			user = (String) session.getAttribute("user");
+			
         ServletContext otherContext = getServletContext().getContext("/mbook-1");
 
 			RequestDispatcher rd = otherContext.getRequestDispatcher("/rest/user/"+user.trim().toString()+"/"+token_.trim().toString());
@@ -96,7 +112,7 @@ public class AdminServlet extends HttpServlet {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login/logout");
 			rd.include(request, response);
 	        PrintWriter out = response.getWriter();
-			out.println("<font color=red>User is not found</font>");
+			out.println("<font color=red>General error</font>");
 			
 				}
 
@@ -105,30 +121,35 @@ public class AdminServlet extends HttpServlet {
     public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
 
-
     	// Set the response message's MIME type
         response.setContentType("text/html;charset=UTF-8");
         
-        // If a persistent session cookie has been created
+        // Get JSESSION url parameter. Later it needs to be sent as header
         sessionId = request.getParameter("JSESSIONID");			
        
         
         // Return current session  	
-		session = request.getSession();
-		
+		session = request.getSession();		
         log.info("admin SessionID:" + session.getId().toString());
     	
+        // Check session for user attribute
     	if(session.getAttribute("user") == null){
     	
             if (sessionId != null) {
                 
-                // Get the existing session           	
+                // Get the existing session and creates a new one
             	session = request.getSession(true);
+            	
+            	// Get ServletContext
                 ServletContext context = session.getServletContext();
+                
+                // Init HashMap that stores session objects
                 activeUsers = (HashMap<String, HttpSession>)context.getAttribute("activeUsers");
+                
+                // Get session with sessionId
                 session = activeUsers.get(sessionId);
 
-                if (session.getAttribute("user") == null) {
+                if (session == null || session.getAttribute("user") == null) {
 
                 	response.sendError(HttpServletResponse.SC_BAD_REQUEST);;
 
@@ -147,7 +168,6 @@ public class AdminServlet extends HttpServlet {
     		
     		
     		// user = (String) session.getAttribute("user");	 	   
-    	//TODO: store / update session id with creation time
     	/*	sessionID = session.getId();
     	
         // Allocate a output writer to write the response message into the network socket

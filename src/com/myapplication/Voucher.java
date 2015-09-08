@@ -4,10 +4,11 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import com.myapplication.SQLAccess;
-
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+
+import com.myapplication.SQLAccess;
+
 
 //Extend HttpServlet class
 public class Voucher extends HttpServlet {
@@ -15,15 +16,14 @@ public class Voucher extends HttpServlet {
     *
     */
     private static final long serialVersionUID = 1L;
-    @SuppressWarnings("unused")
-	private String message;
 
 	public final static String dbDriverClass = "com.mysql.jdbc.Driver";
 	public final static String dbUrl = "jdbc:mysql://localhost:3306";
 	public final static String dbUserName = "sqluser";
 	public final static String dbPassWord = "sqluserpw";
+	
 	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
-	public volatile static String voucher;
+	private volatile static String voucher;
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -38,7 +38,6 @@ public class Voucher extends HttpServlet {
     public void init() throws ServletException
     {
         // Do required initialization
-        message = "Hello World";
     }
     
     public synchronized void processRequest (HttpServletRequest request, HttpServletResponse response)
