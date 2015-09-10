@@ -27,6 +27,7 @@ public class AdminServlet extends HttpServlet {
 	
 	private volatile static String user;
 	private volatile static String token_;
+	private volatile static String Response;
 	private volatile static String deviceId;
 	protected volatile static HttpSession session = null;
 	protected volatile static String sessionId;
@@ -70,6 +71,10 @@ public class AdminServlet extends HttpServlet {
 			
 			// Get token1 from dB. token1 will be used to make a user related API call
 			token_ = SQLAccess.token(deviceId);
+			
+			// Get voucher activation method
+			Response = SQLAccess.isActivated(user);
+
 		
 		} catch (Exception e) {
 			
@@ -94,6 +99,19 @@ public class AdminServlet extends HttpServlet {
 			out.println("<font color=red>User is not found</font>");
 				}
 		}
+		
+		// else if voucher needs activation
+		if(Response == "S") {
+
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login/logout");
+			
+				rd.include(request, response);
+				response.setHeader("Response", "S");
+				response.setStatus(300);
+		        //PrintWriter out = response.getWriter();
+				//out.println("<font color=red>Voucher is to activated</font>");
+
+			}
 		
 		// Get user entity using API GET method, with user and token as request params
 		else if(!token_.isEmpty()) {

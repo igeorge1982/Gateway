@@ -29,6 +29,8 @@ public class SQLAccess {
 	public static String hash;
 	public static String voucher;
 	public static String token;
+	private static int isActivated;
+	private static String Response;
 
 	//public static boolean genSumRep;	
 	 public volatile static boolean genSumRep;
@@ -488,7 +490,6 @@ public class SQLAccess {
 			while (rs.next()) {
 				
 				hash =rs.getString(1);
-				System.out.println(hash);
 			}
 			
 		} catch (SQLException ex) {
@@ -501,6 +502,49 @@ public class SQLAccess {
 		}
 		return hash;
 	}
+	
+	
+	public static String isActivated(String user) throws Exception {
+
+		
+		try {
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName(dbDriverClass);
+
+			// Setup the connection with the DB
+			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+								
+			InputStream in = IOUtils.toInputStream(user, "UTF-8");
+		    Reader reader = new BufferedReader(new InputStreamReader(in));
+		    
+		    connect.setCatalog("login");
+			CallableStatement callableStatement = connect.prepareCall("{call `isActivated`(?)}");
+
+				callableStatement.setCharacterStream(1, reader);
+							
+			ResultSet rs = callableStatement.executeQuery();
+			callableStatement.closeOnCompletion();
+			reader.close();
+			while (rs.next()) {
+				
+				isActivated =rs.getInt(1);
+			}
+			
+			if (isActivated != 1) {
+				Response = "S";
+			}
+			
+		} catch (SQLException ex) {
+		      SQLAccess.printSQLException(ex);
+
+		} finally {
+			
+			close();
+
+		}
+		return Response;
+	}
+	
 	
 	/**
 	 * Get token1 for current device. 
