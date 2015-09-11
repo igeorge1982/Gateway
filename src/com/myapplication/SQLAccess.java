@@ -15,6 +15,7 @@ import java.sql.Statement;
 import java.util.UUID;
 import org.apache.commons.io.IOUtils;
 
+
 public class SQLAccess {
 	
 	private static String dbDriverClass;
@@ -26,25 +27,22 @@ public class SQLAccess {
 	private static PreparedStatement preparedStatement = null;
 	private static ResultSet resultSet = null;
 	private volatile static UUID idOne;
-	public static String hash;
-	public static String voucher;
-	public static String token;
-	private static int isActivated;
-	private static String Response;
+	public static volatile String hash;
+	public static volatile String voucher;
+	public static volatile String token;
+	private static volatile int isActivated;
+	private static volatile String Response = null;
+	private static volatile ResultSet rs;
+	private static volatile CallableStatement callableStatement;
+	
+	  public synchronized final static UUID uuId(){
 
-	//public static boolean genSumRep;	
-	 public volatile static boolean genSumRep;
-
-	public synchronized static boolean getGenSumRep() {
-	    boolean tmp = genSumRep;
-	    if (tmp = false) {
-	        tmp = genSumRep;
-	        if (tmp = false) {
-	          genSumRep = tmp = true;
-	      }
-	    }
-	    return tmp; // Using tmp here instead of myField avoids an memory update
-	  }
+          if (idOne == null) {
+	     SQLAccess.idOne = UUID.randomUUID();
+          	}
+	  return idOne;
+         
+  }
 	
 	public SQLAccess(String dbDriverClass, String dbUrl, String dbUserName, String dbPassWord) {
 
@@ -54,15 +52,6 @@ public class SQLAccess {
 		SQLAccess.dbPassWord = dbPassWord;
 
 	}
-	
-	  public synchronized final static UUID uuId(){
-
-	          if (idOne == null) {
-		     SQLAccess.idOne = UUID.randomUUID();
-	          	}
-		  return idOne;
-	         
-	  }
 	          
 	public static void SetUpDataBase() throws Exception {
 
@@ -504,7 +493,7 @@ public class SQLAccess {
 	}
 	
 	
-	public static String isActivated(String user) throws Exception {
+	public synchronized static String isActivated(String user) throws Exception {
 
 		
 		try {
@@ -518,11 +507,11 @@ public class SQLAccess {
 		    Reader reader = new BufferedReader(new InputStreamReader(in));
 		    
 		    connect.setCatalog("login");
-			CallableStatement callableStatement = connect.prepareCall("{call `isActivated`(?)}");
+			callableStatement = connect.prepareCall("{call `isActivated`(?)}");
 
 				callableStatement.setCharacterStream(1, reader);
 							
-			ResultSet rs = callableStatement.executeQuery();
+			rs = callableStatement.executeQuery();
 			callableStatement.closeOnCompletion();
 			reader.close();
 			while (rs.next()) {
@@ -532,6 +521,8 @@ public class SQLAccess {
 			
 			if (isActivated != 1) {
 				Response = "S";
+			} 	else {
+				Response = "";
 			}
 			
 		} catch (SQLException ex) {

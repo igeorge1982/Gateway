@@ -25,12 +25,12 @@ public class AdminServlet extends HttpServlet {
 	public final static String dbPassWord = "sqluserpw";
 	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
 	
-	private volatile static String user;
+	private volatile static String user = null;
 	private volatile static String token_;
-	private volatile static String Response;
+	private volatile static String Response = null;
 	private volatile static String deviceId;
 	protected volatile static HttpSession session = null;
-	protected volatile static String sessionId;
+	protected volatile static String sessionId = null;
 	
 	private static Logger log = Logger.getLogger(Logger.class.getName());
 	private static volatile HashMap<String, HttpSession> activeUsers;
@@ -108,6 +108,7 @@ public class AdminServlet extends HttpServlet {
 				rd.include(request, response);
 				response.setHeader("Response", "S");
 				response.setStatus(300);
+				response.setHeader("User", user);
 		        //PrintWriter out = response.getWriter();
 				//out.println("<font color=red>Voucher is to activated</font>");
 
@@ -146,7 +147,7 @@ public class AdminServlet extends HttpServlet {
         sessionId = request.getParameter("JSESSIONID");			
        
         
-        // Return current session  	
+        // Return current session
 		session = request.getSession();		
         log.info("admin SessionID:" + session.getId().toString());
     	
