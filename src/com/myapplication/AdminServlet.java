@@ -10,6 +10,7 @@ import javax.servlet.http.*;
 import com.myapplication.SQLAccess;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
@@ -104,13 +105,26 @@ public class AdminServlet extends HttpServlet {
 		if(Response == "S") {
 
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login/logout");
-			
+	
 				rd.include(request, response);
+				
+				response.setContentType("application/json"); 
+				response.setCharacterEncoding("utf-8"); 
 				response.setHeader("Response", "S");
 				response.setStatus(300);
 				response.setHeader("User", user);
-		        //PrintWriter out = response.getWriter();
-				//out.println("<font color=red>Voucher is to activated</font>");
+
+				PrintWriter out = response.getWriter(); 
+				
+				//create Json Object 
+				JSONObject json = new JSONObject(); 
+				
+				// put some value pairs into the JSON object . 				
+				json.put("Success", "false"); 
+				
+				// finally output the json string 
+				out.print(json.toString());
+				out.flush();
 
 			}
 		
