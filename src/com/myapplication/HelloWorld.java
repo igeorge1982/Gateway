@@ -6,7 +6,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import com.myapplication.SQLAccess;
-
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
@@ -46,13 +45,10 @@ public class HelloWorld extends HttpServlet {
         // Do required initialization
     }
     
-    public synchronized void processRequest (HttpServletRequest request, HttpServletResponse response)
-    	    throws Exception {
-		    	
-    }
     
     public synchronized void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+    	
     	// Set response content type
         response.setContentType("text/html");
 	      
@@ -71,7 +67,7 @@ public class HelloWorld extends HttpServlet {
 
 		}
 		
-			if(pass.equals(hash1) && devices){
+        	if(pass.equals(hash1) && devices){
 				
 				// Create session
 				session = request.getSession();
@@ -114,6 +110,28 @@ public class HelloWorld extends HttpServlet {
     public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         
+    	// Set response content type
+        response.setContentType("text/html");
+	      
+        // Actual logic goes here.		
+        try {
+    		pass = request.getParameter("pswrd");	
+    		user = request.getParameter("user");	
+    		deviceId = request.getParameter("deviceId");
+    		
+			hash1 = SQLAccess.hash(pass);
+			devices = SQLAccess.insert_device(deviceId, user);
+			
+			if (user.trim().isEmpty()) {
+	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+			}
+		
+		} catch (Exception e) {
+			
+    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+
+		}
+    	
     }
     
     public void destroy()
