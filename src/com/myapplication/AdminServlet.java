@@ -137,8 +137,8 @@ public class AdminServlet extends HttpServlet {
         ServletContext otherContext = getServletContext().getContext("/mbook-1");
 
 			RequestDispatcher rd = otherContext.getRequestDispatcher("/rest/user/"+user.trim().toString()+"/"+token_.trim().toString());
-			
-				rd.forward(request, response); 
+
+			rd.forward(request, response); 
 			}
 		else {
 			
@@ -156,6 +156,8 @@ public class AdminServlet extends HttpServlet {
 
     	// Set the response message's MIME type
         response.setContentType("text/html;charset=UTF-8");
+       
+        log.info("requesturi:" + request.getRequestURI());
         
         // Get JSESSION url parameter. Later it needs to be sent as header
         sessionId = request.getParameter("JSESSIONID");			

@@ -1,6 +1,9 @@
 package com.myapplication;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -10,25 +13,29 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
 
-public class RohadekFilter implements Filter
+public class TokenFilter implements Filter
 {
+	public static final String TOKEN_HEADER = "Token";
+	public static final String s = "This is a test";
 
     @Override
     public void doFilter( ServletRequest request, ServletResponse response, FilterChain chain )
                           throws IOException, ServletException
     {
     	  HttpServletResponse response_ = (HttpServletResponse) response;
-
-          response_.setHeader("Cache-Control", "no-cache, must-revalidate"); // HTTP 1.1.
-          response_.setHeader("Pragma", "no-cache"); // HTTP 1.0.
           
-          // Set IE extended HTTP 1.1 no-cache header
-          response_.addHeader("Cache-Control", "post-check=0,pre-check=0");
+          try{
+                  
+          MessageDigest m=MessageDigest.getInstance("MD5");
+          m.update(s.getBytes(),0,s.length());
           
-          // Tell proxy caches not to cache a given resource
-          response_.addHeader("Cache-Control", "proxy-revalidate");
+          String password = new BigInteger(1,m.digest()).toString(16);
 
-          response_.setDateHeader("Expires", 0);
+          String passwordEnc = Token.encrypt(password);
+          response_.addHeader(TOKEN_HEADER, passwordEnc);
+          } catch (Exception e){
+        	  
+          }
 
           chain.doFilter(request, response);
     }

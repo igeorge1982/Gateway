@@ -90,19 +90,12 @@ public class HelloWorld extends HttpServlet {
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60); 	
 	        	
-				//ServletContext otherContext = getServletContext().getContext("/exercise_");
-
 				String encodedURL = response.encodeRedirectURL("https://localhost/example/index.jsp");
 				response.sendRedirect(encodedURL);
 
 			}else{
 	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
 	    		
-	    		/*
-				RequestDispatcher rd = getServletContext().getRequestDispatcher("https://localhost/javaScript/mainpage.html");
-				rd.include(request, response);
-				out.println("<font color=red>User is not found</font>");
-				*/
 			}
         
     }
@@ -110,6 +103,7 @@ public class HelloWorld extends HttpServlet {
     public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         
+    	
     	// Set response content type
         response.setContentType("text/html");
 	      
@@ -118,14 +112,11 @@ public class HelloWorld extends HttpServlet {
     		pass = request.getParameter("pswrd");	
     		user = request.getParameter("user");	
     		deviceId = request.getParameter("deviceId");
-    		
-			hash1 = SQLAccess.hash(pass);
-			devices = SQLAccess.insert_device(deviceId, user);
 			
 			if (user.trim().isEmpty()) {
 	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
 			}
-		
+					
 		} catch (Exception e) {
 			
     		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
