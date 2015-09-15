@@ -11,21 +11,24 @@
 .settings/org.eclipse.wst.jsdt.ui.superType.name -text
 .settings/org.eclipse.wst.validation.prefs -text
 /pom.xml -text
-src/com/myapplication/AccessFilter.java -text
 src/com/myapplication/AdminServlet.java -text
-src/com/myapplication/CustomHttpSessionListener.java -text
-src/com/myapplication/CustomServletContextListener.java -text
-src/com/myapplication/DecodeFilter.java -text
 src/com/myapplication/DeviceManagement.java -text
-src/com/myapplication/HTMLFilter.java -text
 src/com/myapplication/HelloWorld.java -text
 src/com/myapplication/Loggingout.java -text
+src/com/myapplication/MyServletRequestWrapper.java -text
 src/com/myapplication/Registration.java -text
-src/com/myapplication/RohadekFilter.java -text
 src/com/myapplication/SQLAccess.java -text
 src/com/myapplication/Token.java -text
-src/com/myapplication/TokenFilter.java -text
 src/com/myapplication/Voucher.java -text
+src/com/myapplication/filters/AccessFilter.java -text
+src/com/myapplication/filters/CustomRequestFilter.java -text
+src/com/myapplication/filters/DecodeFilter.java -text
+src/com/myapplication/filters/HTMLFilter.java -text
+src/com/myapplication/filters/RequestFilter.java -text
+src/com/myapplication/filters/RohadekFilter.java -text
+src/com/myapplication/filters/TokenFilter.java -text
+src/com/myapplication/listeners/CustomHttpSessionListener.java -text
+src/com/myapplication/listeners/CustomServletContextListener.java -text
 target/lib/aopalliance-1.0.jar -text svneol=unset#application/zip
 target/lib/bsh-2.0b4.jar -text
 target/lib/commons-codec-1.4.jar -text svneol=unset#application/zip

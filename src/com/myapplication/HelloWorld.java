@@ -89,8 +89,9 @@ public class HelloWorld extends HttpServlet {
 
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60); 	
-	        	
-				String encodedURL = response.encodeRedirectURL("https://localhost/example/index.jsp");
+		        ServletContext otherContext = getServletContext().getContext("/example");
+
+				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() +"/index.jsp");
 				response.sendRedirect(encodedURL);
 
 			}else{

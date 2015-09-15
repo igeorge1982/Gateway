@@ -1,4 +1,4 @@
-package com.myapplication;
+package com.myapplication.filters;
 
 import java.io.IOException;
 
@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
+
+import com.myapplication.Token;
 
 
 public class DecodeFilter implements Filter {

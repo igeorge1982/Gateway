@@ -1,4 +1,4 @@
-package com.myapplication;
+package com.myapplication.filters;
 
 import java.io.IOException;
 
@@ -23,8 +23,9 @@ public class AccessFilter implements Filter{
 	    HttpServletResponse response = (HttpServletResponse) res;
 	    
 	    HttpSession session = request.getSession(false);
+	    
 		user = (String) session.getAttribute("user");	
-	    String loginURL = request.getContextPath() + "/login/logout"; 
+	    String loginURL = request.getContextPath() + "/logout"; 
 
 	    if (user == null) {       
     		response.sendRedirect(loginURL);
@@ -34,10 +35,10 @@ public class AccessFilter implements Filter{
 	}
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-		// TODO Auto-generated method stub
-		
-	}
+	public void init(FilterConfig config) throws ServletException {
+
+	}		
+	
 
 	@Override
 	public void destroy() {

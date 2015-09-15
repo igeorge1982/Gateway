@@ -1,4 +1,4 @@
-package com.myapplication;
+package com.myapplication.listeners;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -56,8 +56,7 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
         ServletContext context = session.getServletContext();
         activeUsers = (HashMap<String, HttpSession>)context.getAttribute("activeUsers");
         
-        log.info("SessionID destroyed: " + session.getId().toString());     
-        
+        log.info("SessionID destroyed: " + session.getId().toString());          
         // TODO: sql can run to cleanup device / user sessions later in the dB
         activeUsers.remove(session.getId());
         
