@@ -1,12 +1,12 @@
 package com.jeet.rest;
 
-import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 
 import com.jeet.api.Devices;
@@ -74,10 +74,15 @@ public class BookController {
 	@Path("/user/{user}/{token1}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	
-	public Response getUser(@PathParam(value = "user") String user, @PathParam(value = "token1") String token1) {
+	public Response getUser(@Context HttpHeaders headers, @PathParam(value = "user") String user, @PathParam(value = "token1") String token1) {
 		
 		Logins user_ = new BookingHandlerImpl().getUser(user);
 		Tokens token = new BookingHandlerImpl().getToken(token1);
+		
+		for(String header : headers.getRequestHeaders().keySet()){
+			System.out.println(header);
+		}
+
 		
 		if (user_ != null && token != null) {
 			return Response.ok().status(200).entity(user_).header("User", user_.getUuid()).build();

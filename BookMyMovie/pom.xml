@@ -5,19 +5,16 @@
 	<artifactId>mbook</artifactId>
 	<version>1</version>
 	<packaging>war</packaging>
-	<developers>
-		<developer>
-			<name>Jatin</name>
-			<email>jatin@mymailid.com</email>
-			<organization>Jeet tech</organization>
-			<organizationUrl>http://www.coder2design.com</organizationUrl>
-		</developer>
-	</developers>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		
@@ -42,7 +39,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>4.2.1.Final</version>
+			<version>4.3.11.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
