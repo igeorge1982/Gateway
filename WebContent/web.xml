@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+                      http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+  version="3.0"
+  metadata-complete="true">
+
+  <display-name>Welcome to Tomcat</display-name>
+  <description>
+     Welcome to Tomcat
+  </description>
+  
+<listener>
+    <listener-class>
+        com.myapplication.listeners.CustomServletContextListener
+    </listener-class>
+</listener>
+
+<listener>
+    <listener-class>
+        com.myapplication.listeners.CustomHttpSessionListener
+    </listener-class>
+</listener>
+
+     <filter>
+        <description>Set cache expiry for static content</description>
+        <filter-name>ExpiresFilter</filter-name>
+        <filter-class>com.myapplication.filters.RohadekFilter</filter-class>
+    <init-param>
+ 		<param-name>ExpiresByType text/html</param-name>
+ 		<param-value>now</param-value>
+	</init-param>
+	</filter>
+	    
+    <filter-mapping>
+        <filter-name>ExpiresFilter</filter-name>
+        <url-pattern>/login/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+	
+	<filter>
+		<filter-name>XssFilter</filter-name>
+		<filter-class>com.myapplication.filters.XssFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>XssFilter</filter-name>
+		<url-pattern>/login/voucher</url-pattern>
+		<url-pattern>/login/register</url-pattern>
+	</filter-mapping>
+	
+<!--	<filter>
+		<filter-name>AccessFilter</filter-name>
+		<filter-class>com.myapplication.filters.AccessFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>AccessFilter</filter-name>
+		<url-pattern>/login/*</url-pattern>
+	</filter-mapping> -->
+    
+   
+   <servlet>  
+    <servlet-name>AdminServlet</servlet-name>  
+    <servlet-class>com.myapplication.AdminServlet</servlet-class>  
+  </servlet>  
+  
+  <servlet-mapping>  
+    <servlet-name>AdminServlet</servlet-name>  
+    <url-pattern>/login/admin</url-pattern>
+  </servlet-mapping>  
+  
+
+ <servlet>
+   <servlet-name>HelloWorld</servlet-name>
+   <servlet-class>com.myapplication.HelloWorld</servlet-class>
+ </servlet>
+
+ <servlet-mapping>
+   <servlet-name>HelloWorld</servlet-name>
+   <url-pattern>/login/HelloWorld</url-pattern>
+ </servlet-mapping>
+
+
+   <servlet>  
+    <servlet-name>Registration</servlet-name>  
+    <servlet-class>com.myapplication.Registration</servlet-class>  
+  </servlet>  
+  
+  <servlet-mapping>  
+    <servlet-name>Registration</servlet-name>  
+    <url-pattern>/login/register</url-pattern>
+  </servlet-mapping>  
+  
+   <servlet>  
+    <servlet-name>Voucher</servlet-name>  
+    <servlet-class>com.myapplication.Voucher</servlet-class>  
+  </servlet>  
+  
+  <servlet-mapping>  
+    <servlet-name>Voucher</servlet-name>  
+    <url-pattern>/login/voucher</url-pattern>
+  </servlet-mapping> 
+  
+   <servlet>  
+    <servlet-name>Loggingout</servlet-name>  
+    <servlet-class>com.myapplication.Loggingout</servlet-class>  
+  </servlet>  
+  
+  <servlet-mapping>  
+   	<servlet-name>Loggingout</servlet-name>  
+   	<url-pattern>/login/logout</url-pattern>
+  </servlet-mapping> 
+  
+  
+  <description>MySQL Test App</description>
+  <resource-ref>
+      <description>DB Connection</description>
+      <res-ref-name>jdbc/TestDB</res-ref-name>
+      <res-type>javax.sql.DataSource</res-type>
+      <res-auth>Container</res-auth>
+  </resource-ref>
+  
+    <session-config>
+
+    <cookie-config>
+
+    <http-only>true</http-only>
+
+    <secure>true</secure>
+
+    </cookie-config>
+
+    </session-config>
+
+</web-app>

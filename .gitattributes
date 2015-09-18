@@ -10,6 +10,7 @@
 .settings/org.eclipse.wst.jsdt.ui.superType.container -text
 .settings/org.eclipse.wst.jsdt.ui.superType.name -text
 .settings/org.eclipse.wst.validation.prefs -text
+WebContent/web.xml -text svneol=unset#application/xml
 /pom.xml -text
 src/com/myapplication/AdminServlet.java -text
 src/com/myapplication/AesUtil.java -text
