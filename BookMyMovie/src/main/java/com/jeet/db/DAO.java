@@ -7,8 +7,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import com.jeet.api.Devices;
 import com.jeet.api.Logins;
@@ -25,10 +25,9 @@ public class DAO {
 	private DAO() {
 		Configuration conf = new Configuration();
 		conf.configure();
-		
-		ServiceRegistry registry = new ServiceRegistryBuilder().applySettings(conf.getProperties()).buildServiceRegistry();
-		
-		factory = conf.buildSessionFactory(registry);
+				
+		StandardServiceRegistry reg = new StandardServiceRegistryBuilder().applySettings(conf.getProperties()).build();
+		factory = conf.buildSessionFactory(reg);
 		
 		System.out.println("Creating factory");
 	}
@@ -104,6 +103,20 @@ public class DAO {
 		
 		Query query = session.createQuery(hql);
 		query.setParameter("mUser", user);
+		
+		@SuppressWarnings("unchecked")
+		List<Logins> list = query.list();
+		
+		return list.get(0);
+	}
+	
+	public Logins getUuid(String uuid){
+		
+		Session session = factory.openSession();
+		String hql = "from Logins where uuid = :mUuid";
+		
+		Query query = session.createQuery(hql);
+		query.setParameter("mUuid", uuid);
 		
 		@SuppressWarnings("unchecked")
 		List<Logins> list = query.list();

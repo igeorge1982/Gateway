@@ -64,6 +64,13 @@ public class BookingHandlerImpl implements BookHandler {
 		return user_;
 	}
 	
+	public Logins getUuid(String uuid) throws BookingException {
+		
+		Logins uuid_ = DAO.instance().getUuid(uuid);
+
+		return uuid_;
+	}
+	
 	public Tokens getToken(String token1) throws BookingException {
 		
 		Tokens token = DAO.instance().getToken(token1);

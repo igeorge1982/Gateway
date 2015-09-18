@@ -9,5 +9,11 @@ public interface BookHandler {
 	public void deleteTicket(int ticketId) throws InvalidTicketException, BookingException;
 	
 	public Ticket updateTicket(Ticket ticket, Movie newMovie) throws InvalidTicketException, InvalidMovieException, BookingException;;
+	
+	public Devices getDevice(String uuid) throws BookingException;
+	
+	public Logins getUser(String user) throws BookingException;
+	
+	public Tokens getToken(String token1) throws BookingException;
 
 }
