@@ -1,6 +1,12 @@
 package com.myapplication;
 
-//Import required java libraries
+/**
+ * @author George Gaspar
+ * @email: igeorge1982@gmail.com 
+ * 
+ * @Year: 2015
+ */
+
 import java.io.*;
 import java.util.HashMap;
 import javax.servlet.*;

@@ -1,5 +1,12 @@
 package com.myapplication;
 
+/**
+ * @author George Gaspar
+ * @email: igeorge1982@gmail.com 
+ * 
+ * @Year: 2015
+ */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +21,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
 import org.apache.commons.io.IOUtils;
-
 
 public class SQLAccess {
 	

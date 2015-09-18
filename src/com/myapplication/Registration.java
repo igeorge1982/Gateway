@@ -1,5 +1,12 @@
 package com.myapplication;
 
+/**
+ * @author George Gaspar
+ * @email: igeorge1982@gmail.com 
+ * 
+ * @Year: 2015
+ */
+
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;

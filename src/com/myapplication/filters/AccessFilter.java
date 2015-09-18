@@ -1,5 +1,12 @@
 package com.myapplication.filters;
 
+/**
+ * @author George Gaspar
+ * @email: igeorge1982@gmail.com 
+ * 
+ * @Year: 2015
+ */
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
