@@ -44,3 +44,4 @@ target/lib/spring-core-4.2.1.RELEASE.jar -text svneol=unset#application/zip
 target/lib/spring-expression-4.2.1.RELEASE.jar -text svneol=unset#application/zip
 target/lib/spring-web-4.2.1.RELEASE.jar -text svneol=unset#application/zip
 target/lib/testng-6.9.4.jar -text
+target/m2e-wtp/WebContent/WEB-INF/web.xml -text svneol=unset#application/xml
