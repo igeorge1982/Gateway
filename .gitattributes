@@ -13,6 +13,14 @@
 /README.md -text
 WebContent/WEB-INF/web.xml -text svneol=unset#application/xml
 /pom.xml -text
+scripts/login_Last_seen.sql -text
+scripts/login_Tokens.sql -text
+scripts/login_device_states.sql -text
+scripts/login_devices.sql -text
+scripts/login_logins.sql -text
+scripts/login_routines.sql -text
+scripts/login_voucher_states.sql -text
+scripts/login_vouchers.sql -text
 src/com/myapplication/AdminServlet.java -text
 src/com/myapplication/AesUtil.java -text
 src/com/myapplication/DeviceManagement.java -text
