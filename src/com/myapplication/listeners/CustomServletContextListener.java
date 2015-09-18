@@ -7,6 +7,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 public class CustomServletContextListener implements ServletContextListener{
+	
+	private volatile static HashMap<String, Object> activeUsers;
 
    public void contextInitialized(ServletContextEvent event){
        ServletContext context = event.getServletContext();
@@ -15,7 +17,7 @@ public class CustomServletContextListener implements ServletContextListener{
        // instanciate a map to store references to all the active
        // sessions and bind it to context scope.
        //
-       HashMap<String, Object> activeUsers = new HashMap<String, Object>();
+       activeUsers = new HashMap<String, Object>();
        context.setAttribute("activeUsers", activeUsers);
    }
 

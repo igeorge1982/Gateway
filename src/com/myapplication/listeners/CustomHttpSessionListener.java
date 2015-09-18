@@ -32,13 +32,14 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
     /**
      * Adds sessions to the context scoped HashMap when they begin.
      */
-    public void sessionCreated(HttpSessionEvent event){
+    @SuppressWarnings("unchecked")
+	public void sessionCreated(HttpSessionEvent event){
         
     	HttpSession    session = event.getSession();
         ServletContext context = session.getServletContext();
         activeUsers = (HashMap<String, HttpSession>) context.getAttribute("activeUsers");
-
         activeUsers.put(session.getId(), session);
+        
         // TODO: sql can run here to insert user sessions into the dB
         log.info("New SessionID: " + session.getId().toString());
         context.setAttribute("activeUsers", activeUsers);
@@ -50,7 +51,8 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
      * Removes sessions from the context scoped HashMap when they expire
      * or are invalidated.
      */
-    public void sessionDestroyed(HttpSessionEvent event){
+    @SuppressWarnings("unchecked")
+	public void sessionDestroyed(HttpSessionEvent event){
         
     	HttpSession    session = event.getSession();
         ServletContext context = session.getServletContext();

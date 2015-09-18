@@ -18,6 +18,7 @@ import org.apache.commons.io.IOUtils;
 
 public class SQLAccess {
 	
+	private static final Connection connection = null;
 	private static String dbDriverClass;
 	private static String dbUrl;
 	private static String dbUserName;
@@ -33,7 +34,7 @@ public class SQLAccess {
 	private static volatile int isActivated;
 	private static volatile String Response = null;
 	private static volatile ResultSet rs;
-	private static volatile CallableStatement callableStatement;
+	private static volatile CallableStatement callableStatement = null;
 	
 	  public synchronized final static UUID uuId(){
 
@@ -44,6 +45,7 @@ public class SQLAccess {
          
   }
 	
+	  // Try - Catch is better handle in the class where this method is actually initialized
 	public SQLAccess(String dbDriverClass, String dbUrl, String dbUserName, String dbPassWord) {
 
 		SQLAccess.dbDriverClass = dbDriverClass;
@@ -53,7 +55,7 @@ public class SQLAccess {
 
 	}
 	          
-	public static void SetUpDataBase() throws Exception {
+	public Connection SetUpDataBase() throws Exception {
 
 		try {
 			// This will load the MySQL driver, each DB has its own driver
@@ -66,6 +68,7 @@ public class SQLAccess {
 		} catch (SQLException ex) {
 		      SQLAccess.printSQLException(ex);
 		}
+		return connection;
 
 	}
 	
@@ -77,7 +80,7 @@ public class SQLAccess {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean new_hash(String pass, String user) throws Exception {
+	public synchronized static boolean new_hash(String pass, String user) throws Exception {
 		
 		// This will load the MySQL driver, each DB has its own driver
 		Class.forName(dbDriverClass);
@@ -106,7 +109,7 @@ public class SQLAccess {
 		return true;
 }
 	
-	public static boolean sessionId() throws Exception {
+	public synchronized static boolean sessionId() throws Exception {
 
 		
 		try {
@@ -152,7 +155,7 @@ public class SQLAccess {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean voucher(String voucher_) throws Exception {
+	public synchronized static boolean voucher(String voucher_) throws Exception {
 
 		
 		try {
@@ -214,7 +217,7 @@ public class SQLAccess {
 	 * @return true on success, otherwise false
 	 * @throws Exception
 	 */
-	public static boolean insert_voucher(String voucher_, String user, String pass) throws Exception {
+	public synchronized static boolean insert_voucher(String voucher_, String user, String pass) throws Exception {
 		
 		
 		try {
@@ -246,12 +249,12 @@ public class SQLAccess {
 		    Reader readers = new BufferedReader(new InputStreamReader(ins));
 		    
 			connect.setCatalog("login");
-			CallableStatement callableStatement_ = connect.prepareCall("{call `insert_voucher`(?, ?, ?)}");
-			callableStatement_.setCharacterStream(1, reader_);
-			callableStatement_.setString(2, user);
-			callableStatement_.setCharacterStream(3, readers);
-			callableStatement_.executeUpdate();
-			callableStatement_.closeOnCompletion();
+			callableStatement = connect.prepareCall("{call `insert_voucher`(?, ?, ?)}");
+			callableStatement.setCharacterStream(1, reader_);
+			callableStatement.setString(2, user);
+			callableStatement.setCharacterStream(3, readers);
+			callableStatement.executeUpdate();
+			callableStatement.closeOnCompletion();
 			reader_.close();
 			readers.close();
 				//}
@@ -279,7 +282,7 @@ public class SQLAccess {
 	 * @return
 	 * @throws Exception
 	 */
-	public static boolean insert_device(String deviceId, String user) throws Exception {
+	public synchronized static boolean insert_device(String deviceId, String user) throws Exception {
 		
 		
 		try {
@@ -296,18 +299,17 @@ public class SQLAccess {
 		    Reader readers = new BufferedReader(new InputStreamReader(ins));
 		    
 			connect.setCatalog("login");
-			CallableStatement callableStatement_ = connect.prepareCall("{call `insert_device_`(?, ?)}");
-			callableStatement_.setCharacterStream(1, reader_);
-			callableStatement_.setCharacterStream(2, readers);
-			callableStatement_.executeUpdate();
-			callableStatement_.closeOnCompletion();
+			callableStatement = connect.prepareCall("{call `insert_device_`(?, ?)}");
+			callableStatement.setCharacterStream(1, reader_);
+			callableStatement.setCharacterStream(2, readers);
+			callableStatement.executeUpdate();
+			callableStatement.closeOnCompletion();
 			reader_.close();
 			readers.close();
-				//}
+				
 				
 				close();
-				return true;
-			//} 
+				return true; 
 			
 		} catch (SQLException ex) {
 		      SQLAccess.printSQLException(ex);
@@ -331,7 +333,7 @@ public class SQLAccess {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public static boolean insert_sessionCreated(String deviceId, long sessionCreated) throws ClassNotFoundException, IOException {
+	public synchronized static boolean insert_sessionCreated(String deviceId, long sessionCreated) throws ClassNotFoundException, IOException {
 		
 		
 		try {
@@ -345,17 +347,16 @@ public class SQLAccess {
 		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
 		    
 			connect.setCatalog("login");
-			CallableStatement callableStatement_ = connect.prepareCall("{call `insert_sessionCreated`(?, ?)}");
-			callableStatement_.setCharacterStream(1, reader_);
-			callableStatement_.setLong(2, sessionCreated);
-			callableStatement_.executeUpdate();
-			callableStatement_.closeOnCompletion();
+			callableStatement = connect.prepareCall("{call `insert_sessionCreated`(?, ?)}");
+			callableStatement.setCharacterStream(1, reader_);
+			callableStatement.setLong(2, sessionCreated);
+			callableStatement.executeUpdate();
+			callableStatement.closeOnCompletion();
 			reader_.close();
-				//}
+				
 				
 				close();
 				return true;
-			//} 
 			
 		} catch (SQLException ex) {
 		      SQLAccess.printSQLException(ex);
@@ -375,7 +376,7 @@ public class SQLAccess {
 	 * @return true
 	 * @throws Exception
 	 */
-	public static boolean reset_voucher(String voucher) throws Exception {
+	public synchronized static boolean reset_voucher(String voucher) throws Exception {
 
 		
 		try {
@@ -389,7 +390,7 @@ public class SQLAccess {
 		    Reader reader = new BufferedReader(new InputStreamReader(in));
 		    
 		    connect.setCatalog("login");
-			CallableStatement callableStatement = connect.prepareCall("{call `reset_voucher`(?)}");
+			callableStatement = connect.prepareCall("{call `reset_voucher`(?)}");
 
 			callableStatement.setCharacterStream(1, reader);
 							
@@ -415,7 +416,7 @@ public class SQLAccess {
 	 * @return true
 	 * @throws Exception
 	 */
-	public static boolean register_voucher(String voucher) throws Exception {
+	public synchronized static boolean register_voucher(String voucher) throws Exception {
 
 		
 		try {
@@ -429,7 +430,7 @@ public class SQLAccess {
 		    Reader reader = new BufferedReader(new InputStreamReader(in));
 		    
 		    connect.setCatalog("login");
-			CallableStatement callableStatement = connect.prepareCall("{call `register_voucher`(?)}");
+			callableStatement = connect.prepareCall("{call `register_voucher`(?)}");
 
 			callableStatement.setCharacterStream(1, reader);
 							
@@ -455,7 +456,7 @@ public class SQLAccess {
 	 * @return hash
 	 * @throws Exception
 	 */
-	public static String hash(String pass) throws Exception {
+	public synchronized static String hash(String pass) throws Exception {
 
 		
 		try {
@@ -469,7 +470,7 @@ public class SQLAccess {
 		    Reader reader = new BufferedReader(new InputStreamReader(in));
 		    
 		    connect.setCatalog("login");
-			CallableStatement callableStatement = connect.prepareCall("{call `get_hash`(?)}");
+			callableStatement = connect.prepareCall("{call `get_hash`(?)}");
 
 				callableStatement.setCharacterStream(1, reader);
 							
@@ -544,7 +545,7 @@ public class SQLAccess {
 	 * @return token
 	 * @throws Exception
 	 */
-	public static String token(String deviceId) throws Exception {
+	public synchronized static String token(String deviceId) throws Exception {
 
 		
 		try {
@@ -558,7 +559,7 @@ public class SQLAccess {
 		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
 		    
 		    connect.setCatalog("login");
-			CallableStatement callableStatement = connect.prepareCall("{call `get_token`(?)}");
+			callableStatement = connect.prepareCall("{call `get_token`(?)}");
 
 				callableStatement.setCharacterStream(1, reader_);
 							
@@ -597,8 +598,8 @@ public class SQLAccess {
 				preparedStatement.close();
 			}
 			
-			if (preparedStatement != null) {
-				preparedStatement.close();
+			if (callableStatement != null) {
+				callableStatement.close();
 			}
 
 			if (connect != null) {
@@ -610,6 +611,11 @@ public class SQLAccess {
 		}
 	}
 	
+	/**
+	 * Prints SQL errors in catalina.out.
+	 * 
+	 * @param ex
+	 */
 	  public static void printSQLException(SQLException ex) {
 		    for (Throwable e : ex) {
 		      if (e instanceof SQLException) {

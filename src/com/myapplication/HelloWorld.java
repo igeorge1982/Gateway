@@ -84,13 +84,14 @@ public class HelloWorld extends HttpServlet {
 
 				try {
 					SQLAccess.insert_sessionCreated(deviceId, SessionCreated);
-				} catch (Exception e) {					
+				} catch (Exception e) {	
+					throw new ServletException();
 				}
 
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60); 	
-		        ServletContext otherContext = getServletContext().getContext("/example");
-
+		        
+				ServletContext otherContext = getServletContext().getContext("/example");
 				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() +"/index.jsp");
 				response.sendRedirect(encodedURL);
 
@@ -114,7 +115,7 @@ public class HelloWorld extends HttpServlet {
     		user = request.getParameter("user");	
     		deviceId = request.getParameter("deviceId");
 			
-			if (user.trim().isEmpty()) {
+			if (user.trim().isEmpty() || pass.trim().isEmpty() || deviceId.trim().isEmpty()) {
 	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
 			}
 					

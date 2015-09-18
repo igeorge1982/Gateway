@@ -7,6 +7,7 @@ import javax.servlet.http.*;
 
 import com.myapplication.SQLAccess;
 
+import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
@@ -59,14 +60,38 @@ public class Loggingout extends HttpServlet {
 		  		 
 		    	 session.removeAttribute("user");
 			     session.invalidate();
-		    	 
-			     response.setHeader("Referer", "https://localhost/javaScript/index.html");
-		    	 response.sendRedirect("https://localhost/javaScript/index.html");
+				 
+			     response.setContentType("application/json"); 
+		    	 response.setStatus(HttpServletResponse.SC_OK);
+		    	 PrintWriter out = response.getWriter(); 
+					
+					//create Json Object 
+					JSONObject json = new JSONObject(); 
+					
+					// put some value pairs into the JSON object .
+					json.put("isLoggedOut", "true"); 
+					json.put("Success", "true"); 
+					
+					// finally output the json string 
+					out.print(json.toString());
+					out.flush();
 		     }
 		     
 		     else {
-		    	 response.setHeader("Referer", "https://localhost/javaScript/index.html");
-		    	 response.sendRedirect("https://localhost/javaScript/index.html");
+			     
+		    	 response.setContentType("application/json"); 
+		    	 response.setStatus(HttpServletResponse.SC_OK);
+		    	 PrintWriter out = response.getWriter(); 
+					
+					//create Json Object 
+					JSONObject json = new JSONObject(); 
+					
+					// put some value pairs into the JSON object .
+					json.put("Success", "true"); 
+					
+					// finally output the json string 
+					out.print(json.toString());
+					out.flush();
 		     }
 	
 	  }

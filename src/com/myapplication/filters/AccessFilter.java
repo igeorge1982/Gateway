@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -23,7 +24,9 @@ public class AccessFilter implements Filter{
 	    HttpServletResponse response = (HttpServletResponse) res;
 	    
 	    HttpSession session = request.getSession(false);
+        ServletContext context = session.getServletContext().getContext("/login");
 	    
+        //TODO: fix nullpointer
 		user = (String) session.getAttribute("user");	
 	    String loginURL = request.getContextPath() + "/logout"; 
 

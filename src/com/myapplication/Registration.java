@@ -83,7 +83,8 @@ public class Registration extends HttpServlet {
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60);	
 				
-				String encodedURL = response.encodeRedirectURL("https://localhost/login/admin");
+				ServletContext otherContext = getServletContext().getContext("/login");
+				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/admin");
 				response.sendRedirect(encodedURL);
 					
 				  }	
@@ -96,7 +97,8 @@ public class Registration extends HttpServlet {
 					session.invalidate();
 				}
 				//TODO: clear url parameter
-				String encodedURL = response.encodeRedirectURL("https://localhost/login/logout");
+				ServletContext otherContext = getServletContext().getContext("/login");
+				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/logout");
 	    		response.sendRedirect(encodedURL);
 			}
 		
@@ -112,8 +114,9 @@ public class Registration extends HttpServlet {
 				session.invalidate();
 			}
 			
-			String encodedURL = response.encodeRedirectURL("https://localhost/login/logout");
-    		response.sendRedirect(encodedURL);
+			ServletContext otherContext = getServletContext().getContext("/login");
+			String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/logout");
+			response.sendRedirect(encodedURL);
 		}
         
     }

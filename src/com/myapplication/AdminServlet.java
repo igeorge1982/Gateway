@@ -3,7 +3,6 @@ package com.myapplication;
 //Import required java libraries
 import java.io.*;
 import java.util.HashMap;
-
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -62,6 +61,9 @@ public class AdminServlet extends HttpServlet {
 	private synchronized void performTask(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {	
 
+			session = request.getSession(false);
+			log.info("Session ID check: "+ session.getId());
+		
 		try {
 			
 			// Get deviceId from session
@@ -129,7 +131,7 @@ public class AdminServlet extends HttpServlet {
 			}
 		
 		// Get user entity using API GET method, with user and token as request params
-		else if(!token_.isEmpty()) {
+		else if(token_ != null && session != null && request.isRequestedSessionIdValid()) {			
         		
 			// Get user from session
 			user = (String) session.getAttribute("user");
@@ -151,14 +153,13 @@ public class AdminServlet extends HttpServlet {
 
 		}
     
-    public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    @SuppressWarnings("unchecked")
+	public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
 
     	// Set the response message's MIME type
         response.setContentType("text/html;charset=UTF-8");
-       
-        log.info("requesturi:" + request.getRequestURI());
-        
+               
         // Get JSESSION url parameter. Later it needs to be sent as header
         sessionId = request.getParameter("JSESSIONID");			
        
@@ -184,15 +185,15 @@ public class AdminServlet extends HttpServlet {
                 // Get session with sessionId
                 session = activeUsers.get(sessionId);
 
-                if (session == null || session.getAttribute("user") == null) {
+                if (!activeUsers.containsKey(sessionId) || session == null || session.getAttribute("user") == null) {
 
-                	response.sendError(HttpServletResponse.SC_BAD_REQUEST);;
+                	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Line 197");
 
                 }
             
             } else {
     		
-            	response.sendError(HttpServletResponse.SC_BAD_GATEWAY);;
+            	response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 203");
 
             }
     	

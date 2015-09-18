@@ -7,9 +7,11 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+@SuppressWarnings("unused")
 public class RohadekFilter implements Filter
 {
 
@@ -18,6 +20,8 @@ public class RohadekFilter implements Filter
                           throws IOException, ServletException
     {
     	  HttpServletResponse response_ = (HttpServletResponse) response;
+    	  //HttpServletRequest request_ = (HttpServletRequest) request;
+
 
           response_.setHeader("Cache-Control", "no-cache, must-revalidate"); // HTTP 1.1.
           response_.setHeader("Pragma", "no-cache"); // HTTP 1.0.
@@ -29,7 +33,6 @@ public class RohadekFilter implements Filter
           response_.addHeader("Cache-Control", "proxy-revalidate");
 
           response_.setDateHeader("Expires", 0);
-
           chain.doFilter(request, response);
     }
 
