@@ -10,7 +10,7 @@
 .settings/org.eclipse.wst.jsdt.ui.superType.container -text
 .settings/org.eclipse.wst.jsdt.ui.superType.name -text
 .settings/org.eclipse.wst.validation.prefs -text
-WebContent/web.xml -text svneol=unset#application/xml
+WebContent/WEB-INF/web.xml -text svneol=unset#application/xml
 /pom.xml -text
 src/com/myapplication/AdminServlet.java -text
 src/com/myapplication/AesUtil.java -text
@@ -45,4 +45,3 @@ target/lib/spring-core-4.2.1.RELEASE.jar -text svneol=unset#application/zip
 target/lib/spring-expression-4.2.1.RELEASE.jar -text svneol=unset#application/zip
 target/lib/spring-web-4.2.1.RELEASE.jar -text svneol=unset#application/zip
 target/lib/testng-6.9.4.jar -text
-target/m2e-wtp/WebContent/WEB-INF/web.xml -text svneol=unset#application/xml
