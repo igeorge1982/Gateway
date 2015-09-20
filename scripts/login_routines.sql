@@ -182,22 +182,29 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`sqluser`@`localhost` PROCEDURE `insert_sessionCreated`(IN deviceId_ char(255), IN sessionCreated_ long)
+CREATE DEFINER=`sqluser`@`localhost` PROCEDURE `insert_sessionCreated`(IN deviceId_ char(255), IN sessionCreated_ long, IN sessionID_ char(255))
 BEGIN
 
 declare devices_ char(255);
 declare id_ int(11);
+declare idS_ int(11);
 
 select id, deviceId into id_, devices_ from Last_seen where deviceId = deviceId_;
+select id into idS_ from device_states where deviceId = deviceId_ order by TIME_ desc LIMIT 1;
 
 if deviceId_ != devices_ or devices_ is null then
 
 insert into Last_seen (deviceId, Session_) values (deviceId_,sessionCreated_);
+update device_states set SessionID = sessionID_ where device_states.deviceId = deviceId_ and device_states.id = idS_;
 
 else 
+
 update Last_seen 
 set Last_seen.Session_ = sessionCreated_ 
 where Last_seen.deviceId = deviceId_ and Last_seen.id= id_;
+
+update device_states set SessionID = sessionID_ 
+where device_states.deviceId = deviceId_ and device_states.id = idS_;
 
 end if;
 END ;;
@@ -253,6 +260,30 @@ from voucher_states a
 left join  vouchers b on a.voucher_ = b.voucher_ 
 left join logins c on c.uuid = b.uuid
 where c.user = user_;
+
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `logout_device` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`sqluser`@`localhost` PROCEDURE `logout_device`(IN sessionID_ char(255))
+BEGIN
+
+	update device_states 
+	set device_states.state = 'logged_out' 
+	where device_states.sessionID = sessionID_;
+	 
 
 END ;;
 DELIMITER ;
@@ -336,4 +367,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-19 15:03:24
+-- Dump completed on 2015-09-20 16:42:27

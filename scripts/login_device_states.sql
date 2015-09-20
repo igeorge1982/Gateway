@@ -28,13 +28,14 @@ CREATE TABLE `device_states` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `deviceId` char(255) COLLATE utf8_bin DEFAULT NULL,
   `state` enum('logged_in','playing','logged_out','deleted') COLLATE utf8_bin DEFAULT NULL,
-  `Session_End` datetime DEFAULT NULL,
+  `SessionID` char(255) COLLATE utf8_bin DEFAULT NULL,
   `TIME_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `state` (`state`),
   KEY `deviceId` (`deviceId`),
-  KEY `idx_device_states_Session_End` (`Session_End`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  KEY `time` (`TIME_`),
+  KEY `sessionID` (`SessionID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -46,4 +47,4 @@ CREATE TABLE `device_states` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-19 15:03:23
+-- Dump completed on 2015-09-20 16:42:27
