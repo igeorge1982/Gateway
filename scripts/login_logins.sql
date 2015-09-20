@@ -18,14 +18,23 @@ USE `login`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `logins`
+-- Table structure for table `logins`
 --
 
-LOCK TABLES `logins` WRITE;
-/*!40000 ALTER TABLE `logins` DISABLE KEYS */;
-INSERT INTO `logins` VALUES (1,'b0db4f528e66e0806b34f65a1bcc68a398ff71d05e39d5c3b806bdfdddf3cf7d3ed58ade2128cac7222bb0db90d74e6340058c846d6d8107e5983f0c426588cc','GG','1ab0cc40-38f9-11e5-9394-9c064858df56'),(2,'b0db4f528e66e0806b34f65a1bcc68a398ff71d05e39d5c3b806bdfdddf3cf7d3ed58ade2128cac7222bb0db90d74e6340058c846d6d8107e5983f0c426588cc','GA','393ccf62-55e9-11e5-9bcc-f5321bf0631f');
-/*!40000 ALTER TABLE `logins` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `logins`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `logins` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `hash_` char(255) COLLATE utf8_bin DEFAULT NULL,
+  `user` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `uuid` char(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
+  KEY `user` (`user`),
+  KEY `hash_` (`hash_`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -80,4 +89,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-11 18:36:10
+-- Dump completed on 2015-09-19 15:03:23

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import org.apache.log4j.Logger;
 
+import com.myapplication.SQLAccess;
+
 /**
  * Listens for session events and adds or removes references to 
  * to the context scoped HashMap accordingly.
@@ -58,8 +60,15 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
         ServletContext context = session.getServletContext();
         activeUsers = (HashMap<String, HttpSession>)context.getAttribute("activeUsers");
         
-        log.info("SessionID destroyed: " + session.getId().toString());          
-        // TODO: sql can run to cleanup device / user sessions later in the dB
+        try {
+			
+        	SQLAccess.logout(session.getId());
+	        log.info("SessionID destroyed: " + session.getId().toString());          
+			
+        	} catch (Exception e) {
+        		
+        		e.printStackTrace();
+		}
         activeUsers.remove(session.getId());
         
     }

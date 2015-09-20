@@ -18,14 +18,21 @@ USE `login`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `Last_seen`
+-- Table structure for table `Last_seen`
 --
 
-LOCK TABLES `Last_seen` WRITE;
-/*!40000 ALTER TABLE `Last_seen` DISABLE KEYS */;
-INSERT INTO `Last_seen` VALUES (1,'6750101046007128076007126900144024','1441460325696','2015-09-05 14:15:10'),(2,'85010104537364402403157537366900144024','1441464149653','2015-09-05 14:42:29'),(3,'64501010400201001014005900144024','1441465887948','2015-09-05 15:21:19'),(4,'9501010453736450245485537367900144024','1441534656143','2015-09-06 10:27:37'),(5,'8501010453736450245485537366900144024','1441927899211','2015-09-10 23:31:39');
-/*!40000 ALTER TABLE `Last_seen` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `Last_seen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Last_seen` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `deviceId` char(255) COLLATE utf8_bin NOT NULL DEFAULT '0000',
+  `Session_` mediumtext COLLATE utf8_bin,
+  `TIME_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`,`deviceId`),
+  KEY `deviceId` (`deviceId`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -68,7 +75,7 @@ BEGIN
 	   select deviceId into deviceId_ from Last_seen where last_insert_id() = last_insert_id() ORDER by ID DESC LIMIT 1;
   
   UPDATE Tokens 
-  SET Tokens.deviceId = deviceId_;
+  SET Tokens.deviceId = deviceId_ where Tokens.deviceId = deviceId_;
 
 END */;;
 DELIMITER ;
@@ -86,4 +93,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-11 18:36:10
+-- Dump completed on 2015-09-19 15:03:23

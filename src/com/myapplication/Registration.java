@@ -33,6 +33,7 @@ public class Registration extends HttpServlet {
 	private volatile static String user;
 	private volatile static String voucher;
 	private volatile static String deviceId;
+	private volatile static HttpSession session;
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -51,23 +52,23 @@ public class Registration extends HttpServlet {
     }
     
     public synchronized void processRequest (HttpServletRequest request, HttpServletResponse response)
-    	    throws Exception {
+    	    throws ServletException, IOException {
 		    	
     }
     
     public synchronized void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+    	    	
     	// Set response content type
         response.setContentType("text/html");
-	      
-        
+	             
         
         // Actual logic goes here.
 		user = request.getParameter("user");			
     	pass = request.getParameter("pswrd");
         voucher = request.getParameter("voucher_");
         deviceId = request.getParameter("deviceId");
-    	HttpSession session = request.getSession();
+    	session = request.getSession();
 
 
         try {
@@ -90,8 +91,8 @@ public class Registration extends HttpServlet {
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60);	
 				
-				ServletContext otherContext = getServletContext().getContext("/login");
-				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/admin");
+				ServletContext otherContext = getServletContext().getContext("/example");
+				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/index.jsp");
 				response.sendRedirect(encodedURL);
 					
 				  }	
@@ -103,18 +104,21 @@ public class Registration extends HttpServlet {
 				if (session != null) {								
 					session.invalidate();
 				}
-				//TODO: clear url parameter
 				ServletContext otherContext = getServletContext().getContext("/login");
-				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/logout");
+				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/login/logout");
 	    		response.sendRedirect(encodedURL);
 			}
 		
 		} catch (Exception e) {
 			
-			//TODO: clear url parameter
 			try {
+				
 				SQLAccess.reset_voucher(voucher);
+				
 			} catch (Exception e1) {
+			
+				System.err.println("Voucher reset FAILED!");
+				
 				}
 			
 			if (session != null) {								
@@ -122,14 +126,34 @@ public class Registration extends HttpServlet {
 			}
 			
 			ServletContext otherContext = getServletContext().getContext("/login");
-			String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/logout");
+			String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/login/logout");
 			response.sendRedirect(encodedURL);
-		}
-        
+		
+		} 
     }
     
     public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+    	
+    	processRequest(request, response);
+
+    	// Set response content type
+        response.setContentType("text/html");
+	      
+        try {
+    		voucher = request.getParameter("voucher");
+        	pass = request.getParameter("pswrd");
+            voucher = request.getParameter("voucher_");
+            deviceId = request.getParameter("deviceId");
+			
+			if (voucher.trim().isEmpty() || user.trim().isEmpty() || pass.trim().isEmpty() || deviceId.trim().isEmpty()) {
+	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+			}
+					
+		} catch (Exception e) {			
+    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+
+		}
         
     }
     

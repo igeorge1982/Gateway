@@ -111,10 +111,6 @@ public class AdminServlet extends HttpServlet {
 		
 		// else if voucher needs activation
 		if(Response == "S") {
-
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login/logout");
-	
-				rd.include(request, response);
 				
 				response.setContentType("application/json"); 
 				response.setCharacterEncoding("utf-8"); 

@@ -48,21 +48,27 @@ public class Voucher extends HttpServlet {
     }
     
     public synchronized void processRequest (HttpServletRequest request, HttpServletResponse response)
-    	    throws Exception {
+    	    throws ServletException, IOException {
 		    	
+        String userName = "admin";
+        String password = "Tapsihapsi666";
+    	request.login(userName, password); 
+    	
     }
     
     public synchronized void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+    	processRequest(request, response);
+
     	//TODO: do something with left voucher registrations
     	// Set response content type
-        response.setContentType("text/html");
-	      
-        // Actual logic goes here.
-		voucher = request.getParameter("voucher");			
+        response.setContentType("text/html");			
 
-        try {
-			if (SQLAccess.voucher(voucher)) { 	
+        try {       		      
+            // Actual logic goes here.
+    		voucher = request.getParameter("voucher");
+    		
+			if (voucher != null && SQLAccess.voucher(voucher)) { 	
 	        	
 				String encodedURL = response.encodeRedirectURL("https://localhost/javaScript/register.html?voucher_="+voucher);
 				response.sendRedirect(encodedURL);
@@ -73,15 +79,32 @@ public class Voucher extends HttpServlet {
 				
 			}
 		} catch (Exception e) {
-
-		}
-
+        	response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+		
+		} 
         
     }
     
     public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         
+    	processRequest(request, response);
+
+    	// Set response content type
+        response.setContentType("text/html");
+	      
+        try {
+    		voucher = request.getParameter("voucher");
+			
+			if (voucher.trim().isEmpty()) {
+	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+			}
+					
+		} catch (Exception e) {
+			
+    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+
+		}  	
     }
     
     public void destroy()

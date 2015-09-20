@@ -18,14 +18,22 @@ USE `login`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `vouchers`
+-- Table structure for table `vouchers`
 --
 
-LOCK TABLES `vouchers` WRITE;
-/*!40000 ALTER TABLE `vouchers` DISABLE KEYS */;
-INSERT INTO `vouchers` VALUES (1,'12345','1ab0cc40-38f9-11e5-9394-9c064858df56','2015-08-02 09:30:25'),(2,'12346','393ccf62-55e9-11e5-9bcc-f5321bf0631f','2015-09-08 05:19:48');
-/*!40000 ALTER TABLE `vouchers` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `vouchers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vouchers` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `voucher_` char(255) COLLATE utf8_bin DEFAULT NULL,
+  `uuid` char(255) COLLATE utf8_bin DEFAULT NULL,
+  `TIME_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uuid` (`uuid`),
+  KEY `uuid_2` (`uuid`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -36,4 +44,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-11 18:36:10
+-- Dump completed on 2015-09-19 15:03:23

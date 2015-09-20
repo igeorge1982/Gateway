@@ -36,6 +36,8 @@ public class HelloWorld extends HttpServlet {
 	private volatile static HttpSession session;
 	private volatile static boolean devices;
 	private volatile static long SessionCreated;
+	private volatile static String sessionID;
+
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -86,11 +88,12 @@ public class HelloWorld extends HttpServlet {
 				session.setAttribute("deviceId", deviceId);
 				request.removeAttribute("pswrd");
 				SessionCreated = session.getCreationTime();
+				sessionID = session.getId();
 
 		           }
 
 				try {
-					SQLAccess.insert_sessionCreated(deviceId, SessionCreated);
+					SQLAccess.insert_sessionCreated(deviceId, SessionCreated, sessionID);
 				} catch (Exception e) {	
 					throw new ServletException();
 				}

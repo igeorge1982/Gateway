@@ -18,14 +18,25 @@ USE `login`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `voucher_states`
+-- Table structure for table `voucher_states`
 --
 
-LOCK TABLES `voucher_states` WRITE;
-/*!40000 ALTER TABLE `voucher_states` DISABLE KEYS */;
-INSERT INTO `voucher_states` VALUES (1,'registered','12345',NULL,0,1,'2015-09-10 22:58:11'),(2,'registered','12346',NULL,0,0,'2015-09-10 22:58:11'),(3,'free','12347',NULL,0,0,'2015-09-10 22:58:11'),(4,'free','12348',NULL,0,0,'2015-09-10 22:58:11'),(5,'free','12349',NULL,1,0,'2015-09-10 22:59:08'),(6,'free','12350',NULL,1,0,'2015-09-10 22:59:08');
-/*!40000 ALTER TABLE `voucher_states` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `voucher_states`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `voucher_states` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `state` enum('free','processing','registered','expired') DEFAULT NULL,
+  `voucher_` char(255) DEFAULT NULL,
+  `duration_in_seconds` int(11) unsigned DEFAULT NULL,
+  `toBeActivated` tinyint(1) DEFAULT NULL,
+  `isActivated` tinyint(1) NOT NULL,
+  `TIME_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `voucher_` (`voucher_`),
+  KEY `state` (`state`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -36,4 +47,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-11 18:36:10
+-- Dump completed on 2015-09-19 15:03:23

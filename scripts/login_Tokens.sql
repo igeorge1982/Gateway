@@ -18,14 +18,24 @@ USE `login`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Dumping data for table `Tokens`
+-- Table structure for table `Tokens`
 --
 
-LOCK TABLES `Tokens` WRITE;
-/*!40000 ALTER TABLE `Tokens` DISABLE KEYS */;
-INSERT INTO `Tokens` VALUES (1,'6750101046007128076007126900144024','23a0beb6-53dc-11e5-a014-c6bb55785957','0.3316590993960007','2015-09-05 14:41:06'),(2,'85010104537364402403157537366900144024','5579bdac-53dc-11e5-a014-c6bb55785957','0.8360359620638527','2015-09-05 14:42:29'),(3,'64501010400201001014005900144024','c1fd41ec-53e1-11e5-a014-c6bb55785957','0.9790423475010714','2015-09-05 15:21:19'),(4,'9501010453736450245485537367900144024','e4cac212-5481-11e5-a014-c6bb55785957','0.08538594477380249','2015-09-06 10:27:37'),(5,'8501010453736450245485537366900144024','15c068be-5814-11e5-b50f-f0b7c3ac176b','0.5500802365598084','2015-09-10 23:31:39');
-/*!40000 ALTER TABLE `Tokens` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `Tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Tokens` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `deviceId` char(255) COLLATE utf8_bin DEFAULT NULL,
+  `token1` char(255) COLLATE utf8_bin DEFAULT NULL,
+  `token2` char(255) COLLATE utf8_bin DEFAULT NULL,
+  `TIME_` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `token1` (`token1`),
+  UNIQUE KEY `token2` (`token2`),
+  KEY `token2_2` (`token2`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -74,4 +84,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-11 18:36:10
+-- Dump completed on 2015-09-19 15:03:23

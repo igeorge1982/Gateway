@@ -75,7 +75,7 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`sqluser`@`localhost` PROCEDURE `get_token`(IN deviceId_ char (255))
 BEGIN
-select token1 from Tokens where deviceId = deviceId_;
+select token1 from Tokens where deviceId = deviceId_ order by TIME_ desc LIMIT 1;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -186,8 +186,9 @@ CREATE DEFINER=`sqluser`@`localhost` PROCEDURE `insert_sessionCreated`(IN device
 BEGIN
 
 declare devices_ char(255);
+declare id_ int(11);
 
-select deviceId into devices_ from Last_seen where deviceId = deviceId_;
+select id, deviceId into id_, devices_ from Last_seen where deviceId = deviceId_;
 
 if deviceId_ != devices_ or devices_ is null then
 
@@ -196,7 +197,7 @@ insert into Last_seen (deviceId, Session_) values (deviceId_,sessionCreated_);
 else 
 update Last_seen 
 set Last_seen.Session_ = sessionCreated_ 
-where Last_seen.deviceId = deviceId_;
+where Last_seen.deviceId = deviceId_ and Last_seen.id= id_;
 
 end if;
 END ;;
@@ -251,8 +252,7 @@ select a.isActivated AS state
 from voucher_states a 
 left join  vouchers b on a.voucher_ = b.voucher_ 
 left join logins c on c.uuid = b.uuid
-where c.user = user_ and
-a.toBeActivated = 0;
+where c.user = user_;
 
 END ;;
 DELIMITER ;
@@ -336,4 +336,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-09-11 18:36:10
+-- Dump completed on 2015-09-19 15:03:24

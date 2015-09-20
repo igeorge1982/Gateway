@@ -339,7 +339,7 @@ public class SQLAccess {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public synchronized static boolean insert_sessionCreated(String deviceId, long sessionCreated) throws ClassNotFoundException, IOException {
+	public synchronized static boolean insert_sessionCreated(String deviceId, long sessionCreated, String sessionID) throws ClassNotFoundException, IOException {
 		
 		
 		try {
@@ -352,10 +352,14 @@ public class SQLAccess {
 			InputStream in_ = IOUtils.toInputStream(deviceId, "UTF-8");
 		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
 		    
+			InputStream in = IOUtils.toInputStream(sessionID, "UTF-8");
+		    Reader reader = new BufferedReader(new InputStreamReader(in));
+		    
 			connect.setCatalog("login");
-			callableStatement = connect.prepareCall("{call `insert_sessionCreated`(?, ?)}");
+			callableStatement = connect.prepareCall("{call `insert_sessionCreated`(?, ?, ?)}");
 			callableStatement.setCharacterStream(1, reader_);
 			callableStatement.setLong(2, sessionCreated);
+			callableStatement.setCharacterStream(3, reader);
 			callableStatement.executeUpdate();
 			callableStatement.closeOnCompletion();
 			reader_.close();
@@ -586,6 +590,40 @@ public class SQLAccess {
 
 		}
 		return token;
+	}
+	
+	public synchronized static boolean logout(String sessionID) throws Exception {
+
+		
+		try {
+			// This will load the MySQL driver, each DB has its own driver
+			Class.forName(dbDriverClass);
+
+			// Setup the connection with the DB
+			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+								
+			InputStream in_ = IOUtils.toInputStream(sessionID, "UTF-8");
+		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
+		    
+		    connect.setCatalog("login");
+			callableStatement = connect.prepareCall("{call `logout_device`(?)}");
+
+			callableStatement.setCharacterStream(1, reader_);
+							
+			callableStatement.executeQuery();
+			callableStatement.closeOnCompletion();
+			reader_.close();
+
+			
+		} catch (SQLException ex) {
+		      SQLAccess.printSQLException(ex);
+
+		} finally {
+			
+			close();
+
+		}
+		return true;
 	}
 
 
