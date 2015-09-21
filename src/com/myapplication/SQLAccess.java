@@ -35,7 +35,6 @@ public class SQLAccess {
 	private static ResultSet resultSet = null;
 	private volatile static UUID idOne;
 	public static volatile String hash;
-	public static volatile String voucher;
 	public static volatile String token;
 	private static volatile int isActivated;
 	private static volatile String Response = null;
@@ -426,7 +425,7 @@ public class SQLAccess {
 	 * @return true
 	 * @throws Exception
 	 */
-	public synchronized static boolean register_voucher(String voucher) throws Exception {
+	public synchronized static boolean register_voucher(String voucher_) throws Exception {
 
 		
 		try {
@@ -435,19 +434,42 @@ public class SQLAccess {
 
 			// Setup the connection with the DB
 			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
-				
-			InputStream in = IOUtils.toInputStream(voucher, "UTF-8");
+			
+			InputStream in = IOUtils.toInputStream(voucher_, "UTF-8");
 		    Reader reader = new BufferedReader(new InputStreamReader(in));
+		    
+		    connect.setCatalog("login");
+			callableStatement = connect.prepareCall("{call `get_processing_voucher`(?)}");
+
+			callableStatement.setCharacterStream(1, reader);				
+			ResultSet rs = callableStatement.executeQuery();
+			callableStatement.closeOnCompletion();
+			reader.close();
+	
+			while (rs.next()) {
+				
+				String voucher =rs.getString(1);
+
+				if (voucher_.equals(voucher)) {
+			
+			InputStream in_ = IOUtils.toInputStream(voucher, "UTF-8");
+		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
 		    
 		    connect.setCatalog("login");
 			callableStatement = connect.prepareCall("{call `register_voucher`(?)}");
 
-			callableStatement.setCharacterStream(1, reader);
+			callableStatement.setCharacterStream(1, reader_);
 							
 			callableStatement.executeQuery();
 			callableStatement.closeOnCompletion();
 			reader.close();
 	
+				}
+				
+				close();
+				return true;
+			} 
+			
 		} catch (SQLException ex) {
 		      SQLAccess.printSQLException(ex);
 
@@ -456,7 +478,7 @@ public class SQLAccess {
 			close();
 
 		}
-		return true;
+		return false;
 	}
 	
 	/**

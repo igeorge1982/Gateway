@@ -13,11 +13,15 @@ import javax.servlet.http.*;
 
 import com.myapplication.SQLAccess;
 
+import org.apache.log4j.Logger;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 //Extend HttpServlet class
 public class Registration extends HttpServlet {
+	
+	private static Logger log = Logger.getLogger(Logger.class.getName());
+
     /**
     *
     */
@@ -77,13 +81,15 @@ public class Registration extends HttpServlet {
             // Set an attribute (name-value pair) if present in the request
             if (voucher != null) voucher = voucher.trim();
 
-            if (voucher != null && !voucher.equals("") )
-            		{
+            if (voucher != null && !voucher.equals("") ) {
+            	
                // synchronized session object to prevent concurrent update
                synchronized(session) {
                   session.setAttribute("voucher", voucher);
+                
+			if (SQLAccess.register_voucher(voucher)) {
                   
-			if (SQLAccess.new_hash(pass, user) && SQLAccess.register_voucher(voucher) && SQLAccess.insert_voucher(voucher, user, pass) && SQLAccess.insert_device(deviceId, user)) {
+              if (SQLAccess.new_hash(pass, user) && SQLAccess.insert_voucher(voucher, user, pass) && SQLAccess.insert_device(deviceId, user)) {
 				
 				session.setAttribute("user", user);				
 				session.setAttribute("device", deviceId);
@@ -96,18 +102,12 @@ public class Registration extends HttpServlet {
 				response.sendRedirect(encodedURL);
 					
 				  }	
+	           } else {
+
+	        	   response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, "Line 108");
 	           }
 			}
-			
-			else {
-				SQLAccess.reset_voucher(voucher);
-				if (session != null) {								
-					session.invalidate();
-				}
-				ServletContext otherContext = getServletContext().getContext("/login");
-				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/login/logout");
-	    		response.sendRedirect(encodedURL);
-			}
+		}
 		
 		} catch (Exception e) {
 			
@@ -117,7 +117,7 @@ public class Registration extends HttpServlet {
 				
 			} catch (Exception e1) {
 			
-				System.err.println("Voucher reset FAILED!");
+				log.info("Voucher reset FAILED!");
 				
 				}
 			

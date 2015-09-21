@@ -58,7 +58,6 @@ public class Voucher extends HttpServlet {
     
     public synchronized void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-    	processRequest(request, response);
 
     	//TODO: do something with left voucher registrations
     	// Set response content type
@@ -88,7 +87,7 @@ public class Voucher extends HttpServlet {
     public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
         
-    	processRequest(request, response);
+    	//processRequest(request, response);
 
     	// Set response content type
         response.setContentType("text/html");
