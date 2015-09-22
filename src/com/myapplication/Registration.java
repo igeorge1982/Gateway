@@ -125,6 +125,7 @@ public class Registration extends HttpServlet {
 				session.invalidate();
 			}
 			
+			response.setHeader("Referer", request.getContextPath() + "/login/register");
 			ServletContext otherContext = getServletContext().getContext("/login");
 			String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/login/logout");
 			response.sendRedirect(encodedURL);
