@@ -60,6 +60,13 @@ public class HelloWorld extends HttpServlet {
     	
     	// Set response content type
         response.setContentType("text/html");
+        
+	 	session = request.getSession(false);
+      	
+ 	     if(session != null){
+ 	  		 
+ 		     session.invalidate();
+ 	     }
 	      
         // Actual logic goes here.		
         try {
@@ -72,14 +79,14 @@ public class HelloWorld extends HttpServlet {
 		
 		} catch (Exception e) {
 			
-    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 75");
 
 		}
-		
+        
         	if(pass.equals(hash1) && devices){
-				
-				// Create session
-				session = request.getSession();
+        		
+        		// Create new session
+				session = request.getSession(true);
 			
 				// synchronized session object to prevent concurrent update		        	   
 				synchronized(session) {
@@ -106,7 +113,7 @@ public class HelloWorld extends HttpServlet {
 				response.sendRedirect(encodedURL);
 
 			}else{
-	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 109");
 	    		
 			}
         
@@ -118,6 +125,13 @@ public class HelloWorld extends HttpServlet {
     	
     	// Set response content type
         response.setContentType("text/html");
+        
+	 	session = request.getSession(false);
+      	
+	     if(session != null){
+	  		 
+		     session.invalidate();
+	     }
 	      
         // Actual logic goes here.		
         try {

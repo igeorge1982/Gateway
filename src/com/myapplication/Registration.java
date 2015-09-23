@@ -38,6 +38,8 @@ public class Registration extends HttpServlet {
 	private volatile static String voucher;
 	private volatile static String deviceId;
 	private volatile static HttpSession session;
+	private volatile static long SessionCreated;
+	private volatile static String sessionID;
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -95,7 +97,15 @@ public class Registration extends HttpServlet {
 				session.setAttribute("device", deviceId);
 				
 				//setting session to expiry in 30 mins
-				session.setMaxInactiveInterval(30*60);	
+				session.setMaxInactiveInterval(30*60);
+				SessionCreated = session.getCreationTime();
+				sessionID = session.getId();
+				
+				try {
+					SQLAccess.insert_sessionCreated(deviceId, SessionCreated, sessionID);
+				} catch (Exception e) {	
+					throw new ServletException();
+				}
 				
 				ServletContext otherContext = getServletContext().getContext("/example");
 				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/index.jsp");
@@ -148,11 +158,11 @@ public class Registration extends HttpServlet {
             deviceId = request.getParameter("deviceId");
 			
 			if (voucher.trim().isEmpty() || user.trim().isEmpty() || pass.trim().isEmpty() || deviceId.trim().isEmpty()) {
-	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 161");
 			}
 					
 		} catch (Exception e) {			
-    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY);
+    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 165");
 
 		}
         
