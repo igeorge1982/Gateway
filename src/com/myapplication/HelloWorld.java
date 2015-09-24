@@ -22,13 +22,6 @@ public class HelloWorld extends HttpServlet {
     *
     */
     private static final long serialVersionUID = 1L;
-
-	public final static String dbDriverClass = "com.mysql.jdbc.Driver";
-	public final static String dbUrl = "jdbc:mysql://localhost:3306";
-	public final static String dbUserName = "sqluser";
-	public final static String dbPassWord = "sqluserpw";
-	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
-	
 	private volatile static String pass;
 	private volatile static String user;
 	private volatile static String hash1;
@@ -67,6 +60,7 @@ public class HelloWorld extends HttpServlet {
  	  		 
  		     session.invalidate();
  	     }
+ 		ServletContext context = request.getServletContext();
 	      
         // Actual logic goes here.		
         try {
@@ -74,8 +68,8 @@ public class HelloWorld extends HttpServlet {
     		user = request.getParameter("user");	
     		deviceId = request.getParameter("deviceId");
     		
-			hash1 = SQLAccess.hash(pass);
-			devices = SQLAccess.insert_device(deviceId, user);
+			hash1 = SQLAccess.hash(pass, context);
+			devices = SQLAccess.insert_device(deviceId, user, context);
 		
 		} catch (Exception e) {
 			
@@ -96,11 +90,10 @@ public class HelloWorld extends HttpServlet {
 				request.removeAttribute("pswrd");
 				SessionCreated = session.getCreationTime();
 				sessionID = session.getId();
-
 		           }
 
 				try {
-					SQLAccess.insert_sessionCreated(deviceId, SessionCreated, sessionID);
+					SQLAccess.insert_sessionCreated(deviceId, SessionCreated, sessionID, context);
 				} catch (Exception e) {	
 					throw new ServletException();
 				}

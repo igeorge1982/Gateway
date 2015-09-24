@@ -22,6 +22,7 @@ scripts/login_routines.sql -text
 scripts/login_voucher_states.sql -text
 scripts/login_vouchers.sql -text
 src/com/myapplication/AdminServlet.java -text
+src/com/myapplication/DBConnectionManager.java -text
 src/com/myapplication/DeviceManagement.java -text
 src/com/myapplication/HelloWorld.java -text
 src/com/myapplication/Loggingout.java -text

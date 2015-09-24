@@ -14,25 +14,18 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.UUID;
+import javax.servlet.ServletContext;
 import org.apache.commons.io.IOUtils;
 
 public class SQLAccess {
 	
-	private static final Connection connection = null;
-	private static String dbDriverClass;
-	private static String dbUrl;
-	private static String dbUserName;
-	private static String dbPassWord;
-	private static Connection connect = null;
-	private static Statement statement = null;
-	private static PreparedStatement preparedStatement = null;
-	private static ResultSet resultSet = null;
+	private static volatile Connection connect = null;
+	private static volatile PreparedStatement preparedStatement = null;
 	private volatile static UUID idOne;
 	public static volatile String hash;
 	public static volatile String token;
@@ -40,42 +33,23 @@ public class SQLAccess {
 	private static volatile String Response = null;
 	private static volatile ResultSet rs;
 	private static volatile CallableStatement callableStatement = null;
-	
+
 	  public synchronized final static UUID uuId(){
 
           if (idOne == null) {
 	     SQLAccess.idOne = UUID.randomUUID();
           	}
-	  return idOne;
-         
-  }
-	
-	  // Try - Catch is better handle in the class where this method is actually initialized
-	public SQLAccess(String dbDriverClass, String dbUrl, String dbUserName, String dbPassWord) {
+	  return idOne;         
+	  }
+	  
+	  public synchronized static Connection connect(ServletContext context) throws ClassNotFoundException, SQLException{
 
-		SQLAccess.dbDriverClass = dbDriverClass;
-		SQLAccess.dbUrl = dbUrl;
-		SQLAccess.dbUserName = dbUserName;
-		SQLAccess.dbPassWord = dbPassWord;
-
-	}
-	          
-	public Connection SetUpDataBase() throws Exception {
-
-		try {
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
-
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);			
-			
-
-		} catch (SQLException ex) {
-		      SQLAccess.printSQLException(ex);
-		}
-		return connection;
-
-	}
+          if (connect == null) {
+      		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
+      		SQLAccess.connect = dbManager.getConnection();
+          	}
+	  return connect;         
+	  }
 	
 	/**
 	 * Inserts user and password.
@@ -85,21 +59,22 @@ public class SQLAccess {
 	 * @return
 	 * @throws Exception
 	 */
-	public synchronized static boolean new_hash(String pass, String user) throws Exception {
-		
-		// This will load the MySQL driver, each DB has its own driver
-		Class.forName(dbDriverClass);
-
+	public synchronized static boolean new_hash(String pass, String user, ServletContext context) throws Exception {
+	
 		// Setup the connection with the DB
-		connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
 		
-	String sql = "insert into  login.logins values (default, ?, ?, default)";
+		try {
 
-	InputStream ps = IOUtils.toInputStream(pass, "UTF-8");
-    Reader readerP = new BufferedReader(new InputStreamReader(ps));
-    
-	InputStream us = IOUtils.toInputStream(user, "UTF-8");
-    Reader readerU = new BufferedReader(new InputStreamReader(us));
+		connect = dbManager.getConnection();
+		
+			String sql = "insert into  login.logins values (default, ?, ?, default)";
+		
+			InputStream ps = IOUtils.toInputStream(pass, "UTF-8");
+		    Reader readerP = new BufferedReader(new InputStreamReader(ps));
+		    
+			InputStream us = IOUtils.toInputStream(user, "UTF-8");
+		    Reader readerU = new BufferedReader(new InputStreamReader(us));
     
 			preparedStatement = connect.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setCharacterStream(1, readerP);
@@ -108,21 +83,28 @@ public class SQLAccess {
 			preparedStatement.executeUpdate();		
 			preparedStatement.closeOnCompletion();
 		
-	readerP.close();
-	readerU.close();
+			readerP.close();
+			readerU.close();
 	
-		return true;
-}
+			} catch (SQLException ex) {
+				SQLAccess.printSQLException(ex);
 	
-	public synchronized static boolean sessionId() throws Exception {
-
+				} finally {
+			
+			dbManager.closeConnection();
+	
+		}
+			return true;
+	}
+	
+	public synchronized static boolean sessionId(ServletContext context) throws Exception {
+		
+		// Setup the connection with the DB
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
 		
 		try {
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
-
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+			
+    		connect = dbManager.getConnection();
 					 
 				long time = System.currentTimeMillis();
 				java.sql.Timestamp timestamp = new java.sql.Timestamp(time);
@@ -146,7 +128,7 @@ public class SQLAccess {
 
 		} finally {
 			
-			close();
+			dbManager.closeConnection();
 
 		}
 		return true;
@@ -160,21 +142,19 @@ public class SQLAccess {
 	 * @return
 	 * @throws Exception
 	 */
-	public synchronized static boolean voucher(String voucher_) throws Exception {
+	public synchronized static boolean voucher(String voucher_, ServletContext context) throws Exception {
 
+		// Setup the connection with the DB
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
 		
 		try {
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
 
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+			connect = dbManager.getConnection();
 				
 			InputStream in = IOUtils.toInputStream(voucher_, "UTF-8");
 		    Reader reader = new BufferedReader(new InputStreamReader(in));
 		    
-		    connect.setCatalog("login");
-			CallableStatement callableStatement = connect.prepareCall("{call `get_voucher`(?)}");
+			callableStatement = connect.prepareCall("{call `get_voucher`(?)}");
 
 			callableStatement.setCharacterStream(1, reader);				
 			ResultSet rs = callableStatement.executeQuery();
@@ -198,7 +178,7 @@ public class SQLAccess {
 			reader_.close();
 				}
 				
-				close();
+				dbManager.closeConnection();
 				return true;
 			} 
 			
@@ -207,7 +187,7 @@ public class SQLAccess {
 
 		} finally {
 			
-			close();
+			dbManager.closeConnection();
 
 		}
 		return false;
@@ -222,30 +202,13 @@ public class SQLAccess {
 	 * @return true on success, otherwise false
 	 * @throws Exception
 	 */
-	public synchronized static boolean insert_voucher(String voucher_, String user, String pass) throws Exception {
+	public synchronized static boolean insert_voucher(String voucher_, String user, String pass, ServletContext context) throws Exception {
 		
+		// Setup the connection with the DB
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
 		
 		try {
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
-
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
-				
-			//InputStream in = IOUtils.toInputStream(voucher_, "UTF-8");
-		    //Reader reader = new BufferedReader(new InputStreamReader(in));
-		    
-		    //connect.setCatalog("login");
-			//CallableStatement callableStatement = connect.prepareCall("{call `check_voucher`(?)}");
-
-			//callableStatement.setCharacterStream(1, reader);				
-			//ResultSet rs = callableStatement.executeQuery();
-			//reader.close();
-			//while (rs.next()) {
-				
-			//	String voucher =rs.getString(1);
-
-			//	if (voucher_.equals(voucher)) {
+    		connect = dbManager.getConnection();
 			 
 			InputStream in_ = IOUtils.toInputStream(voucher_, "UTF-8");
 		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
@@ -262,18 +225,16 @@ public class SQLAccess {
 			callableStatement.closeOnCompletion();
 			reader_.close();
 			readers.close();
-				//}
 				
-				close();
-				return true;
-			//} 
+				dbManager.closeConnection();
+				return true; 
 			
 		} catch (SQLException ex) {
 		      SQLAccess.printSQLException(ex);
 
 		} finally {
 			
-			close();
+			dbManager.closeConnection();
 
 		}
 		return false;
@@ -287,15 +248,13 @@ public class SQLAccess {
 	 * @return
 	 * @throws Exception
 	 */
-	public synchronized static boolean insert_device(String deviceId, String user) throws Exception {
+	public synchronized static boolean insert_device(String deviceId, String user, ServletContext context) throws Exception {
 		
+		// Setup the connection with the DB
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
 		
 		try {
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
-
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+    		connect = dbManager.getConnection();
 			 
 			InputStream in_ = IOUtils.toInputStream(deviceId, "UTF-8");
 		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
@@ -311,9 +270,9 @@ public class SQLAccess {
 			callableStatement.closeOnCompletion();
 			reader_.close();
 			readers.close();
+								
+				dbManager.closeConnection();
 				
-				
-				close();
 				return true; 
 			
 		} catch (SQLException ex) {
@@ -321,7 +280,7 @@ public class SQLAccess {
 
 		} finally {
 			
-			close();
+			dbManager.closeConnection();
 
 		}
 		return false;
@@ -337,16 +296,16 @@ public class SQLAccess {
 	 * @return true on success, otherwise false
 	 * @throws ClassNotFoundException
 	 * @throws IOException
+	 * @throws SQLException 
 	 */
-	public synchronized static boolean insert_sessionCreated(String deviceId, long sessionCreated, String sessionID) throws ClassNotFoundException, IOException {
+	public synchronized static boolean insert_sessionCreated(String deviceId, long sessionCreated, String sessionID, ServletContext context) throws ClassNotFoundException, IOException, SQLException {
 		
+		// Setup the connection with the DB
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
 		
 		try {
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
-
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+    		//connect(context);
+			connect = dbManager.getConnection();
 			 
 			InputStream in_ = IOUtils.toInputStream(deviceId, "UTF-8");
 		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
@@ -364,7 +323,8 @@ public class SQLAccess {
 			reader_.close();
 				
 				
-				close();
+			dbManager.closeConnection();
+			
 				return true;
 			
 		} catch (SQLException ex) {
@@ -372,7 +332,7 @@ public class SQLAccess {
 
 		} finally {
 			
-			close();
+			dbManager.closeConnection();
 
 		}
 		return false;
@@ -385,15 +345,13 @@ public class SQLAccess {
 	 * @return true
 	 * @throws Exception
 	 */
-	public synchronized static boolean reset_voucher(String voucher) throws Exception {
+	public synchronized static boolean reset_voucher(String voucher, ServletContext context) throws Exception {
 
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
 		
 		try {
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
-
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+    		
+    		connect = dbManager.getConnection();
 				
 			InputStream in = IOUtils.toInputStream(voucher, "UTF-8");
 		    Reader reader = new BufferedReader(new InputStreamReader(in));
@@ -411,8 +369,7 @@ public class SQLAccess {
 		      SQLAccess.printSQLException(ex);
 
 		} finally {
-			
-			close();
+			dbManager.closeConnection();
 
 		}
 		return true;
@@ -425,15 +382,13 @@ public class SQLAccess {
 	 * @return true
 	 * @throws Exception
 	 */
-	public synchronized static boolean register_voucher(String voucher_) throws Exception {
+	public synchronized static boolean register_voucher(String voucher_, ServletContext context) throws Exception {
 
+		// Setup the connection with the DB
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
 		
 		try {
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
-
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+    		connect = dbManager.getConnection();
 			
 			InputStream in = IOUtils.toInputStream(voucher_, "UTF-8");
 		    Reader reader = new BufferedReader(new InputStreamReader(in));
@@ -466,7 +421,8 @@ public class SQLAccess {
 	
 				}
 				
-				close();
+				dbManager.closeConnection();
+
 				return true;
 			} 
 			
@@ -475,7 +431,7 @@ public class SQLAccess {
 
 		} finally {
 			
-			close();
+			dbManager.closeConnection();
 
 		}
 		return false;
@@ -488,15 +444,13 @@ public class SQLAccess {
 	 * @return hash
 	 * @throws Exception
 	 */
-	public synchronized static String hash(String pass) throws Exception {
+	public synchronized static String hash(String pass, ServletContext context) throws Exception {
 
+		// Setup the connection with the DB
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
 		
 		try {
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
-
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+    		connect = dbManager.getConnection();
 								
 			InputStream in = IOUtils.toInputStream(pass, "UTF-8");
 		    Reader reader = new BufferedReader(new InputStreamReader(in));
@@ -519,22 +473,20 @@ public class SQLAccess {
 
 		} finally {
 			
-			close();
+			dbManager.closeConnection();
 
 		}
 		return hash;
 	}
 	
 	
-	public synchronized static String isActivated(String user) throws Exception {
+	public synchronized static String isActivated(String user, ServletContext context) throws Exception {
 
+		// Setup the connection with the DB
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
 		
 		try {
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
-
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+    		connect = dbManager.getConnection();
 								
 			InputStream in = IOUtils.toInputStream(user, "UTF-8");
 		    Reader reader = new BufferedReader(new InputStreamReader(in));
@@ -563,7 +515,7 @@ public class SQLAccess {
 
 		} finally {
 			
-			close();
+			dbManager.closeConnection();
 
 		}
 		return Response;
@@ -577,15 +529,13 @@ public class SQLAccess {
 	 * @return token
 	 * @throws Exception
 	 */
-	public synchronized static String token(String deviceId) throws Exception {
+	public synchronized static String token(String deviceId, ServletContext context) throws Exception {
 
+		// Setup the connection with the DB
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
 		
 		try {
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
-
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+    		connect = dbManager.getConnection();
 								
 			InputStream in_ = IOUtils.toInputStream(deviceId, "UTF-8");
 		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
@@ -593,7 +543,7 @@ public class SQLAccess {
 		    connect.setCatalog("login");
 			callableStatement = connect.prepareCall("{call `get_token`(?)}");
 
-				callableStatement.setCharacterStream(1, reader_);
+			callableStatement.setCharacterStream(1, reader_);
 							
 			ResultSet rs = callableStatement.executeQuery();
 			callableStatement.closeOnCompletion();
@@ -608,21 +558,19 @@ public class SQLAccess {
 
 		} finally {
 			
-			close();
+			dbManager.closeConnection();
 
 		}
 		return token;
 	}
 	
-	public synchronized static boolean logout(String sessionID) throws Exception {
+	public synchronized static boolean logout(String sessionID, ServletContext context) throws Exception {
 
+		// Setup the connection with the DB
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
 		
 		try {
-			// This will load the MySQL driver, each DB has its own driver
-			Class.forName(dbDriverClass);
-
-			// Setup the connection with the DB
-			connect = DriverManager.getConnection(dbUrl, dbUserName, dbPassWord);
+    		connect = dbManager.getConnection();
 								
 			InputStream in_ = IOUtils.toInputStream(sessionID, "UTF-8");
 		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
@@ -642,39 +590,10 @@ public class SQLAccess {
 
 		} finally {
 			
-			close();
+			dbManager.closeConnection();
 
 		}
 		return true;
-	}
-
-
-	// You need to close the resultSet
-	private static void close() {
-		try {
-			if (resultSet != null) {
-				resultSet.close();
-			}
-
-			if (statement != null) {
-				statement.close();
-			}
-			
-			if (preparedStatement != null) {
-				preparedStatement.close();
-			}
-			
-			if (callableStatement != null) {
-				callableStatement.close();
-			}
-
-			if (connect != null) {
-				connect.close();
-
-			}
-		} catch (Exception e) {
-
-		}
 	}
 	
 	/**
@@ -714,6 +633,7 @@ public class SQLAccess {
 		    // 42Y55: Table already exists in schema
 		    if (sqlState.equalsIgnoreCase("42Y55"))
 		      return true;		 
+		    
 		    return false;
 		  }
 

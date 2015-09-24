@@ -23,13 +23,6 @@ public class Voucher extends HttpServlet {
     *
     */
     private static final long serialVersionUID = 1L;
-
-	public final static String dbDriverClass = "com.mysql.jdbc.Driver";
-	public final static String dbUrl = "jdbc:mysql://localhost:3306";
-	public final static String dbUserName = "sqluser";
-	public final static String dbPassWord = "sqluserpw";
-	
-	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
 	private volatile static String voucher;
 	
     @BeforeClass
@@ -66,8 +59,9 @@ public class Voucher extends HttpServlet {
         try {       		      
             // Actual logic goes here.
     		voucher = request.getParameter("voucher");
+    		ServletContext context = request.getServletContext();
     		
-			if (voucher != null && SQLAccess.voucher(voucher)) { 	
+			if (voucher != null && SQLAccess.voucher(voucher, context)) { 	
 	        	
 				String encodedURL = response.encodeRedirectURL("https://localhost/javaScript/register.html?voucher_="+voucher);
 				response.sendRedirect(encodedURL);

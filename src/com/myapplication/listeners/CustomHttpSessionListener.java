@@ -37,7 +37,7 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
     @SuppressWarnings("unchecked")
 	public void sessionCreated(HttpSessionEvent event){
         
-    	HttpSession    session = event.getSession();
+    	HttpSession session = event.getSession();
         ServletContext context = session.getServletContext();
         activeUsers = (HashMap<String, HttpSession>) context.getAttribute("activeUsers");
         activeUsers.put(session.getId(), session);
@@ -62,7 +62,7 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
         
         try {
 			
-        	SQLAccess.logout(session.getId());
+        	SQLAccess.logout(session.getId(), context);
 	        log.info("SessionID destroyed: " + session.getId().toString());          
 			
         	} catch (Exception e) {

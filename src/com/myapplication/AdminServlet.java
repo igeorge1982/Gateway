@@ -23,14 +23,6 @@ import org.testng.annotations.BeforeClass;
 public class AdminServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    
-    // TODO: put dB params in the web.xml
-	public final static String dbDriverClass = "com.mysql.jdbc.Driver";
-	public final static String dbUrl = "jdbc:mysql://localhost:3306";
-	public final static String dbUserName = "sqluser";
-	public final static String dbPassWord = "sqluserpw";
-	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
-	
 	private volatile static String user = null;
 	private volatile static String token_;
 	private volatile static String Response = null;
@@ -68,6 +60,7 @@ public class AdminServlet extends HttpServlet {
 			IOException {	
 
 			session = request.getSession(false);
+    		ServletContext context = request.getServletContext();
 			log.info("Session ID check: "+ session.getId());
 		
 		try {
@@ -79,10 +72,10 @@ public class AdminServlet extends HttpServlet {
 			user = (String) session.getAttribute("user");
 			
 			// Get token1 from dB. token1 will be used to make a user related API call
-			token_ = SQLAccess.token(deviceId);
+			token_ = SQLAccess.token(deviceId, context);
 			
 			// Get voucher activation method
-			Response = SQLAccess.isActivated(user);
+			Response = SQLAccess.isActivated(user, context);
 
 		
 		} catch (Exception e) {

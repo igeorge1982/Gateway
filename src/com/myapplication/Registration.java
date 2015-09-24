@@ -25,14 +25,7 @@ public class Registration extends HttpServlet {
     /**
     *
     */
-    private static final long serialVersionUID = 1L;
-
-	public final static String dbDriverClass = "com.mysql.jdbc.Driver";
-	public final static String dbUrl = "jdbc:mysql://localhost:3306";
-	public final static String dbUserName = "sqluser";
-	public final static String dbPassWord = "sqluserpw";
-	public static SQLAccess dao = new SQLAccess(dbDriverClass, dbUrl, dbUserName, dbPassWord);
-	
+    private static final long serialVersionUID = 1L;	
 	private volatile static String pass;
 	private volatile static String user;
 	private volatile static String voucher;
@@ -75,6 +68,7 @@ public class Registration extends HttpServlet {
         voucher = request.getParameter("voucher_");
         deviceId = request.getParameter("deviceId");
     	session = request.getSession();
+		ServletContext context = request.getServletContext();
 
 
         try {
@@ -89,9 +83,9 @@ public class Registration extends HttpServlet {
                synchronized(session) {
                   session.setAttribute("voucher", voucher);
                 
-			if (SQLAccess.register_voucher(voucher)) {
+			if (SQLAccess.register_voucher(voucher, context)) {
                   
-              if (SQLAccess.new_hash(pass, user) && SQLAccess.insert_voucher(voucher, user, pass) && SQLAccess.insert_device(deviceId, user)) {
+              if (SQLAccess.new_hash(pass, user, context) && SQLAccess.insert_voucher(voucher, user, pass, context) && SQLAccess.insert_device(deviceId, user, context)) {
 				
 				session.setAttribute("user", user);				
 				session.setAttribute("device", deviceId);
@@ -102,7 +96,7 @@ public class Registration extends HttpServlet {
 				sessionID = session.getId();
 				
 				try {
-					SQLAccess.insert_sessionCreated(deviceId, SessionCreated, sessionID);
+					SQLAccess.insert_sessionCreated(deviceId, SessionCreated, sessionID, context);
 				} catch (Exception e) {	
 					throw new ServletException();
 				}
@@ -123,7 +117,7 @@ public class Registration extends HttpServlet {
 			
 			try {
 				
-				SQLAccess.reset_voucher(voucher);
+				SQLAccess.reset_voucher(voucher, context);
 				
 			} catch (Exception e1) {
 			
