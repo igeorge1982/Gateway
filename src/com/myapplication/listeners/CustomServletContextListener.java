@@ -12,6 +12,7 @@ public class CustomServletContextListener implements ServletContextListener{
 	
 	private static Logger log = Logger.getLogger(Logger.class.getName());
 	private volatile static HashMap<String, Object> activeUsers;
+	private volatile static HashMap<String, String> sessionUsers;
 
    public void contextInitialized(ServletContextEvent event){
     
@@ -32,6 +33,9 @@ public class CustomServletContextListener implements ServletContextListener{
        //
        activeUsers = new HashMap<String, Object>();
        context.setAttribute("activeUsers", activeUsers);
+       
+       sessionUsers = new HashMap<String, String>();
+       context.setAttribute("sessionUsers", sessionUsers);
    }
 
    /**

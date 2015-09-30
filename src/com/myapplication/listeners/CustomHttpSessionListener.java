@@ -26,6 +26,8 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
 	
 	private static Logger log = Logger.getLogger(Logger.class.getName());
 	public static volatile HashMap<String, HttpSession> activeUsers = null;
+	public static volatile HashMap<String, String> sessionUsers = null;
+	private static volatile String sessionId;
 
     public void init(ServletConfig config){
     	
@@ -40,12 +42,27 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
     	HttpSession session = event.getSession();
         ServletContext context = session.getServletContext();
         activeUsers = (HashMap<String, HttpSession>) context.getAttribute("activeUsers");
-        activeUsers.put(session.getId(), session);
+        sessionUsers = (HashMap<String, String>) context.getAttribute("sessionUsers");
         
-        // TODO: sql can run here to insert user sessions into the dB
+        if (sessionUsers.containsKey((String) session.getAttribute("user"))) {
+        	
+        	sessionId = sessionUsers.get((String) session.getAttribute("user"));        	
+        	sessionUsers.replace((String) session.getAttribute("user"), sessionId, session.getId());
+        	activeUsers.remove(sessionId);
+        	activeUsers.put(session.getId(), session);
+        
+        } else {
+        
+        	sessionUsers.put((String) session.getAttribute("user"), session.getId());
+        	activeUsers.put(session.getId(), session);
+        }
+                
         log.info("New SessionID: " + session.getId().toString());
         context.setAttribute("activeUsers", activeUsers);
-        log.info("Actice UserSessions: " + activeUsers.keySet().toString());
+        context.setAttribute("sessionUsers", sessionUsers);
+
+        log.info("Active UserSessions: " + activeUsers.keySet().toString());
+        log.info("sessionUsers: " + sessionUsers.values().toString());
 
     }
 
@@ -59,6 +76,7 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
     	HttpSession    session = event.getSession();
         ServletContext context = session.getServletContext();
         activeUsers = (HashMap<String, HttpSession>)context.getAttribute("activeUsers");
+        sessionUsers = (HashMap<String, String>)context.getAttribute("sessionUsers");
         
         try {
 			
@@ -70,6 +88,7 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
         		e.printStackTrace();
 		}
         activeUsers.remove(session.getId());
+        sessionUsers.remove((String) session.getAttribute("user"));
         
     }
     
