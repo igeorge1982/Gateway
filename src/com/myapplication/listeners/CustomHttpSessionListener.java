@@ -1,7 +1,9 @@
 package com.myapplication.listeners;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -28,6 +30,8 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
 	public static volatile HashMap<String, HttpSession> activeUsers = null;
 	public static volatile HashMap<String, String> sessionUsers = null;
 	private static volatile String sessionId;
+	private volatile Set<String> includesSet = null; 
+
 
     public void init(ServletConfig config){
     	
@@ -48,7 +52,10 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
         	
         	sessionId = sessionUsers.get((String) session.getAttribute("user"));        	
         	sessionUsers.replace((String) session.getAttribute("user"), sessionId, session.getId());
-        	activeUsers.remove(sessionId);
+        	
+        	includesSet = Collections.synchronizedSet(activeUsers.keySet());
+        	includesSet.remove(sessionId);
+        	//.remove(sessionId);
         	activeUsers.put(session.getId(), session);
         
         } else {
