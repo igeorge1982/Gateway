@@ -59,9 +59,9 @@ public class AdminServlet extends HttpServlet {
 	private synchronized void performTask(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {	
 
-			session = request.getSession(false);
-    		ServletContext context = request.getServletContext();
-			log.info("Session ID check: "+ session.getId());
+			//session = request.getSession();
+    		ServletContext context = session.getServletContext();
+			//log.info("Session ID check: "+ session.getId());
 		
 		try {
 			
@@ -80,26 +80,43 @@ public class AdminServlet extends HttpServlet {
 		
 		} catch (Exception e) {
 			
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login/logout");
-			rd.include(request, response);
-	        PrintWriter out = response.getWriter();
-			out.println("<font color=red>User is not found</font>");
+			response.setContentType("application/json"); 
+			response.setCharacterEncoding("utf-8"); 
+			response.setStatus(502);
+
+			PrintWriter out = response.getWriter(); 
+			
+			//create Json Object 
+			JSONObject json = new JSONObject(); 
+			
+			// put some value pairs into the JSON object . 				
+			json.put("Success", "false"); 
+			
+			// finally output the json string 
+			out.print(json.toString());
+			out.flush();
 			
 		}
 		
 		if (deviceId == null || user == null) {
 			
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login/logout");
-			rd.include(request, response);
-	        PrintWriter out = response.getWriter();
-	        
-	        if (deviceId == null) {
-			out.println("<font color=red>deviceId is not found</font>");
-				}
-	        
-	        if (user == null) {
-			out.println("<font color=red>User is not found</font>");
-				}
+			response.setContentType("application/json"); 
+			response.setCharacterEncoding("utf-8"); 
+			response.setStatus(502);
+
+			PrintWriter out = response.getWriter(); 
+			
+			//create Json Object 
+			JSONObject json = new JSONObject(); 
+			
+			// put some value pairs into the JSON object . 				
+			json.put("deviceId", "null"); 
+			json.put("user", "null"); 
+			
+			// finally output the json string 
+			out.print(json.toString());
+			out.flush();
+
 		}
 		
 		// else if voucher needs activation
@@ -117,6 +134,7 @@ public class AdminServlet extends HttpServlet {
 				JSONObject json = new JSONObject(); 
 				
 				// put some value pairs into the JSON object . 				
+				json.put("Activation", "false"); 
 				json.put("Success", "false"); 
 				
 				// finally output the json string 
@@ -126,10 +144,7 @@ public class AdminServlet extends HttpServlet {
 			}
 		
 		// Get user entity using API GET method, with user and token as request params
-		else if(token_ != null && session != null && request.isRequestedSessionIdValid()) {			
-        		
-			// Get user from session
-			user = (String) session.getAttribute("user");
+		else if(token_ != null && session != null /*&& request.isRequestedSessionIdValid()*/) {			
 			
         ServletContext otherContext = getServletContext().getContext("/mbook-1");
 
@@ -139,10 +154,21 @@ public class AdminServlet extends HttpServlet {
 			}
 		else {
 			
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login/logout");
-			rd.include(request, response);
-	        PrintWriter out = response.getWriter();
-			out.println("<font color=red>General error</font>");
+			response.setContentType("application/json"); 
+			response.setCharacterEncoding("utf-8"); 
+			response.setStatus(502);
+
+			PrintWriter out = response.getWriter(); 
+			
+			//create Json Object 
+			JSONObject json = new JSONObject(); 
+			
+			// put some value pairs into the JSON object . 				
+			json.put("Success", "false"); 
+			
+			// finally output the json string 
+			out.print(json.toString());
+			out.flush();
 			
 				}
 
@@ -157,11 +183,11 @@ public class AdminServlet extends HttpServlet {
                
         // Get JSESSION url parameter. Later it needs to be sent as header
         sessionId = request.getParameter("JSESSIONID");			
+        log.info("SessionId from request parameter: " + sessionId);
        
-        
         // Return current session
 		session = request.getSession();		
-        log.info("admin SessionID:" + session.getId().toString());
+        //log.info("admin SessionID:" + session.getId().toString());
     	
         // Check session for user attribute
     	if(session.getAttribute("user") == null){
@@ -179,144 +205,25 @@ public class AdminServlet extends HttpServlet {
                 
                 // Get session with sessionId
                 session = activeUsers.get(sessionId);
-
-                if (!activeUsers.containsKey(sessionId) || session == null || session.getAttribute("user") == null) {
-
-                	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Line 197");
-
-                }
+                //log.info("activeUsers sessionId:" + session.getId().toString());
             
             } else {
     		
-            	response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 203");
+            	response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 212");
 
             }
     	
-    	}else 
+    	}
+    	
+        if (session == null || session.getAttribute("user") == null) {
+
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Line 220");
+
+        } else {
     		
-		            log.info("CurrentUserSessionId: " + sessionId);
 		            performTask(request, response);
-    		
-    		
-    		// user = (String) session.getAttribute("user");	 	   
-    	/*	sessionID = session.getId();
-    	
-        // Allocate a output writer to write the response message into the network socket
-        PrintWriter out = response.getWriter();
-   
-        // Use ResourceBundle to keep localized string in "LocalStrings_xx.properties"
-        ResourceBundle rb = ResourceBundle.getBundle("LocalStrings",  request.getLocale());
-   
-        
-        // Write the response message, in an HTML page
-        try {
-           
-           out.println("<!DOCTYPE html");  // HTML 5
-           out.println("<html><head>");
-           out.println("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>");
-           
-           String title = rb.getString("sessions.title");
-           
-           out.println("<head><title>" + title + "</title></head>");
-           out.println("<body>");
-           out.println("<h3>" + title + "</h3>");
-    	
-        out.println("<!DOCTYPE html");  // HTML 5
-        out.println("<html><head>");
-        out.println("<meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>");
-        String title_ = rb.getString("requestinfo.title");
-        out.println("<head><title>" + title_ + "</title></head>");
-        out.println("<body>");
-        out.println("<h3>" + title_ + "</h3>");
-
-        // Tabulate the request information 
-        out.println("<table>");
-        out.println("<tr><td>" + rb.getString("requestinfo.label.protocol") + "</td>");
-        out.println("<td>" + request.getProtocol() + "</td></tr>");
-        out.println("<tr><td>" + rb.getString("requestinfo.label.method") + "</td>");
-        out.println("<td>" + request.getMethod() + "</td></tr>");
-        out.println("</td></tr><tr><td>");
-        out.println("<tr><td>" + rb.getString("requestinfo.label.requesturi") + "</td>");
-        out.println("<td>" + HTMLFilter.filter(request.getRequestURI()) + "</td></tr>");
-        out.println("<tr><td>" + rb.getString("requestinfo.label.pathinfo") + "</td>");
-        out.println("<td>" + HTMLFilter.filter(request.getPathInfo()) + "</td></tr>");
-        out.println("<tr><td>Path Translated:</td>");
-        out.println("<td>" + request.getPathTranslated() + "</td></tr>");
-        out.println("<tr><td>" + rb.getString("requestinfo.label.remoteaddr") + "</td>");
-        out.println("<td>" + request.getRemoteAddr() + "</td></tr>");
-    	
-    	// Display session information
-        out.println(rb.getString("sessions.id") + " " + session.getId() + "<br />");
-        out.println(rb.getString("sessions.created") + " ");
-        out.println(new Date(session.getCreationTime()) + "<br />");
-        out.println(rb.getString("sessions.lastaccessed") + " ");
-        out.println(new Date(session.getLastAccessedTime()) + "<br /><br />");
-        
-        //TODO: get system.property for unique identifier
-        
-        // Set an attribute (name-value pair) if present in the request
-        String attName = request.getParameter("attribute_name");
-        
-        if (attName != null) attName = attName.trim();
-        
-        String attValue = request.getParameter("attribute_value");
-        
-        if (attValue != null) attValue = attValue.trim();
-        if (attName != null && !attName.equals("") && attValue != null && !attValue.equals("") ) {
-           
-        	// synchronized session object to prevent concurrent update
-           synchronized(session) {
-        	   
-              session.setAttribute(attName, attValue);
-           }
-        }
-
-        // Display the attributes (name-value pairs) stored in this session
-        out.println(rb.getString("sessions.data") + "<br>");
-        
-        Enumeration<String> names = session.getAttributeNames();
-        
-        while (names.hasMoreElements()) {
-            String name = (String) names.nextElement();
-            String value = session.getAttribute(name).toString();
-            
-            out.println(HTMLFilter.filter(name) + " = " + HTMLFilter.filter(value) + "<br>");
-        }
-        out.println("<br />");
-
-        // Display a form to prompt user to create session attribute
-        out.println("<form method='get'>");
-        out.println(rb.getString("sessions.dataname"));
-        out.println("<input type='text' name='attribute_name'><br />");
-        out.println(rb.getString("sessions.datavalue"));
-        out.println("<input type='text' name='attribute_value'><br />");
-        out.println("<input type='submit' value='SEND'>");
-        out.println("</form><br />");
-
-        out.print("<a href=");
-        // Encode URL by including the session ID (URL-rewriting)
-        out.print(response.encodeURL(request.getRequestURI() + "?attribute_name=foo&attribute_value=bar"));
-        out.println("'>Encode URL with session ID (URL re-writing)</a>");
-        out.println("</body></html>");
-        
-        //TODO:logout
-        out.print("<a href=/login/logout");
-
-        out.println(">Logout</a>");
-        out.println("</body></html>");
-        
-        out.close();  // Always close the output writer
-        
-        
-
-     } catch (Exception e) {
-
-    	 //HttpSession session = request.getSession(false);
-    	 //session.invalidate();
- 		 //response.sendRedirect("https://localhost/javaScript/mainpage.html");
-    	 out.close();  // Always close the output writer
-
-     }*/
+    			//	log.info("CurrentUserSessionId: " + sessionId);
+        	}
     	
     	}
     

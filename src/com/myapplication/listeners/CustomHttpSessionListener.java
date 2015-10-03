@@ -46,7 +46,9 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
     	HttpSession session = event.getSession();
         ServletContext context = session.getServletContext();
         activeUsers = (HashMap<String, HttpSession>) context.getAttribute("activeUsers");
-        sessionUsers = (HashMap<String, String>) context.getAttribute("sessionUsers");
+    	activeUsers.put(session.getId(), session);
+
+      /*  sessionUsers = (HashMap<String, String>) context.getAttribute("sessionUsers");
         
         if (sessionUsers.containsKey((String) session.getAttribute("user"))) {
         	
@@ -63,13 +65,14 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
         	sessionUsers.put((String) session.getAttribute("user"), session.getId());
         	activeUsers.put(session.getId(), session);
         }
-                
+        */
+    	
         log.info("New SessionID: " + session.getId().toString());
         context.setAttribute("activeUsers", activeUsers);
-        context.setAttribute("sessionUsers", sessionUsers);
+        //context.setAttribute("sessionUsers", sessionUsers);
 
         log.info("Active UserSessions: " + activeUsers.keySet().toString());
-        log.info("sessionUsers: " + sessionUsers.values().toString());
+       // log.info("sessionUsers: " + sessionUsers.values().toString());
 
     }
 
@@ -83,7 +86,7 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
     	HttpSession    session = event.getSession();
         ServletContext context = session.getServletContext();
         activeUsers = (HashMap<String, HttpSession>)context.getAttribute("activeUsers");
-        sessionUsers = (HashMap<String, String>)context.getAttribute("sessionUsers");
+       // sessionUsers = (HashMap<String, String>)context.getAttribute("sessionUsers");
         
         try {
 			
@@ -95,7 +98,7 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
         		e.printStackTrace();
 		}
         activeUsers.remove(session.getId());
-        sessionUsers.remove((String) session.getAttribute("user"));
+       // sessionUsers.remove((String) session.getAttribute("user"));
         
     }
     
