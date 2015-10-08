@@ -13,6 +13,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import com.myapplication.SQLAccess;
+
+import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
@@ -106,7 +108,23 @@ public class HelloWorld extends HttpServlet {
 				response.sendRedirect(encodedURL);
 
 			}else{
-	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 109");
+				
+				response.setContentType("application/json"); 
+				response.setCharacterEncoding("utf-8"); 
+				response.setStatus(502);
+
+				PrintWriter out = response.getWriter(); 
+				
+				//create Json Object 
+				JSONObject json = new JSONObject(); 
+				
+				// put some value pairs into the JSON object . 				
+				json.put("Session creation", "failed"); 
+				json.put("Success", "false"); 
+				
+				// finally output the json string 
+				out.print(json.toString());
+				out.flush();
 	    		
 			}
         

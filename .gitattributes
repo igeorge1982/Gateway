@@ -38,20 +38,3 @@ src/com/myapplication/listeners/CustomHttpSessionListener.java -text
 src/com/myapplication/listeners/CustomServletContextListener.java -text
 src/com/myapplication/utils/AesUtil.java -text
 src/com/myapplication/utils/Memory.java -text
-target/lib/aopalliance-1.0.jar -text svneol=unset#application/zip
-target/lib/bsh-2.0b4.jar -text svneol=unset#application/zip
-target/lib/commons-codec-1.4.jar -text svneol=unset#application/zip
-target/lib/commons-io-2.4.jar -text svneol=unset#application/zip
-target/lib/commons-logging-1.2.jar -text svneol=unset#application/zip
-target/lib/javax.servlet-api-3.1.0.jar -text svneol=unset#application/zip
-target/lib/jcommander-1.48.jar -text svneol=unset#application/zip
-target/lib/json-20141113.jar -text svneol=unset#application/zip
-target/lib/log4j-1.2.17.jar -text svneol=unset#application/java-archive
-target/lib/mysql-connector-java-5.1.35.jar -text svneol=unset#application/java-archive
-target/lib/spring-aop-4.2.1.RELEASE.jar -text svneol=unset#application/zip
-target/lib/spring-beans-4.2.1.RELEASE.jar -text svneol=unset#application/zip
-target/lib/spring-context-4.2.1.RELEASE.jar -text svneol=unset#application/zip
-target/lib/spring-core-4.2.1.RELEASE.jar -text svneol=unset#application/zip
-target/lib/spring-expression-4.2.1.RELEASE.jar -text svneol=unset#application/zip
-target/lib/spring-web-4.2.1.RELEASE.jar -text svneol=unset#application/zip
-target/lib/testng-6.9.4.jar -text svneol=unset#application/zip

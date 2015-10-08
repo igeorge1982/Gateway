@@ -90,6 +90,7 @@ public class AdminServlet extends HttpServlet {
 			JSONObject json = new JSONObject(); 
 			
 			// put some value pairs into the JSON object . 				
+			json.put("SQLAccess", "failed"); 
 			json.put("Success", "false"); 
 			
 			// finally output the json string 
@@ -208,9 +209,24 @@ public class AdminServlet extends HttpServlet {
                 //log.info("activeUsers sessionId:" + session.getId().toString());
             
             } else {
-    		
-            	response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 212");
+            	
+    			response.setContentType("application/json"); 
+    			response.setCharacterEncoding("utf-8"); 
+    			response.setStatus(502);
 
+    			PrintWriter out = response.getWriter(); 
+    			
+    			//create Json Object 
+    			JSONObject json = new JSONObject(); 
+    			
+    			// put some value pairs into the JSON object . 				
+    			json.put("acticeUsers", "failed"); 
+    			json.put("Success", "false"); 
+    			
+    			// finally output the json string 
+    			out.print(json.toString());
+    			out.flush();
+    			
             }
     	
     	}
