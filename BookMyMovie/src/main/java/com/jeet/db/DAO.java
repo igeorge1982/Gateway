@@ -110,6 +110,30 @@ public class DAO {
 		return list.get(0);
 	}
 	
+	public int getNewUser(String newuser){
+		
+		Session session = factory.openSession();
+		String hql = "from Logins where user like :mUser";
+		String hql_ = "from Logins where user = :mUser";
+
+		Query query = session.createQuery(hql);
+		query.setParameter("mUser", newuser+"%").list();
+		
+		Query query_ = session.createQuery(hql_);
+		query_.setParameter("mUser", newuser).list();
+		
+		@SuppressWarnings("unchecked")
+		List<Logins> list = query.list();
+		@SuppressWarnings("unchecked")
+		List<Logins> list_ = query_.list();
+
+		if (list_.isEmpty()) {
+		
+		return list_.size();
+	} else {
+		return list.size(); }
+	}
+	
 	public Logins getUuid(String uuid){
 		
 		Session session = factory.openSession();

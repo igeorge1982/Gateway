@@ -11,6 +11,6 @@ public class MyApplicationExceptionHandler implements ExceptionMapper<MyApplicat
     @Override
     public Response toResponse(MyApplicationException exception)
     {
-        return Response.status(Status.BAD_REQUEST).entity(exception.getMessage()).build(); 
+        return Response.status(Status.BAD_REQUEST).entity("error").build(); 
     }
 }

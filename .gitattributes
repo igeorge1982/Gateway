@@ -10,6 +10,7 @@ BookMyMovie/.settings/org.eclipse.wst.common.project.facet.core.xml -text
 BookMyMovie/.settings/org.eclipse.wst.validation.prefs -text
 BookMyMovie/.settings/org.hibernate.eclipse.console.prefs -text
 BookMyMovie/.springBeans -text
+BookMyMovie/README.md -text
 BookMyMovie/dependency-reduced-pom.xml -text
 BookMyMovie/mkyongapp.log -text
 BookMyMovie/pom.xml -text
@@ -38,11 +39,15 @@ BookMyMovie/src/main/java/com/jeet/service/BookingHandlerImpl.java -text
 BookMyMovie/src/main/java/com/jeet/utils/AesUtil.java -text
 BookMyMovie/src/main/java/com/jeet/utils/MyApplicationException.java -text
 BookMyMovie/src/main/java/com/jeet/utils/MyApplicationExceptionHandler.java -text
+BookMyMovie/src/main/java/com/jeet/utils/MyException.java -text
 BookMyMovie/src/main/java/hibernate-configuration-3.0.dtd -text
 BookMyMovie/src/main/resources/hibernate.cfg.xml -text
 BookMyMovie/src/main/resources/import.sql -text
 BookMyMovie/src/main/resources/logback.xml -text
 BookMyMovie/src/main/webapp/WEB-INF/web.xml -text
+BookMyMovie/target/classes/hibernate.cfg.xml -text
+BookMyMovie/target/classes/import.sql -text
+BookMyMovie/target/classes/logback.xml -text
 BookMyMovie/target/maven-archiver/pom.properties -text
 BookMyMovie/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst -text
 BookMyMovie/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst -text
@@ -72,6 +77,7 @@ BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/service/BookingHandlerImpl.c
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/utils/AesUtil.class -text svneol=unset#application/x-java-applet
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/utils/MyApplicationException.class -text svneol=unset#application/x-java-applet
 BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/utils/MyApplicationExceptionHandler.class -text svneol=unset#application/x-java-applet
+BookMyMovie/target/mbook-1/WEB-INF/classes/com/jeet/utils/MyException.class -text
 BookMyMovie/target/mbook-1/WEB-INF/classes/hibernate-configuration-3.0.dtd -text
 BookMyMovie/target/mbook-1/WEB-INF/classes/hibernate.cfg.xml -text svneol=unset#application/xml
 BookMyMovie/target/mbook-1/WEB-INF/classes/import.sql -text

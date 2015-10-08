@@ -13,6 +13,7 @@
 /Users/georgegaspar/Documents/workspace/BookMyMovie/src/main/java/com/jeet/api/Device_states.java
 /Users/georgegaspar/Documents/workspace/BookMyMovie/src/main/java/com/jeet/api/ObjectFactory.java
 /Users/georgegaspar/Documents/workspace/BookMyMovie/src/main/java/com/jeet/rest/BookController.java
+/Users/georgegaspar/Documents/workspace/BookMyMovie/src/main/java/com/jeet/utils/MyException.java
 /Users/georgegaspar/Documents/workspace/BookMyMovie/src/main/java/com/jeet/api/Seat.java
 /Users/georgegaspar/Documents/workspace/BookMyMovie/src/main/java/com/jeet/api/BookHandler.java
 /Users/georgegaspar/Documents/workspace/BookMyMovie/src/main/java/com/jeet/api/Vouchers.java

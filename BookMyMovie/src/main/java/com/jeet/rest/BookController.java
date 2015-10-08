@@ -1,5 +1,6 @@
 package com.jeet.rest;
 
+import java.net.HttpURLConnection;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -12,6 +13,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import com.jeet.api.Devices;
 import com.jeet.api.Logins;
 import com.jeet.api.Movie;
@@ -19,6 +23,7 @@ import com.jeet.api.Tokens;
 import com.jeet.service.BookingHandlerImpl;
 import com.jeet.utils.AesUtil;
 import com.jeet.utils.MyApplicationException;
+import com.jeet.utils.MyException;
 import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 
 @Path("/")
@@ -54,7 +59,7 @@ public class BookController {
 		
 			return Response.status(404).build();
 		}
-	}*/
+	}
 	
 	@GET
 	@Path("/book/{detail}")
@@ -71,32 +76,40 @@ public class BookController {
 		
 			return Response.status(404).build();
 		}
-	}
+	}*/
 	
 	@GET
 	@Path("/device/{uuid}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response getDevice(@PathParam(value = "uuid") String uuid) throws MyApplicationException {
 		
-		Devices device = new BookingHandlerImpl().getDevice(uuid);
-		
 		if (uuid == null) {
-            throw new MyApplicationException("uuid is not present in request !!");
+           // throw new MyApplicationException("uuid is not present in request !!");
+			return Response.status(404).build();
+
 		}
 		
+		Logins user_ = new BookingHandlerImpl().getUuid(uuid);
+
+		if (user_ == null) {
+			
+			return Response.noContent().status(404).entity("user not found").build();
+		
+		}
+		
+		Devices device = new BookingHandlerImpl().getDevice(uuid);
+
 		if (device != null) {
+			
 			return Response.ok().status(200).entity(device).header("Device", device.getDevice()).build();
 		
 		}
 		
 		else {
 			
-			ResponseBuilderImpl builder = new ResponseBuilderImpl();
-			builder.status(Response.Status.BAD_REQUEST);
-			builder.entity("The requested resource could not be served.");
-			Response response = builder.build();
-			  
-			throw new WebApplicationException(response);		}
+			return Response.noContent().status(404).build();
+
+		}
 	}
 	
 	@GET
@@ -112,10 +125,11 @@ public class BookController {
 			System.out.println(header);
 		}
 		
-		ciphertext = headers.getRequestHeaders().get("Ciphertext");
-        plaintext = aesUtil.decrypt(SALT, IV, PASSPHRASE, ciphertext.toString());
 		
-        if (plaintext.equals(ORIGINPLAINTEXT)) {
+		//ciphertext = headers.getRequestHeaders().get("Ciphertext");
+        //plaintext = aesUtil.decrypt(SALT, IV, PASSPHRASE, ciphertext.toString());
+		
+        //if (plaintext.equals(ORIGINPLAINTEXT)) {
         
 			if (user_ != null && token != null) {
 				
@@ -127,11 +141,35 @@ public class BookController {
 		
 				}		
         
-        } else {
+        //} else {
 			
-        	return Response.status(403).build();
+        //	return Response.status(403).build();
         	
-        }
+        //}
+	}
+	
+	@GET
+	@Path("/newuser/{newuser}")
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	
+	public Response getNewUser(@Context HttpHeaders headers, @PathParam(value = "newuser") String newuser) {
+		
+		int newuser_ = new BookingHandlerImpl().getNewUser(newuser);
+		
+		for(String header : headers.getRequestHeaders().keySet()){
+			System.out.println(header);
+		}
+		      
+			if (newuser_ > 0) {
+				
+					return Response.ok().status(412).entity("User name is already taken!").build();		
+				
+				} else {
+			
+					return Response.status(200).entity("Okay!").build();
+		
+				}		
+    
 	}
 	
 	/*
