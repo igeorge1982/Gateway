@@ -67,7 +67,6 @@ public class Registration extends HttpServlet {
     	pass = request.getParameter("pswrd");
         voucher = request.getParameter("voucher_");
         deviceId = request.getParameter("deviceId");
-    	session = request.getSession();
 		ServletContext context = request.getServletContext();
 
 
@@ -79,16 +78,19 @@ public class Registration extends HttpServlet {
 
             if (voucher != null && !voucher.equals("") ) {
             	
+            	session = request.getSession(true);
+
                // synchronized session object to prevent concurrent update
                synchronized(session) {
-                  session.setAttribute("voucher", voucher);
+                  
+            	   session.setAttribute("voucher", voucher);
                 
 			if (SQLAccess.register_voucher(voucher, context)) {
                   
               if (SQLAccess.new_hash(pass, user, context) && SQLAccess.insert_voucher(voucher, user, pass, context) && SQLAccess.insert_device(deviceId, user, context)) {
 				
 				session.setAttribute("user", user);				
-				session.setAttribute("device", deviceId);
+				session.setAttribute("deviceId", deviceId);
 				
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60);
