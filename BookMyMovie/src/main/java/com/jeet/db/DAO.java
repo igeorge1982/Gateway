@@ -161,7 +161,6 @@ public class DAO {
 		
 		return list.get(0);
 	}
-
 	
 	public Ticket getTicket(String screenId, String seatId){
 		

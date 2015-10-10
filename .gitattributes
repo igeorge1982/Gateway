@@ -24,6 +24,7 @@ BookMyMovie/src/main/java/com/jeet/api/InvalidTicketException.java -text
 BookMyMovie/src/main/java/com/jeet/api/Logins.java -text
 BookMyMovie/src/main/java/com/jeet/api/Movie.java -text
 BookMyMovie/src/main/java/com/jeet/api/ObjectFactory.java -text
+BookMyMovie/src/main/java/com/jeet/api/Pictures.java -text
 BookMyMovie/src/main/java/com/jeet/api/Screen.java -text
 BookMyMovie/src/main/java/com/jeet/api/Seat.java -text
 BookMyMovie/src/main/java/com/jeet/api/Ticket.java -text
@@ -37,6 +38,8 @@ BookMyMovie/src/main/java/com/jeet/rest/BookController.java -text
 BookMyMovie/src/main/java/com/jeet/rest/BookingExceptionMapper.java -text
 BookMyMovie/src/main/java/com/jeet/service/BookingHandlerImpl.java -text
 BookMyMovie/src/main/java/com/jeet/utils/AesUtil.java -text
+BookMyMovie/src/main/java/com/jeet/utils/CustomNotFoundException.java -text
+BookMyMovie/src/main/java/com/jeet/utils/EntityNotFoundMapper.java -text
 BookMyMovie/src/main/java/com/jeet/utils/MyApplicationException.java -text
 BookMyMovie/src/main/java/com/jeet/utils/MyApplicationExceptionHandler.java -text
 BookMyMovie/src/main/java/com/jeet/utils/MyException.java -text
@@ -45,9 +48,6 @@ BookMyMovie/src/main/resources/hibernate.cfg.xml -text
 BookMyMovie/src/main/resources/import.sql -text
 BookMyMovie/src/main/resources/logback.xml -text
 BookMyMovie/src/main/webapp/WEB-INF/web.xml -text
-BookMyMovie/target/classes/hibernate.cfg.xml -text
-BookMyMovie/target/classes/import.sql -text
-BookMyMovie/target/classes/logback.xml -text
 BookMyMovie/target/maven-archiver/pom.properties -text
 BookMyMovie/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst -text
 BookMyMovie/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst -text

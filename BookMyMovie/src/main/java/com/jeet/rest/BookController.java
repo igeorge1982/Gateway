@@ -1,30 +1,28 @@
 package com.jeet.rest;
 
-import java.net.HttpURLConnection;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 
+import javax.activation.MimetypesFileTypeMap;
+import javax.imageio.ImageIO;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 import com.jeet.api.Devices;
 import com.jeet.api.Logins;
-import com.jeet.api.Movie;
 import com.jeet.api.Tokens;
 import com.jeet.service.BookingHandlerImpl;
 import com.jeet.utils.AesUtil;
-import com.jeet.utils.MyApplicationException;
-import com.jeet.utils.MyException;
-import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
+import com.jeet.utils.CustomNotFoundException;
 
 @Path("/")
 public class BookController {
@@ -81,21 +79,8 @@ public class BookController {
 	@GET
 	@Path("/device/{uuid}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response getDevice(@PathParam(value = "uuid") String uuid) throws MyApplicationException {
+	public Response getDevice(@PathParam(value = "uuid") String uuid) {
 		
-		if (uuid == null) {
-           // throw new MyApplicationException("uuid is not present in request !!");
-			return Response.status(404).build();
-
-		}
-		
-		Logins user_ = new BookingHandlerImpl().getUuid(uuid);
-
-		if (user_ == null) {
-			
-			return Response.noContent().status(404).entity("user not found").build();
-		
-		}
 		
 		Devices device = new BookingHandlerImpl().getDevice(uuid);
 
@@ -107,7 +92,7 @@ public class BookController {
 		
 		else {
 			
-			return Response.noContent().status(404).build();
+			return Response.status(404).build();
 
 		}
 	}
@@ -171,6 +156,22 @@ public class BookController {
 				}		
     
 	}
+	
+    @GET
+    @Path("/images/{image}")
+    @Produces("image/*")
+    public Response getImage(@PathParam("image") String image) throws IOException {
+
+      File f = new File("/Users/georgegaspar/Pictures/Exports/" + image);
+      
+      BufferedImage img = ImageIO.read(f);
+
+      if (!f.exists()) 
+        throw new CustomNotFoundException("Image not found");
+          
+      String mt = new MimetypesFileTypeMap().getContentType(f);
+      return Response.ok(img, mt).build();
+    }
 	
 	/*
 	@DELETE
