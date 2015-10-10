@@ -6,6 +6,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import org.apache.log4j.Logger;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.myapplication.DBConnectionManager;
 
 public class CustomServletContextListener implements ServletContextListener{
@@ -13,6 +16,8 @@ public class CustomServletContextListener implements ServletContextListener{
 	private static Logger log = Logger.getLogger(Logger.class.getName());
 	private volatile static HashMap<String, Object> activeUsers;
 	private volatile static HashMap<String, String> sessionUsers;
+	private static volatile Multimap<String, String> sessions;
+
 
    public void contextInitialized(ServletContextEvent event){
     
@@ -36,6 +41,9 @@ public class CustomServletContextListener implements ServletContextListener{
        
        sessionUsers = new HashMap<String, String>();
        context.setAttribute("sessionUsers", sessionUsers);
+       
+       sessions = ArrayListMultimap.create();
+       context.setAttribute("sessions", sessions);
    }
 
    /**

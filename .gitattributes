@@ -36,5 +36,7 @@ src/com/myapplication/filters/XSSRequestWrapper.java -text
 src/com/myapplication/filters/XssFilter.java -text
 src/com/myapplication/listeners/CustomHttpSessionListener.java -text
 src/com/myapplication/listeners/CustomServletContextListener.java -text
+src/com/myapplication/listeners/SessionAttributeListener.java -text
+src/com/myapplication/listeners/SessionBindingListener.java -text
 src/com/myapplication/utils/AesUtil.java -text
 src/com/myapplication/utils/Memory.java -text

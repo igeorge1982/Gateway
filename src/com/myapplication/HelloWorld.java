@@ -13,6 +13,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import com.myapplication.SQLAccess;
+import com.myapplication.listeners.SessionBindingListener;
 
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
@@ -62,7 +63,8 @@ public class HelloWorld extends HttpServlet {
  	  		 
  		     session.invalidate();
  	     }
- 		ServletContext context = request.getServletContext();
+ 		
+ 	     ServletContext context = request.getServletContext();
 	      
         // Actual logic goes here.		
         try {
@@ -84,12 +86,15 @@ public class HelloWorld extends HttpServlet {
         		// Create new session
 				session = request.getSession(true);
 			
+				// Add a HttpSessionBindingListener
+				session.setAttribute("name", new SessionBindingListener(getServletContext()));
+				
 				// synchronized session object to prevent concurrent update		        	   
 				synchronized(session) {
 
 				session.setAttribute("user", user);
 				session.setAttribute("deviceId", deviceId);
-				request.removeAttribute("pswrd");
+				session.removeAttribute("pswrd");
 				SessionCreated = session.getCreationTime();
 				sessionID = session.getId();
 		           }
