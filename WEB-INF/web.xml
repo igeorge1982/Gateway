@@ -52,6 +52,12 @@
         com.myapplication.listeners.CustomHttpSessionListener
     </listener-class>
 </listener>
+    
+<listener>
+    <listener-class>
+        com.myapplication.listeners.SessionAttributeListener
+    </listener-class>
+</listener>
 
      <filter>
         <description>Set cache expiry for static content</description>

@@ -3,12 +3,8 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import org.apache.log4j.Logger;
-
 public class XSSRequestWrapper extends HttpServletRequestWrapper {
 	
-	private static Logger log = Logger.getLogger(Logger.class.getName());
-
     private static Pattern[] patterns = new Pattern[]{
         // Script fragments
         Pattern.compile("<script>(.*?)</script>", Pattern.CASE_INSENSITIVE),
@@ -37,8 +33,6 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String[] getParameterValues(String parameter) {
         String[] values = super.getParameterValues(parameter);
-
-        log.info("XssFiltering for params: " + values);
     
         if (values == null) {
             return null;
@@ -63,9 +57,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public String getHeader(String name) {
         String value = super.getHeader(name);
-        
-        log.info("XssFiltering for headers: " + value);
-        
+                
         return stripXSS(value);
     }
 

@@ -10,26 +10,26 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
+
 public class HSTSFilter implements Filter {
+	private static Logger log = Logger.getLogger(Logger.class.getName());
 
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        HttpServletResponse resp = (HttpServletResponse) res;
-
-        if (req.isSecure())
-            resp.setHeader("Strict-Transport-Security", "max-age=31622400; includeSubDomains; preload");
-
-        chain.doFilter(req, resp);
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        log.info("HSTSFilter init");
     }
 
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+        ((HttpServletResponse) res).setHeader("Strict-Transport-Security", "max-age=12960000; includeSubdomains; preload");
+        log.info("Added Strict-Transport-Security header to response");
 
-	@Override
-	public void destroy() {
-		// TODO Auto-generated method stub
-		
-	}
+        chain.doFilter(req, res);
+    }
+
+    @Override
+    public void destroy() {
+    }
 }

@@ -11,7 +11,7 @@
 .settings/org.eclipse.wst.jsdt.ui.superType.name -text
 .settings/org.eclipse.wst.validation.prefs -text
 /README.md -text
-WebContent/WEB-INF/web.xml -text svneol=unset#application/xml
+WEB-INF/web.xml -text
 /pom.xml -text
 scripts/login_Last_seen.sql -text
 scripts/login_Tokens.sql -text
@@ -29,7 +29,6 @@ src/com/myapplication/Loggingout.java -text
 src/com/myapplication/Registration.java -text
 src/com/myapplication/SQLAccess.java -text
 src/com/myapplication/Voucher.java -text
-src/com/myapplication/filters/AccessFilter.java -text
 src/com/myapplication/filters/HSTSFilter.java -text
 src/com/myapplication/filters/RohadekFilter.java -text
 src/com/myapplication/filters/XSSRequestWrapper.java -text
