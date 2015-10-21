@@ -5,18 +5,21 @@ import java.util.HashMap;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
+
 import org.apache.log4j.Logger;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import com.myapplication.DBConnectionManager;
 
+@WebListener
 public class CustomServletContextListener implements ServletContextListener{
 	
 	private static Logger log = Logger.getLogger(Logger.class.getName());
 	private volatile static HashMap<String, Object> activeUsers;
-	private volatile static HashMap<String, String> sessionUsers;
 	private static volatile Multimap<String, String> sessions;
+	private static volatile HashMap<String,String> attributes;
 
 
    public void contextInitialized(ServletContextEvent event){
@@ -39,10 +42,10 @@ public class CustomServletContextListener implements ServletContextListener{
        activeUsers = new HashMap<String, Object>();
        context.setAttribute("activeUsers", activeUsers);
        
-       sessionUsers = new HashMap<String, String>();
-       context.setAttribute("sessionUsers", sessionUsers);
+       attributes = new HashMap<String, String>();
+       context.setAttribute("attributes", attributes); 
        
-       sessions = ArrayListMultimap.create();
+       sessions = TreeMultimap.create();
        context.setAttribute("sessions", sessions);
    }
 
@@ -68,4 +71,5 @@ public class CustomServletContextListener implements ServletContextListener{
    
    }
 }
+
 

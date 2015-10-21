@@ -9,6 +9,9 @@ import org.apache.log4j.Logger;
 public class SessionAttributeListener implements HttpSessionAttributeListener {
 
 	private static Logger log = Logger.getLogger(Logger.class.getName());
+	private static volatile String id;
+	private static volatile String name;
+	private static volatile String value;
 
   /** Creates new SessionAttribListen */
   public SessionAttributeListener() {
@@ -19,9 +22,9 @@ public class SessionAttributeListener implements HttpSessionAttributeListener {
   public void attributeAdded(HttpSessionBindingEvent se) {
 
     HttpSession session = se.getSession();
-    String id = session.getId();
-    String name = se.getName();
-    String value = (String) se.getValue();
+    id = session.getId();
+    name = se.getName();
+    value = (String) se.getValue();
     String source = se.getSource().getClass().getName();
     String message = new StringBuffer("Attribute bound to session in ")
         .append(source).append("\nThe attribute name: ").append(name)
@@ -33,11 +36,11 @@ public class SessionAttributeListener implements HttpSessionAttributeListener {
   public void attributeRemoved(HttpSessionBindingEvent se) {
 
     HttpSession session = se.getSession();
-    String id = session.getId();
-    String name = se.getName();
+    id = session.getId();
+    name = se.getName();
     if (name == null)
       name = "Unknown";
-    String value = (String) se.getValue();
+    value = (String) se.getValue();
     String source = se.getSource().getClass().getName();
     String message = new StringBuffer("Attribute unbound from session in ")
         .append(source).append("\nThe attribute name: ").append(name)
