@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>
+            Register page
+        </title>
+        <script type="text/javascript" src="sha3.js"></script>
+        <script type="text/javascript" src="aes.js"></script>
+        <script type="text/javascript" src="function.js" ></script>
+        <script type="text/javascript" src="register.js" ></script>
+        <script type="text/javascript" src="angular.min.js"></script>
+        <script type="text/javascript" src="controllers.js"></script>
+        <script type="text/javascript" src="app.js"></script>
+        <script type="text/javascript" src="directives.js"></script>
+        <script type="text/javascript" src="angular-messages.js"></script>
+
+        <meta charset="UTF-8">
+            </head>
+    <body>
+        <div data-ng-app="myApp">
+        <h1> Simple Register Page</h1>
+        
+        <div ng-controller="SearchCtrl">
+                <form name="login">
+                  <div class="field">
+                     
+                     Username<input type="text" name="user" id="user" ng-model="keywords" ng-change="search()"
+                     ng-maxlength="10"
+                     required/>
+                    
+                    <ng-messages for="login.field.$error">
+                        <div ng-repeat="errorMessage in errorMessages">
+                            <div ng-message-exp="errorMessage.type">
+                                {{errorMessage}}
+                            </div>
+                        </div>
+                    </ng-messages>
+                    
+                    Password<input type="password" name="pswrd" id="pswrd"/>
+                    <input type="button" onclick="check(this.form)" value="Login"/>
+                    <input type="reset" value="Cancel"/>
+                </form>
+                </div>
+        </div>
+
+    </body>
+</html>

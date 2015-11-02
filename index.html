@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <script type="text/javascript" src="hw.js" ></script>
+    </head>
+    <body>
+        <a href="operators.html">Operators</a>
+        <a href="validations.html">Validations</a>
+        <a href="mainpage.html">Login</a>
+        <a href="voucher.html">Voucher</a>
+        <script type="text/javascript" src="function.js" ></script>
+        <script type="text/javascript" src="main.js" ></script>
+        <input type="button" onclick="sayHello()" value="Say Hello" />
+        <p>This is web page body </p>
+        <input type="button" onclick="checkscope()" value="Check" />
+        <p>Set the variables to different values and then try...</p>
+        <h1>JavaScript in Body</h1>
+        <p id="demo">Test site</p>
+        <button onclick="myFunction()" type="button">Try it</button>
+        <script>
+            function myFunction() {
+                if (document.getElementById("demo").innerHTML != "Have a nice day")
+                {
+                document.getElementById("demo").innerHTML = "Have a nice day";
+            } else
+                {
+                document.getElementById("demo").innerHTML = "Try it";
+                }
+            }
+        </script>
+    </body>
+</html>
+
+
