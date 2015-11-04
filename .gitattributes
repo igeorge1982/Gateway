@@ -11,8 +11,10 @@
 .settings/org.eclipse.wst.jsdt.ui.superType.name -text
 .settings/org.eclipse.wst.validation.prefs -text
 /README.md -text
+WEB-INF/log4j.properties -text
 WEB-INF/web.xml -text
 /pom.xml -text
+/properties.properties -text
 scripts/login_Last_seen.sql -text
 scripts/login_Tokens.sql -text
 scripts/login_device_states.sql -text
@@ -28,6 +30,7 @@ src/com/myapplication/HelloWorld.java -text
 src/com/myapplication/Loggingout.java -text
 src/com/myapplication/Registration.java -text
 src/com/myapplication/SQLAccess.java -text
+src/com/myapplication/UrlManager.java -text
 src/com/myapplication/Voucher.java -text
 src/com/myapplication/filters/HSTSFilter.java -text
 src/com/myapplication/filters/RohadekFilter.java -text
@@ -39,3 +42,4 @@ src/com/myapplication/listeners/SessionAttributeListener.java -text
 src/com/myapplication/listeners/SessionBindingListener.java -text
 src/com/myapplication/utils/AesUtil.java -text
 src/com/myapplication/utils/Memory.java -text
+src/com/myapplication/utils/PropertyUtils.java -text

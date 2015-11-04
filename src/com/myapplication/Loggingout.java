@@ -53,7 +53,10 @@ public class Loggingout extends HttpServlet {
 	  {	 	
 		     
 		  if (request.getHeader("Referer").contains("register")) {
-				String encodedURL = response.encodeRedirectURL("https://localhost/javaScript/voucher.html");
+			  
+				String elseUrl = getServletContext().getInitParameter("voucherElseRedirect");
+				String encodedURL = response.encodeRedirectURL(elseUrl);
+				
 				response.sendRedirect(encodedURL);
 		  } else {
 		  

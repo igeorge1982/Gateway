@@ -147,9 +147,12 @@ public class AdminServlet extends HttpServlet {
 		// Get user entity using API GET method, with user and token as request params
 		else if(token_ != null && session != null /*&& request.isRequestedSessionIdValid()*/) {			
 			
-        ServletContext otherContext = getServletContext().getContext("/mbook-1");
+			String webApiContext = context.getInitParameter("webApiContext");
+			String webApiContextUrl = context.getInitParameter("webApiContextUrl");
+			
+        ServletContext otherContext = getServletContext().getContext(webApiContext);
 
-			RequestDispatcher rd = otherContext.getRequestDispatcher("/rest/user/"+user.trim().toString()+"/"+token_.trim().toString());
+			RequestDispatcher rd = otherContext.getRequestDispatcher(webApiContextUrl + user.trim().toString()+"/"+token_.trim().toString());
 
 			rd.forward(request, response); 
 			}

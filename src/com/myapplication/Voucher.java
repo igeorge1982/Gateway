@@ -13,7 +13,6 @@ import javax.servlet.http.*;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-
 import com.myapplication.SQLAccess;
 
 
@@ -37,7 +36,7 @@ public class Voucher extends HttpServlet {
 
     public void init() throws ServletException
     {
-        // Do required initialization
+    	
     }
     
     public synchronized void processRequest (HttpServletRequest request, HttpServletResponse response)
@@ -62,13 +61,14 @@ public class Voucher extends HttpServlet {
     		ServletContext context = request.getServletContext();
     		
 			if (voucher != null && SQLAccess.voucher(voucher, context)) { 	
-	        	
-				String encodedURL = response.encodeRedirectURL("https://localhost/javaScript/register.html?voucher_="+voucher);
+	        	String url = getServletContext().getInitParameter("voucherRedirect");
+				String encodedURL = response.encodeRedirectURL(url+voucher);
 				response.sendRedirect(encodedURL);
 				
 			}
 			else {
-				response.sendRedirect("https://localhost/javaScript/voucher.html");
+				String elseUrl = getServletContext().getInitParameter("voucherElseRedirect");
+				response.sendRedirect(elseUrl);
 				
 			}
 		} catch (Exception e) {

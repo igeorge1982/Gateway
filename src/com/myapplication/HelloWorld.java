@@ -85,9 +85,6 @@ public class HelloWorld extends HttpServlet {
         		
         		// Create new session
 				session = request.getSession(true);
-			
-				// Add a HttpSessionBindingListener
-				session.setAttribute("name", new SessionBindingListener(getServletContext()));
 				
 				// synchronized session object to prevent concurrent update		        	   
 				synchronized(session) {
@@ -107,9 +104,11 @@ public class HelloWorld extends HttpServlet {
 
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60); 	
-		        
-				ServletContext otherContext = getServletContext().getContext("/example");
-				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() +"/index.jsp");
+		        String homePage = getServletContext().getInitParameter("homePage");
+		        String homePageIndex = getServletContext().getInitParameter("homePageIndex");
+
+				ServletContext otherContext = getServletContext().getContext(homePage);
+				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + homePageIndex);
 				response.sendRedirect(encodedURL);
 
 			}else{

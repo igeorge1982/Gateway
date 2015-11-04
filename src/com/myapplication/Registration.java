@@ -102,15 +102,17 @@ public class Registration extends HttpServlet {
 				} catch (Exception e) {	
 					throw new ServletException();
 				}
-				
-				ServletContext otherContext = getServletContext().getContext("/example");
-				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/index.jsp");
+		        String homePage = getServletContext().getInitParameter("homePage");
+		        String homePageIndex = getServletContext().getInitParameter("homePageIndex");
+		        
+				ServletContext otherContext = getServletContext().getContext(homePage);
+				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + homePageIndex);
 				response.sendRedirect(encodedURL);
 					
 				  }	
 	           } else {
 
-	        	   response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, "Line 108");
+	        	   response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, "Line 115");
 	           }
 			}
 		}
@@ -130,10 +132,13 @@ public class Registration extends HttpServlet {
 			if (session != null) {								
 				session.invalidate();
 			}
+	        String loginContext = getServletContext().getInitParameter("loginContext");
+	        String loginToRegister = getServletContext().getInitParameter("loginToRegister");
+	        String loginToLogout = getServletContext().getInitParameter("loginToLogout");
 			
-			response.setHeader("Referer", request.getContextPath() + "/login/register");
-			ServletContext otherContext = getServletContext().getContext("/login");
-			String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + "/login/logout");
+			response.setHeader("Referer", request.getContextPath() + loginToRegister);
+			ServletContext otherContext = getServletContext().getContext(loginContext);
+			String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + loginToLogout);
 			response.sendRedirect(encodedURL);
 		
 		} 
@@ -154,11 +159,11 @@ public class Registration extends HttpServlet {
             deviceId = request.getParameter("deviceId");
 			
 			if (voucher.trim().isEmpty() || user.trim().isEmpty() || pass.trim().isEmpty() || deviceId.trim().isEmpty()) {
-	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 161");
+	    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 162");
 			}
 					
 		} catch (Exception e) {			
-    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 165");
+    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 166");
 
 		}
         

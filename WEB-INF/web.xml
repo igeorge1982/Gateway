@@ -28,6 +28,7 @@
      Welcome to Tomcat
   </description>
     
+  <!-- DBManager -->
   <context-param>
     <param-name>DBUSER</param-name>
     <param-value>sqluser</param-value>
@@ -41,6 +42,45 @@
     <param-value>jdbc:mysql://localhost:3306/login</param-value>
   </context-param>
   
+  <!-- UrlManager -->
+  <context-param>
+    <param-name>voucherRedirect</param-name>
+    <param-value>https://localhost/javaScript/register.html?voucher_=</param-value>
+  </context-param>
+    <context-param>
+    <param-name>voucherElseRedirect</param-name>
+    <param-value>https://localhost/javaScript/voucher.html</param-value>
+  </context-param>  
+  <context-param>
+    <param-name>homePage</param-name>
+    <param-value>/example</param-value>
+  </context-param>  
+  <context-param>
+    <param-name>homePageIndex</param-name>
+    <param-value>/index.jsp</param-value>
+  </context-param>  
+  <context-param>
+    <param-name>loginContext</param-name>
+    <param-value>/login</param-value>
+  </context-param>  
+  <context-param>
+    <param-name>loginToRegister</param-name>
+    <param-value>/login/register</param-value>
+  </context-param>  
+  <context-param>
+    <param-name>loginToLogout</param-name>
+    <param-value>/login/logout</param-value>
+  </context-param>  
+  <context-param>
+    <param-name>webApiContext</param-name>
+    <param-value>/mbook-1</param-value>
+  </context-param>  
+  <context-param>
+    <param-name>webApiContextUrl</param-name>
+    <param-value>/rest/user/</param-value>
+  </context-param>
+ 
+<!-- 
 <listener>
     <listener-class>
         com.myapplication.listeners.CustomServletContextListener
@@ -58,6 +98,7 @@
         com.myapplication.listeners.SessionAttributeListener
     </listener-class>
 </listener>
+-->
 
      <filter>
         <description>Set cache expiry for static content</description>
@@ -100,16 +141,6 @@
         <url-pattern>/example/*</url-pattern>
 		<url-pattern>/mbook-1/*</url-pattern>
 	</filter-mapping>
-	
-<!--	<filter>
-		<filter-name>AccessFilter</filter-name>
-		<filter-class>com.myapplication.filters.AccessFilter</filter-class>
-	</filter>
-
-	<filter-mapping>
-		<filter-name>AccessFilter</filter-name>
-		<url-pattern>/login/*</url-pattern>
-	</filter-mapping> -->
     
    
    <servlet>  
