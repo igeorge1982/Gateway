@@ -59,7 +59,7 @@ function check(form) {
             
             post("https://localhost/login/register", {
                  
-                 pswrd: getPsw(Password),
+                 pswrd: getPsw(psw),
                  user: userid,
                  voucher_: params['voucher_'],
                  deviceId: uuid
