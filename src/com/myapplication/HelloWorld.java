@@ -13,7 +13,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import com.myapplication.SQLAccess;
-import com.myapplication.listeners.SessionBindingListener;
 
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
@@ -29,6 +28,7 @@ public class HelloWorld extends HttpServlet {
 	private volatile static String user;
 	private volatile static String hash1;
 	private volatile static String deviceId;
+	private volatile static String ios;
 	private volatile static HttpSession session;
 	private volatile static boolean devices;
 	private volatile static long SessionCreated;
@@ -71,6 +71,7 @@ public class HelloWorld extends HttpServlet {
     		pass = request.getParameter("pswrd");	
     		user = request.getParameter("user");	
     		deviceId = request.getParameter("deviceId");
+    		ios = request.getParameter("ios");
     		
 			hash1 = SQLAccess.hash(pass, context);
 			devices = SQLAccess.insert_device(deviceId, user, context);
@@ -109,7 +110,29 @@ public class HelloWorld extends HttpServlet {
 
 				ServletContext otherContext = getServletContext().getContext(homePage);
 				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + homePageIndex);
-				response.sendRedirect(encodedURL);
+
+						if (ios != null) {
+						
+						response.setContentType("application/json"); 
+						response.setCharacterEncoding("utf-8"); 
+						response.setStatus(200);
+		
+						PrintWriter out = response.getWriter(); 
+						
+						//create Json Object 
+						JSONObject json = new JSONObject(); 
+						
+						// put some value pairs into the JSON object . 				
+						json.put("success", 1);
+						
+						// finally output the json string 
+						out.print(json.toString());
+						out.flush();
+						
+						} else {
+							response.sendRedirect(encodedURL);		
+						}
+				
 
 			}else{
 				
