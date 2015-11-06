@@ -55,10 +55,10 @@ function check(form) {
             
         {
             var Password = decrypt(encrypted_);
-            
+
             post("https://localhost/login/HelloWorld", {
                  
-                 pswrd: getPsw(Password),
+                 pswrd: getPsw(psw),
                  user: userid,
                  deviceId: uuid
                  
@@ -96,7 +96,6 @@ function check(form) {
     
     function decrypt(encrypted_) {
         var decrypted = CryptoJS.AES.decrypt(encrypted_, key);
-        
         return decrypted;
     }
     
