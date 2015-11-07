@@ -124,6 +124,7 @@ public class HelloWorld extends HttpServlet {
 						
 						// put some value pairs into the JSON object . 				
 						json.put("success", 1);
+						json.put("JSESSIONID", sessionID);
 						
 						// finally output the json string 
 						out.print(json.toString());

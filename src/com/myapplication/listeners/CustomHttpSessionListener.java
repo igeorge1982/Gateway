@@ -151,7 +151,7 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
       	  sessionId = mappings.get(D).get(1);
       	  log.info("sessionId to remove: " + sessionId);
 
-      	activeUsers.remove(sessionId);
+      	  activeUsers.remove(sessionId);
     	  
      Set<String> sessionData = sessions.get(D);
 	    
@@ -161,8 +161,9 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
       
           } else {
         	  
-        	  sessions.put(D, useR);
-        	  sessions.put(D, id);
+            activeUsers.put(id, session);
+        	sessions.put(D, useR);
+        	sessions.put(D, id);
 
           }
       context.setAttribute("activeUsers", activeUsers);
@@ -227,6 +228,7 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
 	         if (!sessions.containsKey(D)) {
 	         	
 	         	activeUsers.put(session.getId(), session);
+	        	log.info("sessionId addded in event context: " + session.getId());
 
 	         } 
 	         
@@ -234,10 +236,12 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
 
 	        	mappings = (ListMultimap<String, String>) sessions;
 	        	sessionId = mappings.get(D).get(1);
-	        	log.info("sessionId to remove: " + sessionId);
+	        	log.info("sessionId to remove in event context: " + sessionId);
 
 	        	activeUsers.remove(sessionId);
 	         	activeUsers.put(session.getId(), session);
+	        	log.info("sessionId addded in event context: " + session.getId());
+
 	         	
 	         } 	         
 	      
