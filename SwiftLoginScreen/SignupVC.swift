@@ -103,7 +103,7 @@ class SignupVC: UIViewController {
                     
                     NSLog("Response ==> %@", responseData);
                     
-                    var error: NSError?
+                  //  var error: NSError?
                     
                     let jsonData:NSDictionary = (try! NSJSONSerialization.JSONObjectWithData(urlData!, options:NSJSONReadingOptions.MutableContainers )) as! NSDictionary
                     

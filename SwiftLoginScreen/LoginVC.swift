@@ -7,9 +7,21 @@
 //
 
 import UIKit
+import SwiftyJSON
 
-class LoginVC: UIViewController,UITextFieldDelegate {
+
+class LoginVC: UIViewController,UITextFieldDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate {
     
+    var imageView:UIImageView = UIImageView()
+    var backgroundDict:Dictionary<String, String> = Dictionary()
+    
+    lazy var config = NSURLSessionConfiguration.defaultSessionConfiguration()
+    lazy var session: NSURLSession = NSURLSession(configuration: self.config, delegate: self, delegateQueue:NSOperationQueue.mainQueue())
+    
+   // lazy var session = NSURLSession.sharedCustomSession
+
+    
+    var running = false
     
     @IBOutlet var txtUsername : UITextField!
     @IBOutlet var txtPassword : UITextField!
@@ -18,6 +30,25 @@ class LoginVC: UIViewController,UITextFieldDelegate {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
+        
+        backgroundDict = ["Login":"login"]
+        
+        let view:UIView = UIView(frame: CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height));
+        
+        self.view.addSubview(view)
+        
+        self.view.sendSubviewToBack(view)
+        
+        
+        let backgroundImage:UIImage? = UIImage(named: backgroundDict["Login"]!)
+        
+        
+        imageView = UIImageView(frame: view.frame);
+        
+        imageView.image = backgroundImage;
+        
+        view.addSubview(imageView);
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -36,8 +67,112 @@ class LoginVC: UIViewController,UITextFieldDelegate {
     }
     */
     
+    let url:NSURL = NSURL(string:"https://milo.crabdance.com/login/HelloWorld")!
+    
+    typealias ServiceResponse = (JSON, NSError?) -> Void
+    
+    func dataTask(username: String, hash: String, deviceId: String, systemVersion: String, onCompletion: ServiceResponse) {
+        
+        let request:NSMutableURLRequest = NSMutableURLRequest(URL: url)
+        
+        let post:NSString = "user=\(username)&pswrd=\(hash)&deviceId=\(deviceId)&ios=\(systemVersion)"
+        
+        NSLog("PostData: %@",post);
+        
+        let postData:NSData = post.dataUsingEncoding(NSASCIIStringEncoding)!
+        
+        let postLength:NSString = String( postData.length )
+        
+        request.HTTPMethod = "POST"
+        request.HTTPBody = postData
+        request.setValue(postLength as String, forHTTPHeaderField: "Content-Length")
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+            
+            let json:JSON = JSON(data: data!)
+            
+            if let httpResponse = response as? NSHTTPURLResponse {
+                print("got some data")
+                
+                switch(httpResponse.statusCode) {
+                case 200:
+                    
+                    do {
+                        
+                        let jsonData:NSDictionary = try NSJSONSerialization.JSONObjectWithData(data!, options:
+                            
+                            NSJSONReadingOptions.MutableContainers ) as! NSDictionary
+                    
+                        let success:NSInteger = jsonData.valueForKey("success") as! NSInteger
+                        let sessionID:NSString = jsonData.valueForKey("JSESSIONID") as! NSString
+                        
+                        NSLog("sessionId ==> %@", sessionID);
+                        
+                        NSLog("Success: %ld", success);
+                        
+                        if(success == 1)
+                        {
+                            NSLog("Login SUCCESS");
+                            
+                            let prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+                            
+                            prefs.setObject(username, forKey: "USERNAME")
+                            prefs.setInteger(1, forKey: "ISLOGGEDIN")
+                            prefs.setValue(sessionID, forKey: "JSESSIONID")
+                            prefs.setValue(deviceId, forKey: "deviceId")
+                            
+                            print(prefs)
+                            prefs.synchronize()
+                        }
+                        
+                    NSLog("got a 200")
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                        
+                    } catch {
+                        
+                        //TODO: handle error
+                    }
+                    
+                default:
+                    
+                    let alertView:UIAlertView = UIAlertView()
+                    alertView.title = "Sign in Failed!"
+                    alertView.message = "Server error \(httpResponse.statusCode)"
+                    alertView.delegate = self
+                    alertView.addButtonWithTitle("OK")
+                    alertView.show()
+                    NSLog("Got an HTTP \(httpResponse.statusCode)")
+                }
+                
+            } else {
+                
+                let alertView:UIAlertView = UIAlertView()
+                
+                alertView.title = "Sign in Failed!"
+                alertView.message = "Connection Failure"
+                
+                alertView.delegate = self
+                alertView.addButtonWithTitle("OK")
+                alertView.show()
+                NSLog("Connection Failure")
+            }
+            
+            self.running = false
+            onCompletion(json, error)
+            
+        })
+        
+        running = true
+        task.resume()
+        
+    }
+    
+    
+    
     @IBAction func signinTapped(sender : UIButton) {
-        let uuid = UIDevice.currentDevice().identifierForVendor!.UUIDString
+        let deviceId = UIDevice.currentDevice().identifierForVendor!.UUIDString
         let username:NSString = txtUsername.text!
         let password:NSString = txtPassword.text!
         let systemVersion = UIDevice.currentDevice().systemVersion
@@ -58,111 +193,44 @@ class LoginVC: UIViewController,UITextFieldDelegate {
             alertView.delegate = self
             alertView.addButtonWithTitle("OK")
             alertView.show()
+        
         } else {
             
-            let post:NSString = "user=\(username)&pswrd=\(hash)&deviceId=\(uuid)&ios=\(systemVersion)"
-            
-            NSLog("PostData: %@",post);
-            
-            let url:NSURL = NSURL(string:"https://localhost/login/HelloWorld")!
-            
-            let postData:NSData = post.dataUsingEncoding(NSASCIIStringEncoding)!
-            
-            let postLength:NSString = String( postData.length )
-            
-            let request:NSMutableURLRequest = NSMutableURLRequest(URL: url)
-            request.HTTPMethod = "POST"
-            request.HTTPBody = postData
-            request.setValue(postLength as String, forHTTPHeaderField: "Content-Length")
-            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-            request.setValue("application/json", forHTTPHeaderField: "Accept")
-            
-            
-            var reponseError: NSError?
-            var response: NSURLResponse?
-            
-            var urlData: NSData?
-            do {
-                urlData = try NSURLConnection.sendSynchronousRequest(request, returningResponse:&response)
-            } catch let error as NSError {
-                reponseError = error
-                urlData = nil
-            }
-            
-            if ( urlData != nil ) {
-                let res = response as! NSHTTPURLResponse!;
+            self.dataTask(username as String, hash: hash, deviceId: deviceId, systemVersion: systemVersion){
+                (resultString, error) -> Void in
                 
-                NSLog("Response code: %ld", res.statusCode);
+                print(resultString)
                 
-                if (res.statusCode >= 200 && res.statusCode < 300)
-                {
-                    let responseData:NSString  = NSString(data:urlData!, encoding:NSUTF8StringEncoding)!
-                    
-                    NSLog("Response ==> %@", responseData);
-                    
-                    var error: NSError?
-                    
-                    let jsonData:NSDictionary = (try! NSJSONSerialization.JSONObjectWithData(urlData!, options:NSJSONReadingOptions.MutableContainers )) as! NSDictionary
-                    
-                    
-                    let success:NSInteger = jsonData.valueForKey("success") as! NSInteger
-                    
-                    //[jsonData[@"success"] integerValue];
-                    
-                    NSLog("Success: %ld", success);
-                    
-                    if(success == 1)
-                    {
-                        NSLog("Login SUCCESS");
-                        
-                        let prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
-                        prefs.setObject(username, forKey: "USERNAME")
-                        prefs.setInteger(1, forKey: "ISLOGGEDIN")
-                        prefs.synchronize()
-                        
-                        self.dismissViewControllerAnimated(true, completion: nil)
-                    } else {
-                        var error_msg:NSString
-                        
-                        if jsonData["error_message"] as? NSString != nil {
-                            error_msg = jsonData["error_message"] as! NSString
-                        } else {
-                            error_msg = "Unknown Error"
-                        }
-                        let alertView:UIAlertView = UIAlertView()
-                        alertView.title = "Sign in Failed!"
-                        alertView.message = error_msg as String
-                        alertView.delegate = self
-                        alertView.addButtonWithTitle("OK")
-                        alertView.show()
-                        
-                    }
-                    
-                } else {
-                    let alertView:UIAlertView = UIAlertView()
-                    alertView.title = "Sign in Failed!"
-                    alertView.message = "Connection Failed"
-                    alertView.delegate = self
-                    alertView.addButtonWithTitle("OK")
-                    alertView.show()
-                }
-            } else {
-                let alertView:UIAlertView = UIAlertView()
-                alertView.title = "Sign in Failed!"
-                alertView.message = "Connection Failure"
-                if let error = reponseError {
-                    alertView.message = (error.localizedDescription)
-                }
-                alertView.delegate = self
-                alertView.addButtonWithTitle("OK")
-                alertView.show()
             }
-        }
-        
+                    
     }
     
-    func textFieldShouldReturn(textField: UITextField) -> Bool {   //delegate method
-        textField.resignFirstResponder()
-        return true
+   
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+       
+            textField.resignFirstResponder()
+            return true
+        }
+    
     }
+    
+    func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler:
+        (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+            
+            completionHandler(
+                
+                NSURLSessionAuthChallengeDisposition.UseCredential,
+                NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
+    }
+    
+    func URLSession(session: NSURLSession, task: NSURLSessionTask, willPerformHTTPRedirection response: NSHTTPURLResponse,
+        newRequest request: NSURLRequest, completionHandler: (NSURLRequest?) -> Void) {
+            
+            let newRequest : NSURLRequest? = request
+            
+            print(newRequest?.description);
+            completionHandler(newRequest)
+    }
+
 }
