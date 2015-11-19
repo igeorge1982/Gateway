@@ -61,10 +61,10 @@ class MyURLProtocol: NSURLProtocol {
                 
                 if (response != nil)
                 {
-                    let newRequest = self.request.mutableCopy() as! NSMutableURLRequest
-                    NSURLProtocol.setProperty(true, forKey: "MyRedirectHandledKey", inRequest: newRequest)
-                    self.connection = NSURLConnection(request: newRequest, delegate: self)
-                    NSLog("Relative redirect path ==> %@", newRequest.URL!.relativePath!)
+                  //  let newRequest = self.request.copy() as! NSMutableURLRequest
+                  //  NSURLProtocol.setProperty(true, forKey: "MyRedirectHandledKey", inRequest: newRequest)
+                  //  self.connection = NSURLConnection(request: newRequest, delegate: self)
+                  //  NSLog("Relative redirect path ==> %@", newRequest.URL!.relativePath!)
                     
                 }
             }
@@ -122,7 +122,7 @@ class MyURLProtocol: NSURLProtocol {
             {
                 let newRequest = self.request.mutableCopy() as! NSMutableURLRequest
                 NSURLProtocol.setProperty(true, forKey: "MyRedirectHandledKey", inRequest: newRequest)
-                self.client?.URLProtocol(self, wasRedirectedToRequest: newRequest, redirectResponse: response!)
+           //     self.client?.URLProtocol(self, wasRedirectedToRequest: newRequest, redirectResponse: response!)
                 NSLog("Sending Request from %@ to %@", response!.URL!, request.URL!);
                 
                 
