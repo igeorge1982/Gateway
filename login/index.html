@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html ng-app="hmac">
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">       
+    <title>Login</title>
+    <script type="text/javascript" src="js/sha512.js"></script>
+    <script type="text/javascript" src="js/sha3.js"></script>
+    <script type="text/javascript" src="js/hmac-sha512.js"></script>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/angular-utf8-base64.min.js"></script>
+    <script type="text/javascript" src="js/ng-device-detector.min.js"></script>
+    <script type="text/javascript" src="js/re-tree/re-tree.min.js"></script>
+
+	<style type="text/css">
+		.login-form {
+			max-width: 300px;
+			margin: 0 auto;
+		}
+		#inputUsername {
+		  margin-bottom: -1px;
+		  border-bottom-right-radius: 0;
+		  border-bottom-left-radius: 0;
+		}
+		#inputPassword {
+			border-top-left-radius: 0;
+  			border-top-right-radius: 0;
+		}
+	</style>
+</head>
+<body>
+    <div class="container">
+       <div ng-controller="LoginController">
+          <form class="login-form">
+            <h2>Login</h2>
+            <section class="4u">
+            <label for="username" class="sr-only">Username</label>
+            <input type="text" name="username" id="username" ng-model="username"/>
+            <br />
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" name="password" id="password" ng-model="password"/>
+            </section>
+            <div class="row">
+            <section class="4u">
+            <br>
+            <div class="alert alert-danger" role="alert" ng-show="errorMsg">{{errorMsg}}</div>
+            <br>
+            <button ng-click="login()">Login</button>
+            <input type="reset" value="Cancel"/>
+            </section>
+          </form>
+        </div>
+    </div>
+        <div ng-controller="myCtrl as vm">
+            <p>You are using <b>{{vm.data.browser}}</b> on <b>{{vm.data.os}} ({{vm.data.os_version}})</b>.</p>
+            <p>Your <b>{{vm.data.browser}}</b> version is <b>{{vm.data.browser_version}}</b></p>
+            <p>Device - <b></b>{{vm.data.device}}</p>
+            <p>Complete deviceDetector data - <b></b><pre>{{vm.allData}}<pre></p>
+        </div>
+  <hr/>
+</body>
+</html>
