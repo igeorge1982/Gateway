@@ -15,10 +15,10 @@ class LoginVC: UIViewController,UITextFieldDelegate, NSURLSessionDelegate, NSURL
     var imageView:UIImageView = UIImageView()
     var backgroundDict:Dictionary<String, String> = Dictionary()
     
-    lazy var config = NSURLSessionConfiguration.defaultSessionConfiguration()
-    lazy var session: NSURLSession = NSURLSession(configuration: self.config, delegate: self, delegateQueue:NSOperationQueue.mainQueue())
+    //lazy var config = NSURLSessionConfiguration.defaultSessionConfiguration()
+    //lazy var session: NSURLSession = NSURLSession(configuration: self.config, delegate: self, delegateQueue:NSOperationQueue.mainQueue())
     
-   // lazy var session = NSURLSession.sharedCustomSession
+    lazy var session = NSURLSession.sharedCustomSession
 
     
     var running = false
@@ -89,7 +89,34 @@ class LoginVC: UIViewController,UITextFieldDelegate, NSURLSessionDelegate, NSURL
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
-        let task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+        let task = session.dataTaskWithRequest(request, completionHandler: {data, response, sessionError -> Void in
+            
+            var error = sessionError
+            
+            if let httpResponse = response as? NSHTTPURLResponse {
+                
+                if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
+                    
+                    let description = "HTTP response was \(httpResponse.statusCode)"
+                    
+                    error = NSError(domain: "Custom", code: 0, userInfo: [NSLocalizedDescriptionKey: description])
+                    NSLog(error!.description)
+                    
+                }
+            }
+            
+            if error != nil {
+                
+                let alertView:UIAlertView = UIAlertView()
+                
+                alertView.title = "Sign in Failed!"
+                alertView.message = "Connection Failure: \(error!.localizedDescription)"
+                alertView.delegate = self
+                alertView.addButtonWithTitle("OK")
+                alertView.show()
+                
+                
+            } else {
             
             let json:JSON = JSON(data: data!)
             
@@ -162,6 +189,7 @@ class LoginVC: UIViewController,UITextFieldDelegate, NSURLSessionDelegate, NSURL
             self.running = false
             onCompletion(json, error)
             
+            }
         })
         
         running = true

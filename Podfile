@@ -9,7 +9,7 @@ target 'SwiftLoginScreen' do
 pod 'SwiftyJSON', '~> 2.3'
 pod 'RealmSwift', '~> 0.96'
 pod 'Kanna', '~> 1.0'
-pod 'FlightRecorder', '~> 1.9'
+# pod 'FlightRecorder', '~> 1.9'
 end
 
 target 'SwiftLoginScreenTests' do

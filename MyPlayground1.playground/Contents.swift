@@ -94,7 +94,7 @@ class Car {
 }
 
 class SportsCar: Car {
-    let isExotic:Bool;
+    var isExotic:Bool;
     
     init(make: String, model: String, price:Int, isExotic: Bool) {
         self.isExotic = isExotic;
@@ -102,11 +102,13 @@ class SportsCar: Car {
     }
     
     override func drive() {
+        if isExotic == false {
         print("Driving fast");
+        }
     }
 }
 
-var trabant = SportsCar(make: "Trabant", model: "sedan", price: 10000, isExotic: true)
+var trabant = SportsCar(make: "Trabant", model: "sedan", price: 10000, isExotic: false)
 trabant.drive()
 
 var toyotaCamry = Car(make:"Toyota", model:"Camry", price:20000);

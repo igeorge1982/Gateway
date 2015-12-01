@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'A531E9B1AB8B86F5B83D05FF'
+               BlueprintIdentifier = '3734A15664BF5467EF0326CE'
                BlueprintName = 'Pods-SwiftLoginScreen'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Pods_SwiftLoginScreen.framework'>

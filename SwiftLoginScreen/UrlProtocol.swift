@@ -52,7 +52,10 @@ class MyURLProtocol: NSURLProtocol {
     }
     
     override func startLoading() {
-        
+
+        if AFNetworkReachabilityManager.sharedManager().reachable {
+            NSLog("AFNetwork is reachable...")
+
         if let httpResponse = response as? NSHTTPURLResponse {
             
             if httpResponse.statusCode >= 300 && httpResponse.statusCode < 400
@@ -71,7 +74,7 @@ class MyURLProtocol: NSURLProtocol {
             
         }
         
-        // 1
+            // 1
         let possibleCachedResponse = self.cachedResponseForCurrentRequest()
         
         if let cachedResponse = possibleCachedResponse {
@@ -102,7 +105,19 @@ class MyURLProtocol: NSURLProtocol {
             NSURLProtocol.setProperty(true, forKey: "MyURLProtocolHandledKey", inRequest: newRequest)
             self.connection = NSURLConnection(request: newRequest, delegate: self)
             
+                }
             }
+        
+        } else {
+            
+            NSLog("AFNetwork failed to respond......")
+            
+            let failedResponse = NSHTTPURLResponse(URL: self.request.URL!, statusCode: 0, HTTPVersion: nil, headerFields: nil)
+            
+            self.client?.URLProtocol(self, didReceiveResponse: failedResponse!, cacheStoragePolicy: .NotAllowed)
+            
+            self.client?.URLProtocolDidFinishLoading(self)
+            
         }
     }
     
@@ -122,7 +137,7 @@ class MyURLProtocol: NSURLProtocol {
             {
                 let newRequest = self.request.mutableCopy() as! NSMutableURLRequest
                 NSURLProtocol.setProperty(true, forKey: "MyRedirectHandledKey", inRequest: newRequest)
-           //     self.client?.URLProtocol(self, wasRedirectedToRequest: newRequest, redirectResponse: response!)
+           //   self.client?.URLProtocol(self, wasRedirectedToRequest: newRequest, redirectResponse: response!)
                 NSLog("Sending Request from %@ to %@", response!.URL!, request.URL!);
                 
                 
@@ -137,7 +152,8 @@ class MyURLProtocol: NSURLProtocol {
                     
                     let prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
                     prefs.setValue(sessionID, forKey: "JSESSIONID")
-                    
+                    NSLog("SessionId ==> %@", sessionID!)
+
                     requestLogin = RequestManager(url: adminUrl!, errors: "")
                     
                     requestLogin?.getResponse {
@@ -223,7 +239,7 @@ class MyURLProtocol: NSURLProtocol {
                         if let jsonData:NSDictionary = (try? NSJSONSerialization.JSONObjectWithData(data, options:NSJSONReadingOptions.MutableContainers )) as? Dictionary<String, AnyObject> {
                             
                             let errmsg = jsonData["Session creation"] as! String
-                            errorOnLogin = RequestManager(url: "http://milo.crabdance.com/login/HelloWorld", errors: errmsg)
+                            errorOnLogin = RequestManager(url: "https://milo.crabdance.com/login/HelloWorld", errors: errmsg)
                             errorOnLogin?.getResponse { _ in }
                         
                     }
@@ -244,7 +260,7 @@ class MyURLProtocol: NSURLProtocol {
                     if let result = (try? NSString(data: data, encoding: NSASCIIStringEncoding)) as? String {
                         
                         if let doc = Kanna.HTML(html: result, encoding: NSASCIIStringEncoding) {
-                            errorOnLogin = RequestManager(url: "http://milo.crabdance.com/login/HelloWorld", errors: doc.title!)
+                            errorOnLogin = RequestManager(url: "https://milo.crabdance.com/login/HelloWorld", errors: doc.title!)
                             errorOnLogin?.getResponse { _ in }
                             
                         }

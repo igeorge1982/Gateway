@@ -31,10 +31,10 @@ class RequestManager: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate {
         if errors.isEmpty { }
     }
 
-   // lazy var config = NSURLSessionConfiguration.defaultSessionConfiguration()
-   // lazy var session: NSURLSession = NSURLSession(configuration: self.config, delegate: self, delegateQueue:NSOperationQueue.mainQueue())
+  // lazy var config = NSURLSessionConfiguration.defaultSessionConfiguration()
+  // lazy var session: NSURLSession = NSURLSession(configuration: self.config, delegate: self, delegateQueue:NSOperationQueue.mainQueue())
     
-   lazy var session: NSURLSession = NSURLSession.sharedCustomSession
+  lazy var session: NSURLSession = NSURLSession.sharedCustomSession
 
     var running = false
     
@@ -49,8 +49,7 @@ class RequestManager: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate {
     
     func dataTask(onCompletion: ServiceResponses) {
         
-        let cachePolicy = NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData
-        let request:NSMutableURLRequest = NSMutableURLRequest(URL: url, cachePolicy: cachePolicy, timeoutInterval: 10)
+        let request:NSMutableURLRequest = NSMutableURLRequest(URL: url)
 
         
         let task = session.dataTaskWithRequest(request, completionHandler: {data, response, sessionError -> Void in
@@ -120,7 +119,7 @@ class RequestManager: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate {
                     } else {
                         
                         alertView.title = "Hmmm..."
-                        alertView.message = "Something went wrong..." as String
+                        alertView.message = "Something went wrong... \(json["user"].error?.localizedDescription)" as String
                         alertView.delegate = self
                         alertView.addButtonWithTitle("OK")
                         alertView.show()
@@ -128,8 +127,7 @@ class RequestManager: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate {
                         NSLog("Dictionary\(["user"]) does not exist")
                     }
                 
-            self.running = false
-            
+            self.running = false            
             onCompletion(json, error)
                 }
           //  }
@@ -139,16 +137,42 @@ class RequestManager: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate {
         task.resume()
         
     }
-        
     
-    func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler:      (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+    func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler:
+        (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+            
+            print("didReceiveAuthenticationChallenge")
             
             completionHandler(
                 
                 NSURLSessionAuthChallengeDisposition.UseCredential,
                 NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
     }
+    /*
+    func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
+        
+        // For example, you may want to override this to accept some self-signed certs here.
+        if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust &&
+            Constants.selfSignedHosts.contains(challenge.protectionSpace.host) {
+                
+                // Allow the self-signed cert.
+                let credential = NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!)
+                completionHandler(.UseCredential, credential)
+        } else {
+            // You *have* to call completionHandler either way, so call it to do the default action.
+            completionHandler(.PerformDefaultHandling, nil)
+        }
+    }
     
+    // MARK: - Constants
+    
+    struct Constants {
+        
+        // A list of hosts you allow self-signed certificates on.
+        // You'd likely have your dev/test servers here.
+        // Please don't put your production server here!
+        static let selfSignedHosts: Set<String> = ["milo.crabdance.com", "localhost"]
+    }*/
     
     func URLSession(session: NSURLSession, task: NSURLSessionTask, willPerformHTTPRedirection response: NSHTTPURLResponse,
         newRequest request: NSURLRequest, completionHandler: (NSURLRequest?) -> Void) {

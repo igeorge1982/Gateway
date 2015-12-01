@@ -17,9 +17,11 @@ class HomeVC: UIViewController, NSURLSessionDelegate, NSURLSessionTaskDelegate {
     var imageView:UIImageView = UIImageView()
     var backgroundDict:Dictionary<String, String> = Dictionary()
     
-    lazy var config = NSURLSessionConfiguration.defaultSessionConfiguration()
-    lazy var session: NSURLSession = NSURLSession(configuration: self.config, delegate: self, delegateQueue:NSOperationQueue.mainQueue())
-    
+//    lazy var config = NSURLSessionConfiguration.defaultSessionConfiguration()
+//    lazy var session: NSURLSession = NSURLSession(configuration: self.config, delegate: self, delegateQueue:NSOperationQueue.mainQueue())
+   
+    lazy var session = NSURLSession.sharedCustomSession
+
     var running = false
     
     @IBOutlet var usernameLabel : UILabel!
@@ -137,10 +139,37 @@ class HomeVC: UIViewController, NSURLSessionDelegate, NSURLSessionTaskDelegate {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("", forHTTPHeaderField: "Referer")
         
-        let task = session.dataTaskWithRequest(request, completionHandler: {data, response, error -> Void in
+        let task = session.dataTaskWithRequest(request, completionHandler: {data, response, sessionError -> Void in
 
-            let json:JSON = JSON(data: data!)
-
+            var error = sessionError
+            
+            if let httpResponse = response as? NSHTTPURLResponse {
+                
+                if httpResponse.statusCode < 200 || httpResponse.statusCode >= 300 {
+                    
+                    let description = "HTTP response was \(httpResponse.statusCode)"
+                    
+                    error = NSError(domain: "Custom", code: 0, userInfo: [NSLocalizedDescriptionKey: description])
+                    NSLog(error!.description)
+                    
+                }
+            }
+            
+            if error != nil {
+                
+                let alertView:UIAlertView = UIAlertView()
+                
+                alertView.title = "LogOut in Failed!"
+                alertView.message = "Connection Failure: \(error!.localizedDescription)"
+                alertView.delegate = self
+                alertView.addButtonWithTitle("OK")
+                alertView.show()
+                
+                
+            } else {
+                
+                let json:JSON = JSON(data: data!)
+            
             if let httpResponse = response as? NSHTTPURLResponse {
                 NSLog("got some data")
                 
@@ -178,7 +207,7 @@ class HomeVC: UIViewController, NSURLSessionDelegate, NSURLSessionTaskDelegate {
                 
                 let alertView:UIAlertView = UIAlertView()
                 
-                alertView.title = "Logout Failed!"
+                alertView.title = "LogOut Failed!"
                 alertView.message = "Connection Failure"
                 
                 alertView.delegate = self
@@ -189,7 +218,8 @@ class HomeVC: UIViewController, NSURLSessionDelegate, NSURLSessionTaskDelegate {
             
             self.running = false
             onCompletion(json, error)
-
+            
+            }
         })
         
             

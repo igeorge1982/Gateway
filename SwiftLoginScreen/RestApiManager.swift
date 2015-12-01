@@ -17,7 +17,7 @@ class RestApiManager: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate  
 
     //let baseURL = "http://api.randomuser.me/"
     let baseURL = "https://milo.crabdance.com/login/admin?JSESSIONID="
-    
+
     func getRandomUser(onCompletion: (JSON, NSError?) -> Void) {
         
         let prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
@@ -34,7 +34,7 @@ class RestApiManager: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate  
     
     func makeHTTPGetRequest(path: String, onCompletion: ServiceResponse) {
         
-        let request = NSMutableURLRequest(URL: NSURL(string: path)!)
+        let request = NSMutableURLRequest.requestWithURL(NSURL(string: path)!, method: "GET", queryParameters: nil, bodyParameters: nil, headers: nil)
         
        //let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
        //let session = NSURLSession(configuration: configuration, delegate: self, delegateQueue:NSOperationQueue.mainQueue())
@@ -52,28 +52,28 @@ class RestApiManager: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate  
                     let description = "HTTP response was \(httpResponse.statusCode)"
                     
                     error = NSError(domain: "Custom", code: 0, userInfo: [NSLocalizedDescriptionKey: description])
-                    
-                    if error != nil {
-                        
-                        let alertView:UIAlertView = UIAlertView()
-                        
-                        alertView.title = "Error!"
-                        alertView.message = "Connection Failure: \(error!.localizedDescription)"
-                        alertView.delegate = self
-                        alertView.addButtonWithTitle("OK")
-                        alertView.show()
-                        
-                        
-                    }
-                    
                     NSLog(error!.description)
+                    
                 }
             }
             
+            if error != nil {
+                
+                let alertView:UIAlertView = UIAlertView()
+                
+                alertView.title = "Error!"
+                alertView.message = "Connection Failure: \(error!.description)"
+                alertView.delegate = self
+                alertView.addButtonWithTitle("OK")
+                alertView.show()
+                
+                
+            } else {
+            
             let json:JSON = JSON(data: data!)
-
-           // let wrappedResponse = Responses(data: data, response: response, error: error)
-            onCompletion(json, error)
+                
+                onCompletion(json, error)
+            }
         })
         task.resume()
     }

@@ -19,6 +19,7 @@ extension NSURLSessionConfiguration {
         config.timeoutIntervalForRequest = 10 // Make things timeout quickly.
         config.HTTPAdditionalHeaders = ["MyResponseType": "JSON"] // My web service needs to be explicitly asked for JSON.
         config.HTTPShouldUsePipelining = true // Might speed things up if your server supports it.
+        
         return config
     }
     

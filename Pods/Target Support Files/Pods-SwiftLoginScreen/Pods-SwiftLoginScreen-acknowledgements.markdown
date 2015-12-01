@@ -1,11 +1,6 @@
 # Acknowledgements
 This application makes use of the following third party libraries:
 
-## FlightRecorder
-
-All text and design is copyright © 2013-2014 FlightRecorder, Inc.
-
-
 ## Kanna
 
 The MIT License (MIT)

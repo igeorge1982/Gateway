@@ -14,15 +14,6 @@
 		</dict>
 		<dict>
 			<key>FooterText</key>
-			<string>All text and design is copyright &#169; 2013-2014 FlightRecorder, Inc.
-</string>
-			<key>Title</key>
-			<string>FlightRecorder</string>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-		</dict>
-		<dict>
-			<key>FooterText</key>
 			<string>The MIT License (MIT)
 
 Copyright (c) 2014 - 2015 Atsushi Kiwaki (@_tid_)

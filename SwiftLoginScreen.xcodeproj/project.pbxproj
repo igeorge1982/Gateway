@@ -47,6 +47,7 @@
 		A4C3F2A31BFCC90400ADE1E3 /* CustomURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C3F2A21BFCC90400ADE1E3 /* CustomURLSession.swift */; };
 		A4C3F2A51BFCC9F300ADE1E3 /* CustomURLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C3F2A41BFCC9F300ADE1E3 /* CustomURLRequest.swift */; };
 		A4C3F2A71BFCEAC700ADE1E3 /* Responses.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C3F2A61BFCEAC700ADE1E3 /* Responses.swift */; };
+		A4CA8DA51C07328F00EA59A4 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A4CA8DA41C07328F00EA59A4 /* Launch Screen.storyboard */; };
 		A4D58A451BFA40AB00D379F8 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D58A441BFA40AB00D379F8 /* AFNetworkReachabilityManager.m */; };
 		A4DF6D751BFA2822004B42A5 /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DF6D741BFA2822004B42A5 /* TestVC.swift */; };
 		A4F5D5B81BF88548002850B2 /* CachedURLResponse+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F5D5B61BF88548002850B2 /* CachedURLResponse+CoreDataProperties.swift */; };
@@ -117,6 +118,7 @@
 		A4C3F2A21BFCC90400ADE1E3 /* CustomURLSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomURLSession.swift; sourceTree = "<group>"; };
 		A4C3F2A41BFCC9F300ADE1E3 /* CustomURLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomURLRequest.swift; sourceTree = "<group>"; };
 		A4C3F2A61BFCEAC700ADE1E3 /* Responses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Responses.swift; sourceTree = "<group>"; };
+		A4CA8DA41C07328F00EA59A4 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		A4D58A431BFA40AB00D379F8 /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
 		A4D58A441BFA40AB00D379F8 /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
 		A4D58A471BFA40D000D379F8 /* SwiftLoginScreen-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftLoginScreen-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -293,6 +295,7 @@
 				A4DF6D741BFA2822004B42A5 /* TestVC.swift */,
 				A47C41DF1BFA947F009504B1 /* URLSessionManager.swift */,
 				A4C3F2A61BFCEAC700ADE1E3 /* Responses.swift */,
+				A4CA8DA41C07328F00EA59A4 /* Launch Screen.storyboard */,
 			);
 			path = SwiftLoginScreen;
 			sourceTree = "<group>";
@@ -380,10 +383,11 @@
 				LastSwiftMigration = 0710;
 				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0710;
-				ORGANIZATIONNAME = "Dipin Krishna";
+				ORGANIZATIONNAME = "George Gaspar";
 				TargetAttributes = {
 					EA62FD4F1989F6AC00469896 = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = X8DL5FV4EA;
 					};
 					EA62FD5C1989F6AC00469896 = {
 						CreatedOnToolsVersion = 6.0;
@@ -420,6 +424,7 @@
 				EA62FD581989F6AC00469896 /* Images.xcassets in Resources */,
 				EA62FD6F1989F6E300469896 /* Storyboard.storyboard in Resources */,
 				A4B992941BED305900F87E21 /* mode-ecb.js in Resources */,
+				A4CA8DA51C07328F00EA59A4 /* Launch Screen.storyboard in Resources */,
 				A4B992A01BED305900F87E21 /* sha384.js in Resources */,
 				A4B9928F1BED305900F87E21 /* aes.js in Resources */,
 				A4B9929E1BED305900F87E21 /* sha224.js in Resources */,
@@ -631,8 +636,8 @@
 			baseConfigurationReference = 46C1B4769B655748EC85640D /* Pods-SwiftLoginScreen.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -659,15 +664,13 @@
 					"-framework",
 					"\"CoreVideo\"",
 					"-framework",
-					"\"FlightRecorder\"",
-					"-framework",
 					"\"MobileCoreServices\"",
 					"-framework",
 					"\"SwiftyJSON\"",
 					"-framework",
 					"\"SystemConfiguration\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dipinkrishna.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.georgegaspar.SwiftLoginScreen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "SwiftLoginScreen/SwiftLoginScreen-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -679,8 +682,8 @@
 			baseConfigurationReference = DC67D9529CAD0F0DE8A67C29 /* Pods-SwiftLoginScreen.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -707,15 +710,13 @@
 					"-framework",
 					"\"CoreVideo\"",
 					"-framework",
-					"\"FlightRecorder\"",
-					"-framework",
 					"\"MobileCoreServices\"",
 					"-framework",
 					"\"SwiftyJSON\"",
 					"-framework",
 					"\"SystemConfiguration\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.dipinkrishna.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.georgegaspar.SwiftLoginScreen;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "SwiftLoginScreen/SwiftLoginScreen-Bridging-Header.h";
 			};

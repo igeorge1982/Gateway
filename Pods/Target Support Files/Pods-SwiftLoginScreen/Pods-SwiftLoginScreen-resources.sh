@@ -57,14 +57,6 @@ install_resource()
       ;;
   esac
 }
-if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "FlightRecorder/FlightRecorder.embeddedframework/FlightRecorder.framework/Versions/A/Resources/FECoreModel.momd/FECoreModel.mom"
-  install_resource "FlightRecorder/FlightRecorder.embeddedframework/FlightRecorder.framework/Versions/A/Resources/FECoreModel.momd/VersionInfo.plist"
-fi
-if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "FlightRecorder/FlightRecorder.embeddedframework/FlightRecorder.framework/Versions/A/Resources/FECoreModel.momd/FECoreModel.mom"
-  install_resource "FlightRecorder/FlightRecorder.embeddedframework/FlightRecorder.framework/Versions/A/Resources/FECoreModel.momd/VersionInfo.plist"
-fi
 
 mkdir -p "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
 rsync -avr --copy-links --no-relative --exclude '*/.svn/*' --files-from="$RESOURCES_TO_COPY" / "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"

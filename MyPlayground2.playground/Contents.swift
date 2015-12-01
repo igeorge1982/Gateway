@@ -76,7 +76,7 @@ let task = session.dataTaskWithRequest(request){
     task.resume()
     }
 
-/*
+
 func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler:
 (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
 
@@ -86,8 +86,9 @@ completionHandler(
 
     NSURLSessionAuthChallengeDisposition.UseCredential,
     NSURLCredential(forTrust: challenge.protectionSpace.serverTrust!))
-}*/
-    
+}
+  
+    /*
 func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthenticationChallenge, completionHandler: (NSURLSessionAuthChallengeDisposition, NSURLCredential?) -> Void) {
             
             // For example, you may want to override this to accept some self-signed certs here.
@@ -111,7 +112,7 @@ func URLSession(session: NSURLSession, didReceiveChallenge challenge: NSURLAuthe
         // You'd likely have your dev/test servers here.
         // Please don't put your production server here!
         static let selfSignedHosts: Set<String> = ["milo.crabdance.com"]
-    }
+    }*/
 
 func URLSession(session: NSURLSession, task: NSURLSessionTask, willPerformHTTPRedirection response: NSHTTPURLResponse,
     newRequest request: NSURLRequest, completionHandler: (NSURLRequest?) -> Void) {
