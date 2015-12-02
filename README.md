@@ -8,5 +8,5 @@ https://dipinkrishna.com/blog/2014/07/login-signup-screen-tutorial-xcode-6-swift
 Note on iOS build:
 - You must run POD install to install the pods into your local environment. AFNetwork is an Objective-C dependency that is supposed to be re-installed as the official Objective-C class bridging into Swift code describes it, if any problem occurs. 
 - Take care of the App Transport Security Exceptions: it needs to be set accordingly
-- If you use self-signed certs with the server, you must install your custom cerificate authority file onto your device.
+- If you use self-signed certs with the server, you must install your custom cerificate authority file onto your device (You must use certificate authority, if you go with self-signed, and install it onto the Tomcat instance).
 
