@@ -1,8 +1,10 @@
-var hmacApp = angular.module('hmac', ['ab-base64','ng.deviceDetector'], function ($httpProvider) {
+var hmacApp = angular.module('hmac', ['ab-base64','ng.deviceDetector']);
+
+hmacApp.config(function ($httpProvider) {
     // Add an HTTP interceptor which passes the request URL to the transformer
     // Allows to include the URL into the signature
     // Rejects request if no hmacSecret is available
-    $httpProvider.interceptors.push(function($q) {
+    $httpProvider.interceptors.push(function($q, jsonFilter) {
        return {
             'request': function(config) {
                 if(!localStorage.hmacSecret) {
@@ -21,28 +23,48 @@ var hmacApp = angular.module('hmac', ['ab-base64','ng.deviceDetector'], function
                     return $q.reject(rejection);
                 },
            
-             // optional method
+              // On request failure
+              requestError: function (rejection) {
+              console.log(rejection); // Contains the data about the error on the request.
+
+                // Return the promise rejection.
+                return $q.reject(rejection);
+              },
+
+             // On response success
             'response': function(response) {
-                
-                // TODO: get response headers
-              return response;
+            
+            // do something on success
+            //window.location.href = '/example/index.jsp'
+
+        // Return the response or promise.
+        return response || $q.when(response);
             },
            
        };
     });
 
-    // Add a custom request transformer to generate required headers
-    $httpProvider.defaults.transformRequest.push(function (data, headersGetter) {
-        if (data) {
 
+    // Add a custom request transformer to generate required headers
+    $httpProvider.defaults.transformRequest.push(function (data, headersGetter, jsonFilter) {
+        if (data) {
+           
+            // Add session token header if available
+            if (localStorage.sessionToken) {
+                headersGetter()['X-SESSION-TOKEN'] = localStorage.sessionToken;
+            }
             
             // Add current time to prevent replay attacks
             var microTime = new Date().getTime();
             headersGetter()['X-MICRO-TIME'] = microTime;
-
+            
+            // 4RI "Message", "secret"
+            var hash = CryptoJS.HmacSHA512(headersGetter()['X-URL'] + ':' + data + ':' + microTime, localStorage.hmacSecret);
+            var hashInBase64 = CryptoJS.enc.Base64.stringify(hash); 
+            
             // Finally generate HMAC and set header
-            headersGetter()['X-HMAC-HASH'] = CryptoJS.HmacSHA512(headersGetter()['X-URL'] + ':' + data + ':' + microTime, localStorage.hmacSecret).toString(CryptoJS.enc.Hex);
-
+            headersGetter()['X-HMAC-HASH'] = hashInBase64;
+            
             // And remove our temporary header
             headersGetter()['X-URL'] = '';
         }
@@ -50,15 +72,32 @@ var hmacApp = angular.module('hmac', ['ab-base64','ng.deviceDetector'], function
     });
 });
 
-hmacApp.controller('LoginController', function ($scope, $http, base64, $location) {
+/*
+hmacApp.config(['$routeProvider',
+  function($routeProvider) {
+    $routeProvider.
+      when('/index', {
+        templateUrl: '../index.jsp',
+      //  controller: 'AddOrderController'
+      });
+  }]);
+*/
+
+hmacApp.controller('LoginController', function ($scope, $http, base64, $location, jsonFilter) {
     $scope.message = '';
     $scope.username = '';
     $scope.password = '';
 
     $scope.login = function () {
-        // Generate HMAC secret (sha512('username:password'))
+        
+        // Hash password
         var hash = CryptoJS.SHA3($scope.password, {outputLength: 512});
-        localStorage.hmacSecret = CryptoJS.SHA512($scope.username + ":" + hash).toString(CryptoJS.enc.Hex);
+
+        // Generate HMAC secret (sha512('username:password'))
+        var hmacSec = CryptoJS.HmacSHA512($scope.username, encodeURIComponent(hash));
+        localStorage.hmacSecret = CryptoJS.enc.Base64.stringify(hmacSec);
+                
+        var token = '';
         var useR = $scope.username;
         $scope.password = hash;
         $scope.encoded = base64.encode(useR+":"+hash);
@@ -87,6 +126,7 @@ hmacApp.controller('LoginController', function ($scope, $http, base64, $location
 				encodeURIComponent(uuid);
         
         $scope.username = '';
+        $scope.Result = [];
 
         $http({
 				method: 'POST',
@@ -95,15 +135,34 @@ hmacApp.controller('LoginController', function ($scope, $http, base64, $location
 				headers: {'Content-Type': 'application/x-www-form-urlencoded', 'authorization': 'Basic '+ token}
 			}).
             success(function (data, status, headers, config) {
+           
+            var token = function() {
+            // Store session token 
+            localStorage.sessionToken = headers('X-Token');            
+            
+                return token;
+                
+            };
+            
+            var sessionToken = token();
 
-                // Generate new HMAC secret out of our previous (username + password) and the new session token
-                // sha512("sha512('username:password'):JSESSIONID")
-                // TODO: get response headers
-                localStorage.hmacSecret = CryptoJS.SHA512(localStorage.hmacSecret);
-                window.location.href = '/example/index.jsp'
+            // console.log(headers('X-Token'));
+            
+            // Generate new HMAC secret out of our previous (username + password) and the new session token
+            // sha512("sha512('username:password'):sessionToken")
+            
+            localStorage.hmacSecret = CryptoJS.SHA512(localStorage.hmacSecret, sessionToken);
+            $scope.Result = data;
+            
+				if ( data.Session === 'raked') {
+					window.location.href = '/example/index.jsp';
+				} else {
+                // 
+					$scope.errorMsg = "Login not correct";
+				}            
             }).
             error(function (data, status, headers, config) {
-				$scope.errorMsg = 'User is not found';
+				$scope.errorMsg = 'Login incorrect';
             });
     };
 
