@@ -51,7 +51,7 @@ public class Loggingout extends HttpServlet {
 	  
 	  public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	  {	 	
-		     
+		/*     
 		  if (request.getHeader("Referer").contains("register")) {
 			  
 				String elseUrl = getServletContext().getInitParameter("voucherElseRedirect");
@@ -59,7 +59,7 @@ public class Loggingout extends HttpServlet {
 				
 				response.sendRedirect(encodedURL);
 		  } else {
-		  
+		  */
 		 	session = request.getSession(false);
 		      	
 		     if(session != null){
@@ -101,7 +101,7 @@ public class Loggingout extends HttpServlet {
 		     }
 	
 		  }
-	  }
+	 // }
 	  
 	  public void destroy()
 	  {

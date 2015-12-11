@@ -564,6 +564,48 @@ public class SQLAccess {
 		return token;
 	}
 	
+	/**
+	 * Get token2 for current device. 
+	 * 
+	 * @param deviceId
+	 * @return token
+	 * @throws Exception
+	 */
+	public synchronized static String token2(String deviceId, ServletContext context) throws Exception {
+
+		// Setup the connection with the DB
+		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
+		
+		try {
+    		connect = dbManager.getConnection();
+								
+			InputStream in_ = IOUtils.toInputStream(deviceId, "UTF-8");
+		    Reader reader_ = new BufferedReader(new InputStreamReader(in_));
+		    
+		    connect.setCatalog("login");
+			callableStatement = connect.prepareCall("{call `get_token2`(?)}");
+
+			callableStatement.setCharacterStream(1, reader_);
+							
+			ResultSet rs = callableStatement.executeQuery();
+			callableStatement.closeOnCompletion();
+			reader_.close();
+			while (rs.next()) {
+				
+				token =rs.getString(1);
+			}
+			
+		} catch (SQLException ex) {
+		      SQLAccess.printSQLException(ex);
+
+		} finally {
+			
+			dbManager.closeConnection();
+
+		}
+		return token;
+	}
+	
 	public synchronized static boolean logout(String sessionID, ServletContext context) throws Exception {
 
 		// Setup the connection with the DB

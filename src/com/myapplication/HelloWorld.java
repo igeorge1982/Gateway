@@ -14,9 +14,11 @@ import javax.servlet.http.*;
 
 import com.myapplication.SQLAccess;
 
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import com.myapplication.utils.hmac512;
 
 //Extend HttpServlet class
 public class HelloWorld extends HttpServlet {
@@ -29,10 +31,19 @@ public class HelloWorld extends HttpServlet {
 	private volatile static String hash1;
 	private volatile static String deviceId;
 	private volatile static String ios;
+	private volatile static String WebView;
 	private volatile static HttpSession session;
 	private volatile static boolean devices;
 	private volatile static long SessionCreated;
 	private volatile static String sessionID;
+	private volatile static String token2;
+	private volatile static String hmac;
+	private volatile static String hmacHash;
+	private volatile static String time;
+
+	private static Logger log = Logger.getLogger(Logger.class.getName());
+
+
 
 	
     @BeforeClass
@@ -55,8 +66,9 @@ public class HelloWorld extends HttpServlet {
     {
     	
     	// Set response content type
-        response.setContentType("text/html");
-        
+		response.setContentType("application/json"); 
+		response.setCharacterEncoding("utf-8"); 
+		
 	 	session = request.getSession(false);
       	
  	     if(session != null){
@@ -68,21 +80,30 @@ public class HelloWorld extends HttpServlet {
 	      
         // Actual logic goes here.		
         try {
+        	//TODO: we get the hmac hash from the header and match it against the hmac512 hash 
+        	//that the server will present of the sha512 hash of username and password 
+        	hmac = request.getHeader("X-HMAC-HASH");
+        	time = request.getHeader("X-MICRO-TIME");
     		pass = request.getParameter("pswrd");	
     		user = request.getParameter("user");	
     		deviceId = request.getParameter("deviceId");
     		ios = request.getParameter("ios");
+    		WebView = request.getHeader("User-Agent");
+    		
+    		hmacHash = hmac512.getHmac512(user, pass, deviceId, time);
+    		    		
+    		log.info("HandShake was given: "+hmac+" & "+hmacHash);
     		
 			hash1 = SQLAccess.hash(pass, context);
 			devices = SQLAccess.insert_device(deviceId, user, context);
 		
 		} catch (Exception e) {
 			
-    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "Line 75");
+    		response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "There is a big problem!");
 
 		}
         
-        	if(pass.equals(hash1) && devices){
+        	if(pass.equals(hash1) && devices && hmac.equals(hmacHash)){
         		
         		// Create new session
 				session = request.getSession(true);
@@ -109,7 +130,7 @@ public class HelloWorld extends HttpServlet {
 		        String homePageIndex = getServletContext().getInitParameter("homePageIndex");
 
 				ServletContext otherContext = getServletContext().getContext(homePage);
-				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + homePageIndex);
+				String encodedURL = response.encodeURL(otherContext.getContextPath() + homePageIndex);
 
 						if (ios != null) {
 						
@@ -130,12 +151,42 @@ public class HelloWorld extends HttpServlet {
 						out.print(json.toString());
 						out.flush();
 						
+						// TODO: custom header that the app will use
+						} else if (WebView.contains("Mobile")){ 
+							response.sendRedirect(otherContext.getContextPath() + "/tabularasa.jsp?JSESSIONID="+sessionID);		
+						
 						} else {
-							response.sendRedirect(encodedURL);		
+							try {
+								token2 = SQLAccess.token2(deviceId, context);
+								
+								// The token2 will be used as key-salt-whatever as originally planned.
+								response.addHeader("X-Token", token2);
+								
+								// This seems to be now unnecessary
+								//	response.sendRedirect(encodedURL);
+								
+								PrintWriter out = response.getWriter(); 
+								
+								//create Json Object 
+								JSONObject json = new JSONObject(); 
+								
+								// put some value pairs into the JSON object . 				
+								json.put("Session", "raked"); 
+								json.put("Success", "true"); 
+								
+								// finally output the json string 
+								out.print(json.toString());
+								out.flush();
+								
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
+		
 						}
 				
 
-			}else{
+			}else {
 				
 				response.setContentType("application/json"); 
 				response.setCharacterEncoding("utf-8"); 

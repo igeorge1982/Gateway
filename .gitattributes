@@ -32,6 +32,7 @@ src/com/myapplication/Registration.java -text
 src/com/myapplication/SQLAccess.java -text
 src/com/myapplication/UrlManager.java -text
 src/com/myapplication/Voucher.java -text
+src/com/myapplication/filters/CORSFilter.java -text
 src/com/myapplication/filters/HSTSFilter.java -text
 src/com/myapplication/filters/RohadekFilter.java -text
 src/com/myapplication/filters/XSSRequestWrapper.java -text
@@ -43,3 +44,6 @@ src/com/myapplication/listeners/SessionBindingListener.java -text
 src/com/myapplication/utils/AesUtil.java -text
 src/com/myapplication/utils/Memory.java -text
 src/com/myapplication/utils/PropertyUtils.java -text
+src/com/myapplication/utils/hmac512.java -text
+src/com/myapplication/utils/sha512.java -text
+src/com/myapplication/utils/test.java -text
