@@ -2,9 +2,15 @@ package com.myapplication.filters;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 
 public class CORSFilter implements Filter {
+	
+	private static Logger log = Logger.getLogger(Logger.class.getName());
+	
     public void destroy() {
     }
 
@@ -16,9 +22,12 @@ public class CORSFilter implements Filter {
         	httpResp.setHeader("Access-Control-Allow-Headers", "X-Requested-With, X-Token");    
         	httpResp.setHeader("Access-Control-Expose-Headers", "X-Token");
          
-            httpResp.setHeader("Access-Control-Allow-Origin", "*");
+            httpResp.setHeader("Access-Control-Allow-Origin", "https://milo.crabdance.com");
             httpResp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
             httpResp.setHeader("Access-Control-Max-Age", "3600");
+            
+            log.info("CORS headers have been set.");
+
             chain.doFilter(req, resp);
 
  }

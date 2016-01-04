@@ -146,13 +146,13 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
      useR = GetMappings("user");
     
       if (sessions.containsKey(D)) {
-    
+    /*
     	  mappings = (ListMultimap<String, String>) sessions;
       	  sessionId = mappings.get(D).get(1);
       	  log.info("sessionId to remove: " + sessionId);
 
       	  activeUsers.remove(sessionId);
-    	  
+    */  
      Set<String> sessionData = sessions.get(D);
 	    
      		sessionData.clear();
@@ -194,9 +194,15 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
 	    log.info(message);	
 	    
 	    SetMappings_(name, value);
-        String D_ = GetMappings_("deviceId");
+        D_ = GetMappings_("deviceId");
+        log.info("deviceId_ at remove: "+D_);
 
-        sessions.removeAll(D_);
+        try{
+        	sessions.removeAll(D_);
+        		} catch (Exception e) {
+        	log.info("There was no device left over to remove...");
+        		}
+        
         log.info("SessionUsers: " + sessions.entries());
 
 
@@ -233,12 +239,13 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
 	         } 
 	         
 	         else {
-
+	        /*
 	        	mappings = (ListMultimap<String, String>) sessions;
 	        	sessionId = mappings.get(D).get(1);
 	        	log.info("sessionId to remove in event context: " + sessionId);
 
 	        	activeUsers.remove(sessionId);
+	        */	
 	         	activeUsers.put(session.getId(), session);
 	        	log.info("sessionId addded in event context: " + session.getId());
 
@@ -266,6 +273,7 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
         
         D_ = GetMappings_("deviceId");
         id = session.getId();
+        log.info("deviceId_ at destroy: "+D_);
         
         try {
 			
@@ -279,8 +287,14 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
 
 
             activeUsers.remove(session.getId());
-            sessions.removeAll(D_);
-            log.info("SessionUsers: " + sessions.entries());
+            
+            try {
+            	sessions.removeAll(D_);
+            		} catch (Exception e) {
+            			log.info("There was no device left over to remove...");
+            		}
+            
+            log.info("device logging out from SessionUsers: " + sessions.entries());
           
         
           String message = new StringBuffer("Session destroyed"

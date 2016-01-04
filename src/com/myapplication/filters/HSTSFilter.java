@@ -23,7 +23,8 @@ public class HSTSFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        ((HttpServletResponse) res).setHeader("Strict-Transport-Security", "max-age=12960000; includeSubdomains; preload");
+        
+    	((HttpServletResponse) res).setHeader("Strict-Transport-Security", "max-age=12960000; includeSubdomains; preload");
         log.info("Added Strict-Transport-Security header to response");
 
         chain.doFilter(req, res);

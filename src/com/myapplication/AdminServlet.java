@@ -29,6 +29,7 @@ public class AdminServlet extends HttpServlet {
 	private volatile static String deviceId;
 	protected volatile static HttpSession session = null;
 	protected volatile static String sessionId = null;
+	protected volatile static String sessionId_ = null;
 	
 	private static Logger log = Logger.getLogger(Logger.class.getName());
 	private static volatile HashMap<String, HttpSession> activeUsers;
@@ -235,8 +236,18 @@ public class AdminServlet extends HttpServlet {
     	}
     	
         if (session == null || session.getAttribute("user") == null) {
-
+        	
         	response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Line 220");
+
+    		session = request.getSession(false);		
+
+        	try {
+        	sessionId_ = session.getId();
+        	activeUsers.remove(sessionId_);
+        		} catch (Exception e) {
+        		log.info("No sessionId found during invalid session request...");
+        	}
+        	
 
         } else {
     		

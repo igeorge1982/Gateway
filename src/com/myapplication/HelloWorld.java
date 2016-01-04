@@ -32,6 +32,7 @@ public class HelloWorld extends HttpServlet {
 	private volatile static String deviceId;
 	private volatile static String ios;
 	private volatile static String WebView;
+	private volatile static String M;
 	private volatile static HttpSession session;
 	private volatile static boolean devices;
 	private volatile static long SessionCreated;
@@ -83,12 +84,17 @@ public class HelloWorld extends HttpServlet {
         	//TODO: we get the hmac hash from the header and match it against the hmac512 hash 
         	//that the server will present of the sha512 hash of username and password 
         	hmac = request.getHeader("X-HMAC-HASH");
+        	
+        	//TODO: add time constraint
+        	//TODO: add content length validation
         	time = request.getHeader("X-MICRO-TIME");
     		pass = request.getParameter("pswrd");	
     		user = request.getParameter("user");	
     		deviceId = request.getParameter("deviceId");
     		ios = request.getParameter("ios");
     		WebView = request.getHeader("User-Agent");
+    		M = request.getHeader("M");
+
     		
     		hmacHash = hmac512.getHmac512(user, pass, deviceId, time);
     		    		
@@ -152,8 +158,20 @@ public class HelloWorld extends HttpServlet {
 						out.flush();
 						
 						// TODO: custom header that the app will use
-						} else if (WebView.contains("Mobile")){ 
-							response.sendRedirect(otherContext.getContextPath() + "/tabularasa.jsp?JSESSIONID="+sessionID);		
+						} else if (WebView.contains("Mobile") && M.equals("M")){ 
+							
+							try {
+								token2 = SQLAccess.token2(deviceId, context);
+								
+								// The token2 will be used as key-salt-whatever as originally planned.
+								response.addHeader("X-Token", token2);
+				
+								response.sendRedirect(otherContext.getContextPath() + "/tabularasa.jsp?JSESSIONID="+sessionID);		
+
+								
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						
 						} else {
 							try {

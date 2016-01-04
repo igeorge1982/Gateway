@@ -17,7 +17,8 @@ public class hmac512 {
     	secret_ = hmacSecret(user, pswrd); 
 
     try {
-
+    	//TODO: match full URL with hostname (absolute path), 
+    	// and more generated constants, like the url that we'll use for hash only
 	    message_ = "/login/HelloWorld:user="+user+"&pswrd="+pswrd+"&deviceId="+deviceId+":"+time;
 
      Mac sha256_HMAC = Mac.getInstance("HmacSHA512");
