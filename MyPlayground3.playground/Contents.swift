@@ -34,3 +34,4 @@ stepCounter.totalSteps = 360
 stepCounter.totalSteps = 896
 // About to set totalSteps to 896
 // Added 536 steps
+

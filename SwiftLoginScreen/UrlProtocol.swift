@@ -55,24 +55,6 @@ class MyURLProtocol: NSURLProtocol {
 
         if AFNetworkReachabilityManager.sharedManager().reachable {
             NSLog("AFNetwork is reachable...")
-
-        if let httpResponse = response as? NSHTTPURLResponse {
-            
-            if httpResponse.statusCode >= 300 && httpResponse.statusCode < 400
-            {
-                NSLog("Sending Request from %@ to %@", response!.URL!, request.URL!);
-                
-                if (response != nil)
-                {
-                  //  let newRequest = self.request.copy() as! NSMutableURLRequest
-                  //  NSURLProtocol.setProperty(true, forKey: "MyRedirectHandledKey", inRequest: newRequest)
-                  //  self.connection = NSURLConnection(request: newRequest, delegate: self)
-                  //  NSLog("Relative redirect path ==> %@", newRequest.URL!.relativePath!)
-                    
-                }
-            }
-            
-        }
         
             // 1
         let possibleCachedResponse = self.cachedResponseForCurrentRequest()
@@ -103,9 +85,11 @@ class MyURLProtocol: NSURLProtocol {
              
             let newRequest = self.request.mutableCopy() as! NSMutableURLRequest
             NSURLProtocol.setProperty(true, forKey: "MyURLProtocolHandledKey", inRequest: newRequest)
+            newRequest.setValue("M", forHTTPHeaderField: "M")
             self.connection = NSURLConnection(request: newRequest, delegate: self)
             
                 }
+                        
             }
         
         } else {

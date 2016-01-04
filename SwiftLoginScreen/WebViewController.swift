@@ -41,7 +41,7 @@ class WebViewController: UIViewController, UIWebViewDelegate {
         view.addConstraints([height, width])
         */
 
-        let requestURL = NSURL(string: "https://milo.crabdance.com/javascript/mainpage.html")
+        let requestURL = NSURL(string: "https://milo.crabdance.com/example/index.html")
         let request = NSURLRequest.requestWithURL(requestURL!, method: "GET", queryParameters: nil, bodyParameters: nil, headers: ["hello" : "hello"])
         
         webView.loadRequest(request)
@@ -75,8 +75,8 @@ class WebViewController: UIViewController, UIWebViewDelegate {
     }
     
     func webView(_: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-                
-        if request.URL!.relativePath == "/login/HelloWorld" {
+        
+        if request.URL!.relativePath == "/example/tabularasa.jsp" {
 
                 self.dismissViewControllerAnimated(true, completion: nil)
         }

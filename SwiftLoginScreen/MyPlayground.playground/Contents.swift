@@ -5,9 +5,16 @@ import UIKit
 var str = "Hello, playground"
 
 //current date
-let date = NSDate();
+let date = NSDate().timeIntervalSince1970;
 print("Date 1 \(date)")
 
+func getCurrentMillis()->Int64{
+    return  Int64(NSDate().timeIntervalSince1970 * 1000)
+}
+
+var currentTime = getCurrentMillis()
+
+/*
 var formatter = NSDateFormatter();
 formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZZ";
 let defaultTimeZoneStr = formatter.stringFromDate(date);
@@ -86,3 +93,4 @@ var reversed = names.sort(backwards)
 reversed = names.sort( { (s1: String, s2: String) -> Bool in return s1 > s2 } )
 print(reversed)
 
+*/

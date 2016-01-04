@@ -49,7 +49,10 @@ class RequestManager: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate {
     
     func dataTask(onCompletion: ServiceResponses) {
         
-        let request:NSMutableURLRequest = NSMutableURLRequest(URL: url)
+        let ciphertext = cipherText.getCipherText()
+        
+        let request = NSMutableURLRequest.requestWithURL(url, method: "GET", queryParameters: nil, bodyParameters: nil, headers: ["Ciphertext": ciphertext])
+        //let request:NSMutableURLRequest = NSMutableURLRequest(URL: url)
 
         
         let task = session.dataTaskWithRequest(request, completionHandler: {data, response, sessionError -> Void in

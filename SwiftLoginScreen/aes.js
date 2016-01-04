@@ -35,8 +35,11 @@ b.keySize,b.ivSize);l.iv=d.iv;b=a.encrypt.call(this,b,c,d.key,l);b.mixIn(d);retu
 d[k>>>24]^e[n>>>16&255]^j[g>>>8&255]^l[h&255]^c[p++],n=d[n>>>24]^e[g>>>16&255]^j[h>>>8&255]^l[k&255]^c[p++],g=q,h=s,k=t;q=(f[g>>>24]<<24|f[h>>>16&255]<<16|f[k>>>8&255]<<8|f[n&255])^c[p++];s=(f[h>>>24]<<24|f[k>>>16&255]<<16|f[n>>>8&255]<<8|f[g&255])^c[p++];t=(f[k>>>24]<<24|f[n>>>16&255]<<16|f[g>>>8&255]<<8|f[h&255])^c[p++];n=(f[n>>>24]<<24|f[g>>>16&255]<<16|f[h>>>8&255]<<8|f[k&255])^c[p++];a[b]=q;a[b+1]=s;a[b+2]=t;a[b+3]=n},keySize:8});u.AES=p._createHelper(d)})();
 
 
+
 function encrypt(string, masterkey, options){
-    
+
+    var iv  = CryptoJS.enc.Hex.parse('101112131415161718191a1b1c1d1e1f');
+
     if( options ){
         if( options.mode ){
             options.mode = CryptoJS.mode[options.mode];
@@ -44,7 +47,7 @@ function encrypt(string, masterkey, options){
         if( options.padding ){
             options.padding = CryptoJS.pad[options.padding];
         }
-        var encrypted = CryptoJS.AES.encrypt(string, masterkey, options);
+        var encrypted = CryptoJS.AES.encrypt(iv, masterkey, options);
     }else{
         var encrypted = CryptoJS.AES.encrypt(string, masterkey);
     }
@@ -67,4 +70,21 @@ function decrypt(string, masterkey, options){
     }
     
     return decrypted;
+}
+
+function encrypt_(keySize_, iterationCount, salt, iv, passPhrase, plainText) {
+    
+    var keySize = keySize_ / 32;
+    
+    var key = CryptoJS.PBKDF2(
+                              passPhrase,
+                              CryptoJS.enc.Hex.parse(salt),
+                              { keySize: keySize, iterations: iterationCount });
+    
+    var encrypted = CryptoJS.AES.encrypt(
+                                         plainText,
+                                         key,
+                                         { iv: CryptoJS.enc.Hex.parse(iv) });
+    
+    return encrypted.ciphertext.toString(CryptoJS.enc.Base64);
 }

@@ -12,29 +12,44 @@ private var cryptoJScontext = JSContext()
 
 public class CryptoJS{
     
+    //TODO: use aes like in angular
     public class AES: CryptoJS{
     
         private var encryptFunction: JSValue!
         private var decryptFunction: JSValue!
+        private var encryptFunction_: JSValue!
+
      
         override init(){
             super.init()
             
             // Retrieve the content of aes.js
             let cryptoJSpath = NSBundle.mainBundle().pathForResource("aes", ofType: "js")
+            let cryptoJSpathPBKDF2 = NSBundle.mainBundle().pathForResource("pbkdf2", ofType: "js")
+
             
-            if(( cryptoJSpath ) != nil){
+            if(( cryptoJSpath ) != nil && ( cryptoJSpathPBKDF2 ) != nil){
                 //let cryptoJS = String(contentsOfFile: cryptoJSpath!, encoding:NSUTF8StringEncoding, error: nil)
                 do {
                     let cryptoJS = try String(contentsOfFile: cryptoJSpath!, encoding: NSUTF8StringEncoding)
+                    let cryptoJSPBKDF2 = try String(contentsOfFile: cryptoJSpathPBKDF2!, encoding: NSUTF8StringEncoding)
+
                     print("Loaded aes.js")
+                    print("Loaded pbkdf2.js")
+
                         
-                    // Evaluate aes.js
+                    // Evaluate .js
                     cryptoJScontext.evaluateScript(cryptoJS)
-                        
+                    cryptoJScontext.evaluateScript(cryptoJSPBKDF2)
+
+                    
                     // Reference functions
                     encryptFunction = cryptoJScontext.objectForKeyedSubscript("encrypt")
                     decryptFunction = cryptoJScontext.objectForKeyedSubscript("decrypt")
+                    encryptFunction_ = cryptoJScontext.objectForKeyedSubscript("encrypt_")
+
+
+
                 }
                 catch {
                     print("Unable to load aes.js")
@@ -45,14 +60,27 @@ public class CryptoJS{
             
         }
         
-        public func encrypt(secretMessage: String,secretKey: String,options: AnyObject?=nil)->String {
+
+        public func encrypt_(keySize: Int, iterationCount: Int, salt: String,iv: String, passPhrase: String, plainText: String)->String {
+            
+            
+            cryptoJScontext.exceptionHandler = { cryptoJScontext, exception in
+                print("AES JS RunTime Error: \(exception)")
+            }
+  
+                return "\(encryptFunction_.callWithArguments([keySize, iterationCount, salt, iv, passPhrase, plainText]))"
+            
+        }
+        
+        public func encrypt(secretMessage: String,secretKey: String, options: AnyObject?=nil)->String {
             if let unwrappedOptions: AnyObject = options {
                 return "\(encryptFunction.callWithArguments([secretMessage, secretKey, unwrappedOptions]))"
             }else{
                 return "\(encryptFunction.callWithArguments([secretMessage, secretKey]))"
             }
         }
-        public func decrypt(encryptedMessage: String,secretKey: String,options: AnyObject?=nil)->String {
+        
+        public func decrypt(encryptedMessage: String,secretKey: String, options: AnyObject?=nil)->String {
             if let unwrappedOptions: AnyObject = options {
                 return "\(decryptFunction.callWithArguments([encryptedMessage, secretKey, unwrappedOptions]))"
             }else{
@@ -334,6 +362,63 @@ public class CryptoJS{
         }
         
     }
+    
+    public class hmacSHA512: CryptoJS{
+        
+        private var hmacSHA512: JSValue!
+        private var hmacSHA512_: JSValue!
+
+        
+        override init(){
+            super.init()
+            
+            // Retrieve the content of hmac-sha512.js
+            let cryptoJSpath = NSBundle.mainBundle().pathForResource("hmac-sha512", ofType: "js")
+            
+            if(( cryptoJSpath ) != nil){
+                
+                do {
+                    let cryptoJS = try String(contentsOfFile: cryptoJSpath!, encoding:NSUTF8StringEncoding)
+                    
+                    print("Loaded hmac-sha512.js")
+                    
+                    // Evaluate hmac-sha512.js
+                    cryptoJScontext.evaluateScript(cryptoJS)
+                    
+                    // Reference functions
+                    self.hmacSHA512 = cryptoJScontext.objectForKeyedSubscript("HmacSHA512")
+                    self.hmacSHA512_ = cryptoJScontext.objectForKeyedSubscript("HmacSHA512_")
+
+                }
+                catch {
+                    print("Unable to load hmac-sha512.js")
+                }
+            }
+            
+        }
+        
+        public func hmac(string: String, secret: String)->String {
+
+            
+            cryptoJScontext.exceptionHandler = { cryptoJScontext, exception in
+                print("hmacSHA512 JS RunTime Error: \(exception)")
+            }
+            
+                return "\(self.hmacSHA512.callWithArguments([string, secret]))"
+        }
+        
+        public func hmac_(string: String, secret: String)->String {
+            
+            
+            cryptoJScontext.exceptionHandler = { cryptoJScontext, exception in
+                print("hmacSHA512_ JS RunTime Error: \(exception)")
+            }
+            
+            return "\(hmacSHA512_.callWithArguments([string, secret]))"
+            }
+        
+        }
+    
     
     public class RIPEMD160: CryptoJS{
         

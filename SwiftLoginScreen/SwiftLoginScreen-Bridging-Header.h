@@ -21,3 +21,4 @@
 
 #import "AFNetworkReachabilityManager.h"
 #import "AFSecurityPolicy.h"
+#import <CommonCrypto/CommonCrypto.h>

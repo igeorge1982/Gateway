@@ -10,6 +10,7 @@ import UIKit
 import SwiftyJSON
 
 
+
 class LoginVC: UIViewController,UITextFieldDelegate, NSURLSessionDelegate, NSURLSessionTaskDelegate {
     
     var imageView:UIImageView = UIImageView()
@@ -72,11 +73,25 @@ class LoginVC: UIViewController,UITextFieldDelegate, NSURLSessionDelegate, NSURL
     typealias ServiceResponse = (JSON, NSError?) -> Void
     
     func dataTask(username: String, hash: String, deviceId: String, systemVersion: String, onCompletion: ServiceResponse) {
-        
+
         let request:NSMutableURLRequest = NSMutableURLRequest(URL: url)
         
+        // post data. The server will use this data to reproduce the hash
         let post:NSString = "user=\(username)&pswrd=\(hash)&deviceId=\(deviceId)&ios=\(systemVersion)"
         
+        // hmac data
+        let post_ = "/login/HelloWorld:user=\(username)&pswrd=\(hash)&deviceId=\(deviceId):\(String(currentTime))"
+        
+        let hmacSHA512 = CryptoJS.hmacSHA512()
+        
+        // Create secret for "X-HMAC-HASH" header generation
+        let hmacSec:NSString = hmacSHA512.hmac(username as String, secret: hash as String)
+
+        
+        // Create base64 encoded hmacHash for "X-HMAC-HASH" header
+        let hmacHash:NSString = hmacSHA512.hmac(post_, secret: hmacSec as String)
+                
+        NSLog("hmacSecret: %@",hmacSec);
         NSLog("PostData: %@",post);
         
         let postData:NSData = post.dataUsingEncoding(NSASCIIStringEncoding)!
@@ -86,8 +101,12 @@ class LoginVC: UIViewController,UITextFieldDelegate, NSURLSessionDelegate, NSURL
         request.HTTPMethod = "POST"
         request.HTTPBody = postData
         request.setValue(postLength as String, forHTTPHeaderField: "Content-Length")
+        
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(hmacHash as String, forHTTPHeaderField: "X-HMAC-HASH")
+        request.setValue(String(currentTime), forHTTPHeaderField: "X-MICRO-TIME")
+
         
         let task = session.dataTaskWithRequest(request, completionHandler: {data, response, sessionError -> Void in
             
@@ -205,11 +224,8 @@ class LoginVC: UIViewController,UITextFieldDelegate, NSURLSessionDelegate, NSURL
         let password:NSString = txtPassword.text!
         let systemVersion = UIDevice.currentDevice().systemVersion
 
-        //let AES = CryptoJS.AES()
         let SHA3 = CryptoJS.SHA3()
 
-        //let encrypted = AES.encrypt(password as String, secretKey: "password123")
-        //let decrypted = AES.decrypt(encrypted, secretKey: "password123")
         let hash = SHA3.hash(password as String,outputLength: 512)
         
         

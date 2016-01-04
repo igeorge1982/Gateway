@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0CDBDE3367C16ADBD1C24365 /* Pods_SwiftLoginScreen.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78A188A522422B0D6F7D9D8C /* Pods_SwiftLoginScreen.framework */; };
+		A407DE081C31DFA300D3CAD1 /* Time.swift in Sources */ = {isa = PBXBuildFile; fileRef = A407DE071C31DFA300D3CAD1 /* Time.swift */; };
 		A41942011BF263F8003EFC0E /* RegEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41942001BF263F8003EFC0E /* RegEx.swift */; };
 		A41942031BF264B7003EFC0E /* RequestManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A41942021BF264B7003EFC0E /* RequestManager.swift */; };
 		A449DA3F1BFD185A004A9402 /* AFSecurityPolicy.m in Sources */ = {isa = PBXBuildFile; fileRef = A449DA3E1BFD185A004A9402 /* AFSecurityPolicy.m */; };
@@ -15,12 +16,18 @@
 		A46A6DD01BFA139300F4EB6F /* CachedResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46A6DCF1BFA139300F4EB6F /* CachedResponse.swift */; };
 		A46A6DD41BFA15E100F4EB6F /* People+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46A6DD21BFA15E100F4EB6F /* People+CoreDataProperties.swift */; };
 		A46A6DD51BFA15E100F4EB6F /* People.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46A6DD31BFA15E100F4EB6F /* People.swift */; };
+		A46A92661C2B1A13003F31F1 /* hmac-sha512.js in Resources */ = {isa = PBXBuildFile; fileRef = A46A92651C2B1A13003F31F1 /* hmac-sha512.js */; };
+		A46A926A1C2B2154003F31F1 /* hmac.swift in Sources */ = {isa = PBXBuildFile; fileRef = A46A92691C2B2154003F31F1 /* hmac.swift */; };
+		A46A926C1C2B242D003F31F1 /* enc-base64-min.js in Resources */ = {isa = PBXBuildFile; fileRef = A46A926B1C2B242D003F31F1 /* enc-base64-min.js */; };
 		A4743E4E1BF3DBD6009078F9 /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A4743E4C1BF3DBD6009078F9 /* CoreDataModel.xcdatamodeld */; };
 		A4743E931BF3E0FB009078F9 /* LogItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4743E911BF3E0FB009078F9 /* LogItem+CoreDataProperties.swift */; };
 		A4743E941BF3E0FB009078F9 /* LogItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4743E921BF3E0FB009078F9 /* LogItem.swift */; };
 		A47C41E01BFA947F009504B1 /* URLSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A47C41DF1BFA947F009504B1 /* URLSessionManager.swift */; };
+		A47D31741C309B8C00429EB8 /* enc.js in Resources */ = {isa = PBXBuildFile; fileRef = A47D31731C309B8C00429EB8 /* enc.js */; };
 		A49A51F61BF6829C00E197D7 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49A51F51BF6829C00E197D7 /* WebViewController.swift */; };
 		A49F831D1BEF5ABA00572CC5 /* UrlProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49F831C1BEF5ABA00572CC5 /* UrlProtocol.swift */; };
+		A4AA7BB41C1F508A007FE726 /* AesUtil.js in Resources */ = {isa = PBXBuildFile; fileRef = A4AA7BB31C1F5089007FE726 /* AesUtil.js */; };
+		A4AA7BB61C1F50A6007FE726 /* pbkdf2.js in Resources */ = {isa = PBXBuildFile; fileRef = A4AA7BB51C1F50A6007FE726 /* pbkdf2.js */; };
 		A4B9928F1BED305900F87E21 /* aes.js in Resources */ = {isa = PBXBuildFile; fileRef = A4B9927C1BED305900F87E21 /* aes.js */; };
 		A4B992901BED305900F87E21 /* CryptoJS.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B9927D1BED305900F87E21 /* CryptoJS.swift */; };
 		A4B992911BED305900F87E21 /* md5.js in Resources */ = {isa = PBXBuildFile; fileRef = A4B9927E1BED305900F87E21 /* md5.js */; };
@@ -48,6 +55,7 @@
 		A4C3F2A51BFCC9F300ADE1E3 /* CustomURLRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C3F2A41BFCC9F300ADE1E3 /* CustomURLRequest.swift */; };
 		A4C3F2A71BFCEAC700ADE1E3 /* Responses.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C3F2A61BFCEAC700ADE1E3 /* Responses.swift */; };
 		A4CA8DA51C07328F00EA59A4 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A4CA8DA41C07328F00EA59A4 /* Launch Screen.storyboard */; };
+		A4CC2C451C33E07A0015546C /* ciphertext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4CC2C441C33E07A0015546C /* ciphertext.swift */; };
 		A4D58A451BFA40AB00D379F8 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A4D58A441BFA40AB00D379F8 /* AFNetworkReachabilityManager.m */; };
 		A4DF6D751BFA2822004B42A5 /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4DF6D741BFA2822004B42A5 /* TestVC.swift */; };
 		A4F5D5B81BF88548002850B2 /* CachedURLResponse+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F5D5B61BF88548002850B2 /* CachedURLResponse+CoreDataProperties.swift */; };
@@ -74,6 +82,7 @@
 /* Begin PBXFileReference section */
 		46C1B4769B655748EC85640D /* Pods-SwiftLoginScreen.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftLoginScreen.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftLoginScreen/Pods-SwiftLoginScreen.debug.xcconfig"; sourceTree = "<group>"; };
 		78A188A522422B0D6F7D9D8C /* Pods_SwiftLoginScreen.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftLoginScreen.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A407DE071C31DFA300D3CAD1 /* Time.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Time.swift; sourceTree = "<group>"; };
 		A41942001BF263F8003EFC0E /* RegEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegEx.swift; sourceTree = "<group>"; };
 		A41942021BF264B7003EFC0E /* RequestManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestManager.swift; sourceTree = "<group>"; };
 		A449DA3D1BFD185A004A9402 /* AFSecurityPolicy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFSecurityPolicy.h; sourceTree = "<group>"; };
@@ -82,15 +91,21 @@
 		A46A6DCF1BFA139300F4EB6F /* CachedResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedResponse.swift; sourceTree = "<group>"; };
 		A46A6DD21BFA15E100F4EB6F /* People+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "People+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A46A6DD31BFA15E100F4EB6F /* People.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = People.swift; sourceTree = "<group>"; };
+		A46A92651C2B1A13003F31F1 /* hmac-sha512.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "hmac-sha512.js"; sourceTree = "<group>"; };
+		A46A92691C2B2154003F31F1 /* hmac.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = hmac.swift; sourceTree = "<group>"; };
+		A46A926B1C2B242D003F31F1 /* enc-base64-min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "enc-base64-min.js"; sourceTree = "<group>"; };
 		A4743E4D1BF3DBD6009078F9 /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		A4743E911BF3E0FB009078F9 /* LogItem+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "LogItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A4743E921BF3E0FB009078F9 /* LogItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogItem.swift; sourceTree = "<group>"; };
 		A47C41DD1BFA909D009504B1 /* MyPlayground1.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground1.playground; sourceTree = "<group>"; };
 		A47C41DE1BFA90B2009504B1 /* MyPlayground2.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground2.playground; sourceTree = "<group>"; };
 		A47C41DF1BFA947F009504B1 /* URLSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionManager.swift; sourceTree = "<group>"; };
+		A47D31731C309B8C00429EB8 /* enc.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = enc.js; sourceTree = "<group>"; };
 		A48055721BFB807E007E9E34 /* MyPlayground3.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground3.playground; sourceTree = "<group>"; };
 		A49A51F51BF6829C00E197D7 /* WebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		A49F831C1BEF5ABA00572CC5 /* UrlProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrlProtocol.swift; sourceTree = "<group>"; };
+		A4AA7BB31C1F5089007FE726 /* AesUtil.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = AesUtil.js; sourceTree = "<group>"; };
+		A4AA7BB51C1F50A6007FE726 /* pbkdf2.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = pbkdf2.js; sourceTree = "<group>"; };
 		A4B9927C1BED305900F87E21 /* aes.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = aes.js; sourceTree = "<group>"; };
 		A4B9927D1BED305900F87E21 /* CryptoJS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CryptoJS.swift; sourceTree = "<group>"; };
 		A4B9927E1BED305900F87E21 /* md5.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = md5.js; sourceTree = "<group>"; };
@@ -119,6 +134,7 @@
 		A4C3F2A41BFCC9F300ADE1E3 /* CustomURLRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomURLRequest.swift; sourceTree = "<group>"; };
 		A4C3F2A61BFCEAC700ADE1E3 /* Responses.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Responses.swift; sourceTree = "<group>"; };
 		A4CA8DA41C07328F00EA59A4 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		A4CC2C441C33E07A0015546C /* ciphertext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ciphertext.swift; sourceTree = "<group>"; };
 		A4D58A431BFA40AB00D379F8 /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
 		A4D58A441BFA40AB00D379F8 /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
 		A4D58A471BFA40D000D379F8 /* SwiftLoginScreen-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SwiftLoginScreen-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -188,9 +204,14 @@
 		A4B9927B1BED302D00F87E21 /* CryptoStuff */ = {
 			isa = PBXGroup;
 			children = (
+				A46A926B1C2B242D003F31F1 /* enc-base64-min.js */,
+				A46A92651C2B1A13003F31F1 /* hmac-sha512.js */,
+				A4AA7BB51C1F50A6007FE726 /* pbkdf2.js */,
 				A4B9927C1BED305900F87E21 /* aes.js */,
+				A4AA7BB31C1F5089007FE726 /* AesUtil.js */,
 				A4B9927D1BED305900F87E21 /* CryptoJS.swift */,
 				A4B9927E1BED305900F87E21 /* md5.js */,
+				A47D31731C309B8C00429EB8 /* enc.js */,
 				A4B9927F1BED305900F87E21 /* mode-cfb.js */,
 				A4B992801BED305900F87E21 /* mode-ctr.js */,
 				A4B992811BED305900F87E21 /* mode-ecb.js */,
@@ -207,6 +228,7 @@
 				A4B9928C1BED305900F87E21 /* sha256.js */,
 				A4B9928D1BED305900F87E21 /* sha384.js */,
 				A4B9928E1BED305900F87E21 /* sha512.js */,
+				A46A92691C2B2154003F31F1 /* hmac.swift */,
 			);
 			name = CryptoStuff;
 			sourceTree = "<group>";
@@ -229,7 +251,6 @@
 				A4D58A441BFA40AB00D379F8 /* AFNetworkReachabilityManager.m */,
 				A449DA3D1BFD185A004A9402 /* AFSecurityPolicy.h */,
 				A449DA3E1BFD185A004A9402 /* AFSecurityPolicy.m */,
-				A4D58A471BFA40D000D379F8 /* SwiftLoginScreen-Bridging-Header.h */,
 			);
 			name = AFNetworking;
 			sourceTree = "<group>";
@@ -270,6 +291,7 @@
 		EA62FD521989F6AC00469896 /* SwiftLoginScreen */ = {
 			isa = PBXGroup;
 			children = (
+				A4D58A471BFA40D000D379F8 /* SwiftLoginScreen-Bridging-Header.h */,
 				A4C3F29D1BFCC7D900ADE1E3 /* NSUrlSession */,
 				A4D58A461BFA40B200D379F8 /* AFNetworking */,
 				A46A6DD11BFA15C800F4EB6F /* People */,
@@ -296,6 +318,8 @@
 				A47C41DF1BFA947F009504B1 /* URLSessionManager.swift */,
 				A4C3F2A61BFCEAC700ADE1E3 /* Responses.swift */,
 				A4CA8DA41C07328F00EA59A4 /* Launch Screen.storyboard */,
+				A407DE071C31DFA300D3CAD1 /* Time.swift */,
+				A4CC2C441C33E07A0015546C /* ciphertext.swift */,
 			);
 			path = SwiftLoginScreen;
 			sourceTree = "<group>";
@@ -431,13 +455,18 @@
 				A4B992931BED305900F87E21 /* mode-ctr.js in Resources */,
 				A4B992981BED305900F87E21 /* pad-iso97971.js in Resources */,
 				A4B992921BED305900F87E21 /* mode-cfb.js in Resources */,
+				A47D31741C309B8C00429EB8 /* enc.js in Resources */,
 				A4B992A11BED305900F87E21 /* sha512.js in Resources */,
 				A4B992911BED305900F87E21 /* md5.js in Resources */,
+				A46A926C1C2B242D003F31F1 /* enc-base64-min.js in Resources */,
 				A4B992991BED305900F87E21 /* pad-nopadding.js in Resources */,
 				A4B9929A1BED305900F87E21 /* pad-zeropadding.js in Resources */,
 				A4B992951BED305900F87E21 /* mode-ofb.js in Resources */,
+				A4AA7BB41C1F508A007FE726 /* AesUtil.js in Resources */,
+				A46A92661C2B1A13003F31F1 /* hmac-sha512.js in Resources */,
 				A4B9929C1BED305900F87E21 /* sha1.js in Resources */,
 				A4B992971BED305900F87E21 /* pad-iso10126.js in Resources */,
+				A4AA7BB61C1F50A6007FE726 /* pbkdf2.js in Resources */,
 				A4B9929B1BED305900F87E21 /* ripemd160.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -502,6 +531,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A407DE081C31DFA300D3CAD1 /* Time.swift in Sources */,
 				A4C3F2A51BFCC9F300ADE1E3 /* CustomURLRequest.swift in Sources */,
 				A4C3F29F1BFCC7F500ADE1E3 /* CustomSessionConfiguration.swift in Sources */,
 				EAA118A9198AAC7100F443F1 /* SignupVC.swift in Sources */,
@@ -512,6 +542,7 @@
 				A4C3F2A31BFCC90400ADE1E3 /* CustomURLSession.swift in Sources */,
 				A4743E4E1BF3DBD6009078F9 /* CoreDataModel.xcdatamodeld in Sources */,
 				A4B992901BED305900F87E21 /* CryptoJS.swift in Sources */,
+				A4CC2C451C33E07A0015546C /* ciphertext.swift in Sources */,
 				A4F5D5B81BF88548002850B2 /* CachedURLResponse+CoreDataProperties.swift in Sources */,
 				A4BBC52D1BF0919900CDD365 /* MenuVC.swift in Sources */,
 				A46A6DCA1BFA11A700F4EB6F /* CustomURLProtocol.swift in Sources */,
@@ -524,6 +555,7 @@
 				A4BBC52F1BF14AE200CDD365 /* RestApiManager.swift in Sources */,
 				A4C3F2A71BFCEAC700ADE1E3 /* Responses.swift in Sources */,
 				A449DA3F1BFD185A004A9402 /* AFSecurityPolicy.m in Sources */,
+				A46A926A1C2B2154003F31F1 /* hmac.swift in Sources */,
 				A41942031BF264B7003EFC0E /* RequestManager.swift in Sources */,
 				A4F5D5B91BF88548002850B2 /* CachedURLResponse.swift in Sources */,
 				EAA118A5198A1BF000F443F1 /* HomeVC.swift in Sources */,
