@@ -4,8 +4,7 @@ import java.io.Serializable;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
-
-import com.sun.jersey.api.Responses;
+import javax.ws.rs.core.Response.Status;
 
 public class CustomNotFoundException extends WebApplicationException implements Serializable {
 	 
@@ -18,7 +17,7 @@ public class CustomNotFoundException extends WebApplicationException implements 
 	  * Create a HTTP 404 (Not Found) exception.
 	  */
 	  public CustomNotFoundException() {
-	    super(Responses.notFound().build());
+	    super(Response.noContent().build());
 	  }
 	 
 	  /**
@@ -26,7 +25,7 @@ public class CustomNotFoundException extends WebApplicationException implements 
 	  * @param message the String that is the entity of the 404 response.
 	  */
 	  public CustomNotFoundException(String message) {
-	    super(Response.status(Responses.NOT_FOUND).
+	    super(Response.status(Status.NOT_FOUND).
 	    entity(message).type("text/plain").build());
 	  }
 	}

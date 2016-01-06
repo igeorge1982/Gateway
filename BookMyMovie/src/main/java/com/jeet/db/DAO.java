@@ -1,5 +1,6 @@
 package com.jeet.db;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -106,6 +107,9 @@ public class DAO {
 		
 		@SuppressWarnings("unchecked")
 		List<Logins> list = query.list();
+		
+		ArrayList<Logins> elements = new ArrayList<>();
+		elements.add(list.get(0));
 		
 		return list.get(0);
 	}

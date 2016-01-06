@@ -3,11 +3,12 @@ package com.jeet.rest;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -96,13 +97,13 @@ public class BookController {
 
 		}
 	}
-	
 	@GET
 	@Path("/user/{user}/{token1}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	
 	public Response getUser(@Context HttpHeaders headers, @PathParam(value = "user") String user, @PathParam(value = "token1") String token1) {
 		
+		// ArrayList<Logins> userarray = new ArrayList<>();
 		Logins user_ = new BookingHandlerImpl().getUser(user);
 		Tokens token = new BookingHandlerImpl().getToken(token1);
 		
@@ -111,26 +112,36 @@ public class BookController {
 		}
 		
 		
-		//ciphertext = headers.getRequestHeaders().get("Ciphertext");
-        //plaintext = aesUtil.decrypt(SALT, IV, PASSPHRASE, ciphertext.toString());
+		ciphertext = headers.getRequestHeaders().get("Ciphertext");
 		
-        //if (plaintext.equals(ORIGINPLAINTEXT)) {
-        
-			if (user_ != null && token != null) {
-				
-					return Response.ok().status(200).entity(user_).header("User", user_.getUuid()).build();		
-				
-				} else {
+		if (ciphertext != null) {
 			
-					return Response.status(404).build();
-		
-				}		
-        
-        //} else {
+	        plaintext = aesUtil.decrypt(SALT, IV, PASSPHRASE, ciphertext.toString());
 			
-        //	return Response.status(403).build();
-        	
-        //}
+	        if (plaintext.equals(ORIGINPLAINTEXT)) {
+	        
+				if (user_ != null && token != null) {
+			
+				//	userarray.add(user_);
+					
+						return Response.ok().status(200).entity(user_).header("User", user_.getUuid()).build();		
+					
+					} else {
+				
+						return Response.ok().status(404).entity("User is not authorized!").build();
+			
+					}		
+	        
+	        } else {
+				
+	        	return Response.ok().status(403).entity("User is not authorized!").build();
+	        	
+	        }
+			
+		} else {
+	          throw new CustomNotFoundException("User is not authorized!");
+		}
+
 	}
 	
 	@GET
@@ -160,14 +171,19 @@ public class BookController {
     @GET
     @Path("/images/{image}")
     @Produces("image/*")
-    public Response getImage(@PathParam("image") String image) throws IOException {
+    public Response getImage(
+    		@Context HttpHeaders header,
+    		@Context HttpServletResponse response,
+    		@PathParam("image") String image) throws IOException {
+    	
+        response.setContentType("images/jpg");
 
       File f = new File("/Users/georgegaspar/Pictures/Exports/" + image);
       
+      if (f.exists() == false) 
+          throw new CustomNotFoundException("Image not found");
+      
       BufferedImage img = ImageIO.read(f);
-
-      if (!f.exists()) 
-        throw new CustomNotFoundException("Image not found");
           
       String mt = new MimetypesFileTypeMap().getContentType(f);
       return Response.ok(img, mt).build();

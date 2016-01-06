@@ -57,7 +57,7 @@ public class BookingHandlerImpl implements BookHandler {
 		return device;
 	}
 	
-	public Logins getUser(String user) throws BookingException {
+	public Logins  getUser(String user) throws BookingException {
 		
 		Logins user_ = DAO.instance().getUser(user);
 
