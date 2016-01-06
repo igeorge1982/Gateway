@@ -76,43 +76,99 @@
                 };
             }
         ])
-        .factory("deviceDetector", ["$window", "DEVICES", "BROWSERS", "OS", "OS_VERSIONS","reTree",
-            function ($window, DEVICES, BROWSERS, OS, OS_VERSIONS,reTree) {
+        .factory("deviceDetector", ["$window", "DEVICES", "BROWSERS", "OS", "OS_VERSIONS", "reTree",
+            function ($window, DEVICES, BROWSERS, OS, OS_VERSIONS, reTree) {
 
                 var OS_RE = {
-                    WINDOWS: {and: [{or: [/\bWindows|(Win\d\d)\b/, /\bWin 9x\b/]}, {not: /\bWindows Phone\b/}]},
-                    MAC: {and:[/\bMac OS\b/,{not:/Windows Phone/}]},
-                    IOS: {and: [{or: [/\biPad\b/, /\biPhone\b/, /\biPod\b/]}, {not: /Windows Phone/}]},
-                    ANDROID: {and:[/\bAndroid\b/,{not:/Windows Phone/}]},
+                    WINDOWS: {
+                        and: [{
+                            or: [/\bWindows|(Win\d\d)\b/, /\bWin 9x\b/]
+                        }, {
+                            not: /\bWindows Phone\b/
+                        }]
+                    },
+                    MAC: {
+                        and: [/\bMac OS\b/, {
+                            not: /Windows Phone/
+                        }]
+                    },
+                    IOS: {
+                        and: [{
+                            or: [/\biPad\b/, /\biPhone\b/, /\biPod\b/]
+                        }, {
+                            not: /Windows Phone/
+                        }]
+                    },
+                    ANDROID: {
+                        and: [/\bAndroid\b/, {
+                            not: /Windows Phone/
+                        }]
+                    },
                     LINUX: /\bLinux\b/,
                     UNIX: /\bUNIX\b/,
-                    FIREFOX_OS: {and: [/\bFirefox\b/, /Mobile\b/]},
+                    FIREFOX_OS: {
+                        and: [/\bFirefox\b/, /Mobile\b/]
+                    },
                     CHROME_OS: /\bCrOS\b/,
-                    WINDOWS_PHONE: {or:[/\bIEMobile\b/,/\bWindows Phone\b/]},
+                    WINDOWS_PHONE: {
+                        or: [/\bIEMobile\b/, /\bWindows Phone\b/]
+                    },
                     PS4: /\bMozilla\/5.0 \(PlayStation 4\b/,
                     VITA: /\bMozilla\/5.0 \(Play(S|s)tation Vita\b/
                 };
 
                 var BROWSERS_RE = {
-                    CHROME: {and:[{or: [/\bChrome\b/, /\bCriOS\b/]},{not:{or:[/\bOPR\b/,/\bEdge\b/]}}]},
+                    CHROME: {
+                        and: [{
+                            or: [/\bChrome\b/, /\bCriOS\b/]
+                        }, {
+                            not: {
+                                or: [/\bOPR\b/, /\bEdge\b/]
+                            }
+                        }]
+                    },
                     FIREFOX: /\bFirefox\b/,
-                    SAFARI: {and:[/^((?!CriOS).)*\Safari\b.*$/,{not:{or:[/\bOPR\b/,/\bEdge\b/,/Windows Phone/]}}]},
-                    OPERA: {or:[/Opera\b/,/\bOPR\b/]},
-                    IE: {or: [/\bMSIE\b/, /\bTrident\b/]},
-                    MS_EDGE: {or: [/\bEdge\b/]},
+                    SAFARI: {
+                        and: [/^((?!CriOS).)*\Safari\b.*$/, {
+                            not: {
+                                or: [/\bOPR\b/, /\bEdge\b/, /Windows Phone/]
+                            }
+                        }]
+                    },
+                    OPERA: {
+                        or: [/Opera\b/, /\bOPR\b/]
+                    },
+                    IE: {
+                        or: [/\bMSIE\b/, /\bTrident\b/]
+                    },
+                    MS_EDGE: {
+                        or: [/\bEdge\b/]
+                    },
                     PS4: /\bMozilla\/5.0 \(PlayStation 4\b/,
                     VITA: /\bMozilla\/5.0 \(Play(S|s)tation Vita\b/
                 };
 
                 var DEVICES_RE = {
-                    ANDROID: {and:[/\bAndroid\b/,{not:/Windows Phone/}]},
+                    ANDROID: {
+                        and: [/\bAndroid\b/, {
+                            not: /Windows Phone/
+                        }]
+                    },
                     I_PAD: /\biPad\b/,
-                    IPHONE: {and: [/\biPhone\b/, {not:/Windows Phone/}]},
+                    IPHONE: {
+                        and: [/\biPhone\b/, {
+                            not: /Windows Phone/
+                        }]
+                    },
                     I_POD: /\biPod\b/,
                     BLACKBERRY: /\bblackberry\b/,
-                    FIREFOX_OS: {and: [/\bFirefox\b/, /\bMobile\b/]},
+                    FIREFOX_OS: {
+                        and: [/\bFirefox\b/, /\bMobile\b/]
+                    },
                     CHROME_BOOK: /\bCrOS\b/,
-                    WINDOWS_PHONE: {or:[/\bIEMobile\b/,/\bWindows Phone\b/]},
+                    WINDOWS_PHONE: {
+                        or: [/\bIEMobile\b/, /\bWindows Phone\b/]
+                    },
                     PS4: /\bMozilla\/5.0 \(PlayStation 4\b/,
                     VITA: /\bMozilla\/5.0 \(Play(S|s)tation Vita\b/
                 };
@@ -134,22 +190,26 @@
                     WINDOWS_PHONE_7_5: /(Windows Phone OS 7.5)/,
                     WINDOWS_PHONE_8_1: /(Windows Phone 8.1)/,
                     WINDOWS_PHONE_10: /(Windows Phone 10)/,
-                    WINDOWS_NT_4_0: {and:[/(Windows NT 4.0|WinNT4.0|WinNT|Windows NT)/,{not:/Windows NT 10.0/}]}
+                    WINDOWS_NT_4_0: {
+                        and: [/(Windows NT 4.0|WinNT4.0|WinNT|Windows NT)/, {
+                            not: /Windows NT 10.0/
+                        }]
+                    }
                 };
 
                 var BROWSER_VERSIONS_RE_MAP = {
-                    CHROME:/\bChrome\/([\d\.]+)\b/,
-                    FIREFOX:/\bFirefox\/([\d\.]+)\b/,
-                    SAFARI:/\bVersion\/([\d\.]+)\b/,
-                    OPERA:[/\bVersion\/([\d\.]+)\b/,/\bOPR\/([\d\.]+)\b/],
-                    IE:[/\bMSIE ([\d\.]+\w?)\b/,/\brv:([\d\.]+\w?)\b/],
-                    MS_EDGE:/\bEdge\/([\d\.]+)\b/
+                    CHROME: /\bChrome\/([\d\.]+)\b/,
+                    FIREFOX: /\bFirefox\/([\d\.]+)\b/,
+                    SAFARI: /\bVersion\/([\d\.]+)\b/,
+                    OPERA: [/\bVersion\/([\d\.]+)\b/, /\bOPR\/([\d\.]+)\b/],
+                    IE: [/\bMSIE ([\d\.]+\w?)\b/, /\brv:([\d\.]+\w?)\b/],
+                    MS_EDGE: /\bEdge\/([\d\.]+)\b/
                 };
 
                 var BROWSER_VERSIONS_RE = Object.keys(BROWSER_VERSIONS_RE_MAP).reduce(function (obj, key) {
-                    obj[BROWSERS[key]]=BROWSER_VERSIONS_RE_MAP[key];
+                    obj[BROWSERS[key]] = BROWSER_VERSIONS_RE_MAP[key];
                     return obj;
-                },{});
+                }, {});
 
                 var ua = $window.navigator.userAgent;
 
@@ -195,8 +255,8 @@
                     OS.PS4,
                     OS.VITA
                 ].reduce(function (previousValue, currentValue) {
-                        return (previousValue === OS.UNKNOWN && deviceInfo.raw.os[currentValue]) ? currentValue : previousValue;
-                    }, OS.UNKNOWN);
+                    return (previousValue === OS.UNKNOWN && deviceInfo.raw.os[currentValue]) ? currentValue : previousValue;
+                }, OS.UNKNOWN);
 
                 deviceInfo.browser = [
                     BROWSERS.CHROME,
@@ -208,8 +268,8 @@
                     BROWSERS.PS4,
                     BROWSERS.VITA
                 ].reduce(function (previousValue, currentValue) {
-                        return (previousValue === BROWSERS.UNKNOWN && deviceInfo.raw.browser[currentValue]) ? currentValue : previousValue;
-                    }, BROWSERS.UNKNOWN);
+                    return (previousValue === BROWSERS.UNKNOWN && deviceInfo.raw.browser[currentValue]) ? currentValue : previousValue;
+                }, BROWSERS.UNKNOWN);
 
                 deviceInfo.device = [
                     DEVICES.ANDROID,
@@ -223,8 +283,8 @@
                     DEVICES.PS4,
                     DEVICES.VITA
                 ].reduce(function (previousValue, currentValue) {
-                        return (previousValue === DEVICES.UNKNOWN && deviceInfo.raw.device[currentValue]) ? currentValue : previousValue;
-                    }, DEVICES.UNKNOWN);
+                    return (previousValue === DEVICES.UNKNOWN && deviceInfo.raw.device[currentValue]) ? currentValue : previousValue;
+                }, DEVICES.UNKNOWN);
 
                 deviceInfo.os_version = [
                     OS_VERSIONS.WINDOWS_3_11,
@@ -245,13 +305,13 @@
                     OS_VERSIONS.WINDOWS_PHONE_10,
                     OS_VERSIONS.WINDOWS_NT_4_0
                 ].reduce(function (previousValue, currentValue) {
-                        return (previousValue === OS_VERSIONS.UNKNOWN && deviceInfo.raw.os_version[currentValue]) ? currentValue : previousValue;
-                    }, OS_VERSIONS.UNKNOWN);
+                    return (previousValue === OS_VERSIONS.UNKNOWN && deviceInfo.raw.os_version[currentValue]) ? currentValue : previousValue;
+                }, OS_VERSIONS.UNKNOWN);
 
                 deviceInfo.browser_version = "0";
                 if (deviceInfo.browser !== BROWSERS.UNKNOWN) {
                     var re = BROWSER_VERSIONS_RE[deviceInfo.browser];
-                    var res = reTree.exec(ua,re);
+                    var res = reTree.exec(ua, re);
                     if (!!res) {
                         deviceInfo.browser_version = res[1];
                     }
@@ -268,8 +328,8 @@
                         DEVICES.WINDOWS_PHONE,
                         DEVICES.VITA
                     ].some(function (item) {
-                            return deviceInfo.device == item;
-                        });
+                        return deviceInfo.device == item;
+                    });
                 };
 
                 deviceInfo.isTablet = function () {
@@ -277,8 +337,8 @@
                         DEVICES.I_PAD,
                         DEVICES.FIREFOX_OS
                     ].some(function (item) {
-                            return deviceInfo.device == item;
-                        });
+                        return deviceInfo.device == item;
+                    });
                 };
 
                 deviceInfo.isDesktop = function () {
@@ -287,8 +347,8 @@
                         DEVICES.CHROME_BOOK,
                         DEVICES.UNKNOWN
                     ].some(function (item) {
-                            return deviceInfo.device == item;
-                        });
+                        return deviceInfo.device == item;
+                    });
                 };
 
                 return deviceInfo;
@@ -297,7 +357,7 @@
         .directive('deviceDetector', ["deviceDetector", function (deviceDetector) {
             return {
                 restrict: "A",
-                link: function (scope, elm/*, attrs*/) {
+                link: function (scope, elm /*, attrs*/ ) {
                     elm.addClass('os-' + deviceDetector.os);
                     elm.addClass('browser-' + deviceDetector.browser);
                     elm.addClass('device-' + deviceDetector.device);
