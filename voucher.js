@@ -43,4 +43,9 @@ function check(form) {
         form.submit();
     }
     
+    function formSubmit()
+    {
+        document.getElementById("pswrd").submit();
+    }
+    
 }
