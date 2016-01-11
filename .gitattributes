@@ -1,5 +1,6 @@
 * text=auto !eol
 META-INF/MANIFEST.MF -text
+/README.md -text
 css/app.css -text
 css/bootstrap.css -text
 css/bootstrap.css.map -text
