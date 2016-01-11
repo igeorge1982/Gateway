@@ -12,8 +12,10 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 import com.myapplication.SQLAccess;
+import com.myapplication.utils.hmac512;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
@@ -33,6 +35,17 @@ public class Registration extends HttpServlet {
 	private volatile static HttpSession session;
 	private volatile static long SessionCreated;
 	private volatile static String sessionID;
+	
+
+	private volatile static String hash1;
+	private volatile static String ios;
+	private volatile static String WebView;
+	private volatile static String M;
+	private volatile static boolean devices;
+	private volatile static String token2;
+	private volatile static String hmac;
+	private volatile static String hmacHash;
+	private volatile static String time;
 	
     @BeforeClass
     public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -59,32 +72,47 @@ public class Registration extends HttpServlet {
     {
     	    	
     	// Set response content type
-        response.setContentType("text/html");
-	             
+		response.setContentType("application/json"); 
+		response.setCharacterEncoding("utf-8"); 	             
         
         // Actual logic goes here.
-		user = request.getParameter("user");			
-    	pass = request.getParameter("pswrd");
-        voucher = request.getParameter("voucher_");
-        deviceId = request.getParameter("deviceId");
+		user = request.getParameter("user").trim();			
+    	pass = request.getParameter("pswrd").trim();
+        voucher = request.getParameter("voucher_").trim();
+        deviceId = request.getParameter("deviceId").trim();
+        
+    	hmac = request.getHeader("X-HMAC-HASH");
+    	
+    	//TODO: add time constraint
+    	//TODO: add content length validation
+    	time = request.getHeader("X-MICRO-TIME");
+		ios = request.getParameter("ios");
+		WebView = request.getHeader("User-Agent");
+		M = request.getHeader("M");
+		
 		ServletContext context = request.getServletContext();
 
+        // Check core request parameters first
+        if (voucher != null) voucher = voucher.trim();
 
+        if (voucher != null && !voucher.equals("") && !user.equals("") && user.length() > 0) {
+        	
+        	// TODO: hmac for registration will make use of voucher, too
+        	hmacHash = hmac512.getHmac512(user, pass, deviceId, time);
+    		
+    		log.info("HandShake was given: "+hmac+" & "+hmacHash);
+        	
+        	session = request.getSession(true);
+
+           // synchronized session object to prevent concurrent update
+           synchronized(session) {
+              
+        	   session.setAttribute("voucher", voucher);
+
+        // Try - catch is necessary anyways, and will catch user names that have become identical in the meantime
         try {
-			//TODO: make registration without voucher
 			
-            // Set an attribute (name-value pair) if present in the request
-            if (voucher != null) voucher = voucher.trim();
-
-            if (voucher != null && !voucher.equals("") ) {
-            	
-            	session = request.getSession(true);
-
-               // synchronized session object to prevent concurrent update
-               synchronized(session) {
-                  
-            	   session.setAttribute("voucher", voucher);
-                
+        	//TODO: make registration without voucher               
 			if (SQLAccess.register_voucher(voucher, context)) {
                   
               if (SQLAccess.new_hash(pass, user, context) && SQLAccess.insert_voucher(voucher, user, pass, context) && SQLAccess.insert_device(deviceId, user, context)) {
@@ -103,19 +131,79 @@ public class Registration extends HttpServlet {
 					throw new ServletException();
 				}
 		        String homePage = getServletContext().getInitParameter("homePage");
-		        String homePageIndex = getServletContext().getInitParameter("homePageIndex");
 		        
 				ServletContext otherContext = getServletContext().getContext(homePage);
-				String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + homePageIndex);
-				response.sendRedirect(encodedURL);
+								
+				if (ios != null) {
+					
+					response.setContentType("application/json"); 
+					response.setCharacterEncoding("utf-8"); 
+					response.setStatus(200);
+	
+					PrintWriter out = response.getWriter(); 
+					
+					//create Json Object 
+					JSONObject json = new JSONObject(); 
+					
+					// put some value pairs into the JSON object . 				
+					json.put("success", 1);
+					json.put("JSESSIONID", sessionID);
+					
+					// finally output the json string 
+					out.print(json.toString());
+					out.flush();
+					
+					// TODO: custom header that the app will use
+					} else if (WebView.contains("Mobile") && M.equals("M")){ 
+						
+						try {
+							token2 = SQLAccess.token2(deviceId, context);
+							
+							// The token2 will be used as key-salt-whatever as originally planned.
+							response.addHeader("X-Token", token2);
+			
+							response.sendRedirect(otherContext.getContextPath() + "/tabularasa.jsp?JSESSIONID="+sessionID);		
+
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					
+					} else {
+						try {
+							token2 = SQLAccess.token2(deviceId, context);
+							
+							// The token2 will be used as key-salt-whatever as originally planned.
+							response.addHeader("X-Token", token2);
+							
+							// This seems to be now unnecessary
+							//	response.sendRedirect(encodedURL);
+							
+							PrintWriter out = response.getWriter(); 
+							
+							//create Json Object 
+							JSONObject json = new JSONObject(); 
+							
+							// put some value pairs into the JSON object . 				
+							json.put("Session", "raked"); 
+							json.put("Success", "true"); 
+							
+							// finally output the json string 
+							out.print(json.toString());
+							out.flush();
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+	
+					}
 					
 				  }	
 	           } else {
 
-	        	   response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, "Line 115");
+	        	   response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Line 208");
 	           }
-			}
-		}
 		
 		} catch (Exception e) {
 			
@@ -128,10 +216,13 @@ public class Registration extends HttpServlet {
 				log.info("Voucher reset FAILED!");
 				
 				}
-			
+		
+		}
+        	/*
 			if (session != null) {								
 				session.invalidate();
 			}
+			
 	        String loginContext = getServletContext().getInitParameter("loginContext");
 	        String loginToRegister = getServletContext().getInitParameter("loginToRegister");
 	        String loginToLogout = getServletContext().getInitParameter("loginToLogout");
@@ -140,8 +231,24 @@ public class Registration extends HttpServlet {
 			ServletContext otherContext = getServletContext().getContext(loginContext);
 			String encodedURL = response.encodeRedirectURL(otherContext.getContextPath() + loginToLogout);
 			response.sendRedirect(encodedURL);
-		
-		} 
+			 */
+           } 
+        
+        } else {
+        	
+			try {
+				
+				SQLAccess.reset_voucher(voucher, context);
+				
+			} catch (Exception e1) {
+			
+				log.info("Voucher reset FAILED!");
+				
+				}
+			
+     	   response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED, "Line 251");
+        }
+    
     }
     
     public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException

@@ -666,12 +666,15 @@ public class SQLAccess {
 		      System.out.println("The SQL state is not defined!");
 		      return false;
 		    }
+		    /*
 		    // 70100: Unique key validation eror
 		    if (sqlState.equalsIgnoreCase("70100"))
 		      return true;
 		    // 23000: Unique key validation eror
 		    if (sqlState.equalsIgnoreCase("23000"))
 		      return true;
+		      */
+		    
 		    // 42Y55: Table already exists in schema
 		    if (sqlState.equalsIgnoreCase("42Y55"))
 		      return true;		 

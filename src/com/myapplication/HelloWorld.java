@@ -133,10 +133,8 @@ public class HelloWorld extends HttpServlet {
 				//setting session to expiry in 30 mins
 				session.setMaxInactiveInterval(30*60); 	
 		        String homePage = getServletContext().getInitParameter("homePage");
-		        String homePageIndex = getServletContext().getInitParameter("homePageIndex");
 
 				ServletContext otherContext = getServletContext().getContext(homePage);
-				String encodedURL = response.encodeURL(otherContext.getContextPath() + homePageIndex);
 
 						if (ios != null) {
 						

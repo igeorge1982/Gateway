@@ -53,7 +53,7 @@ public class Voucher extends HttpServlet {
 
     	//TODO: do something with left voucher registrations
     	// Set response content type
-        response.setContentType("text/html");			
+		response.setContentType("application/json"); 
 
         try {       		      
             // Actual logic goes here.
@@ -67,8 +67,8 @@ public class Voucher extends HttpServlet {
 				
 			}
 			else {
-				String elseUrl = getServletContext().getInitParameter("voucherElseRedirect");
-				response.sendRedirect(elseUrl);
+	        	response.sendError(HttpServletResponse.SC_PRECONDITION_FAILED);
+
 				
 			}
 		} catch (Exception e) {
