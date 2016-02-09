@@ -38,6 +38,7 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
  *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}int"/>
  *         &lt;element name="user" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="uuid" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="email" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -51,7 +52,8 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
 @XmlType(name = "", propOrder = {
 	"id",
     "user",
-    "uuid"
+    "uuid",
+    "email"
 })
 @XmlRootElement(name = "logins")
 @Entity
@@ -63,6 +65,8 @@ public class Logins {
     protected String user;
     @XmlElement(required = true)
     protected String uuid;
+    @XmlElement(required = true)
+    protected String email;
 
     /**
      * Gets the value of the Id property.
@@ -126,6 +130,30 @@ public class Logins {
      */
     public void setUuid(String value) {
         this.uuid = value;
+    }
+    
+    /**
+     * Gets the value of the email property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * Sets the value of the email property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setEmail(String value) {
+        this.email = value;
     }
     
     

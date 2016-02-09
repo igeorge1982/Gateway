@@ -138,6 +138,30 @@ public class DAO {
 		return list.size(); }
 	}
 	
+	public int getNewEmail(String newemail){
+		
+		Session session = factory.openSession();
+		String hql = "from Logins where email like :mEmail";
+		String hql_ = "from Logins where email = :mEmail";
+
+		Query query = session.createQuery(hql);
+		query.setParameter("mUser", newemail+"%").list();
+		
+		Query query_ = session.createQuery(hql_);
+		query_.setParameter("mEmail", newemail).list();
+		
+		@SuppressWarnings("unchecked")
+		List<Logins> list = query.list();
+		@SuppressWarnings("unchecked")
+		List<Logins> list_ = query_.list();
+
+		if (list_.isEmpty()) {
+		
+		return list_.size();
+	} else {
+		return list.size(); }
+	}
+	
 	public Logins getUuid(String uuid){
 		
 		Session session = factory.openSession();
@@ -164,6 +188,20 @@ public class DAO {
 		List<Tokens> list = query.list();
 		
 		return list.get(0);
+	}
+	
+	public Tokens getToken2(String token1){
+		
+		Session session = factory.openSession();
+		String hql = "from Tokens where token1 = :mToken1";
+		
+		Query query = session.createQuery(hql);
+		query.setParameter("mToken1", token1);
+		
+		@SuppressWarnings("unchecked")
+		List<Tokens> list_ = query.list();
+		
+		return list_.get(0);
 	}
 	
 	public Ticket getTicket(String screenId, String seatId){

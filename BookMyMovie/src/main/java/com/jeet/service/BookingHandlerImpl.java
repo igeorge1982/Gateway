@@ -71,6 +71,13 @@ public class BookingHandlerImpl implements BookHandler {
 		return newuser_;
 	}
 	
+	public int getNewEmail(String newemail) throws BookingException {
+		
+		int newemail_ = DAO.instance().getNewUser(newemail);
+
+		return newemail_;
+	}
+	
 	public Logins getUuid(String uuid) throws BookingException {
 		
 		Logins uuid_ = DAO.instance().getUuid(uuid);
@@ -83,6 +90,13 @@ public class BookingHandlerImpl implements BookHandler {
 		Tokens token = DAO.instance().getToken(token1);
 
 		return token;
+	}
+	
+	public Tokens getToken2(String token1) throws BookingException {
+		
+		Tokens token_ = DAO.instance().getToken2(token1);
+
+		return token_;
 	}
 
 

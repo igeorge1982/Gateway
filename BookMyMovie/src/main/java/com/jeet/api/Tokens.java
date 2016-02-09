@@ -143,7 +143,7 @@ public class Tokens {
      *     
      */
     public String getToken2() {
-        return token1;
+        return token2;
     }
 
     /**
@@ -155,7 +155,7 @@ public class Tokens {
      *     
      */
     public void setToken2(String value) {
-        this.token1 = value;
+        this.token2 = value;
     }
     
     

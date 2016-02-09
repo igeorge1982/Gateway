@@ -45,7 +45,4 @@ BookMyMovie/src/main/resources/hibernate.cfg.xml -text
 BookMyMovie/src/main/resources/import.sql -text
 BookMyMovie/src/main/resources/logback.xml -text
 BookMyMovie/src/main/webapp/WEB-INF/web.xml -text
-BookMyMovie/target/classes/hibernate.cfg.xml -text
-BookMyMovie/target/classes/import.sql -text
-BookMyMovie/target/classes/logback.xml -text
 /README.md -text

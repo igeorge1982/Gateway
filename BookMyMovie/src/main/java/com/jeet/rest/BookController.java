@@ -18,6 +18,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import com.jeet.api.Devices;
 import com.jeet.api.Logins;
 import com.jeet.api.Tokens;
@@ -30,7 +33,7 @@ public class BookController {
 	
     private static final String SALT = "3FF2EC019C627B945225DEBAD71A01B6985FE84C95A70EB132882F88C0A59A55";
     private static final String IV = "F27D5C9927726BCEFE7510B1BDD3D137";
-    private static volatile List<String> ciphertext;
+    private static volatile String ciphertext;
     
     private static volatile String plaintext;
     private static final String ORIGINPLAINTEXT = "G";
@@ -105,22 +108,20 @@ public class BookController {
 		
 		// ArrayList<Logins> userarray = new ArrayList<>();
 		Logins user_ = new BookingHandlerImpl().getUser(user);
-		Tokens token = new BookingHandlerImpl().getToken(token1);
-		
+		Tokens token2 = new BookingHandlerImpl().getToken2(token1);
+		System.out.println("token2: "+token2.getToken2());
+
 		for(String header : headers.getRequestHeaders().keySet()){
 			System.out.println(header);
 		}
 		
+		ciphertext = headers.getRequestHeader("Ciphertext").get(0);
+		System.out.println("ciphertext: "+ ciphertext);
+
 		
-		ciphertext = headers.getRequestHeaders().get("Ciphertext");
-		
-		if (ciphertext != null) {
-			
-	        plaintext = aesUtil.decrypt(SALT, IV, PASSPHRASE, ciphertext.toString());
-			
-	        if (plaintext.equals(ORIGINPLAINTEXT)) {
+		if (ciphertext.equals(token2.getToken2())) {
 	        
-				if (user_ != null && token != null) {
+				if (user_ != null) {
 			
 				//	userarray.add(user_);
 					
@@ -128,17 +129,11 @@ public class BookController {
 					
 					} else {
 				
-						return Response.ok().status(404).entity("User is not authorized!").build();
+						return Response.ok().status(404).entity("User is not found!").build();
 			
-					}		
-	        
-	        } else {
-				
-	        	return Response.ok().status(403).entity("User is not authorized!").build();
-	        	
-	        }
-			
+					}		        			
 		} else {
+			
 	          throw new CustomNotFoundException("User is not authorized!");
 		}
 
@@ -148,21 +143,51 @@ public class BookController {
 	@Path("/newuser/{newuser}")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	
-	public Response getNewUser(@Context HttpHeaders headers, @PathParam(value = "newuser") String newuser) {
+	public Response getNewUser(@Context HttpHeaders headers, @PathParam(value = "newuser") String newuser) throws JSONException {
 		
 		int newuser_ = new BookingHandlerImpl().getNewUser(newuser);
 		
 		for(String header : headers.getRequestHeaders().keySet()){
 			System.out.println(header);
 		}
-		      
+
+		   JSONObject myObject = new JSONObject();
+		   
+		   myObject.put("name", "Agamemnon");
+		   myObject.put("age", 32);
+		   
 			if (newuser_ > 0) {
-				
-					return Response.ok().status(412).entity("User name is already taken!").build();		
+
+					return Response.ok().status(412).entity(myObject.toString()).type(MediaType.APPLICATION_JSON).build();		
 				
 				} else {
 			
-					return Response.status(200).entity("Okay!").build();
+					return Response.status(200).entity(myObject.toString()).build();
+		
+				}		
+    
+	}
+	
+	@GET
+	@Path("/newemail/{newemail}")
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	
+	public Response getNewEmail(@Context HttpHeaders headers, @PathParam(value = "newemail") String newemail) throws JSONException {
+		
+		int newuser_ = new BookingHandlerImpl().getNewUser(newemail);
+
+		   JSONObject myObject = new JSONObject();
+		   
+		   myObject.put("name", "Agamemnon");
+		   myObject.put("age", 32);
+		   
+			if (newuser_ > 0) {
+
+					return Response.ok().status(412).entity(myObject.toString()).type(MediaType.APPLICATION_JSON).build();		
+				
+				} else {
+			
+					return Response.status(200).entity(myObject.toString()).build();
 		
 				}		
     
