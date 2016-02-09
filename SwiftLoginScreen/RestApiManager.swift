@@ -34,9 +34,9 @@ class RestApiManager: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate  
     
     func makeHTTPGetRequest(path: String, onCompletion: ServiceResponse) {
         
-        let ciphertext = cipherText.getCipherText()
+        //let ciphertext = cipherText.getCipherText()
         
-        let request = NSMutableURLRequest.requestWithURL(NSURL(string: path)!, method: "GET", queryParameters: nil, bodyParameters: nil, headers: ["Ciphertext": ciphertext])
+        let request = NSMutableURLRequest.requestWithURL(NSURL(string: path)!, method: "GET", queryParameters: nil, bodyParameters: nil, headers: ["Ciphertext":                             xtoken as! String])
         
        //let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
        //let session = NSURLSession(configuration: configuration, delegate: self, delegateQueue:NSOperationQueue.mainQueue())

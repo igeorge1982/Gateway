@@ -153,6 +153,7 @@ class LoginVC: UIViewController,UITextFieldDelegate, NSURLSessionDelegate, NSURL
                     
                         let success:NSInteger = jsonData.valueForKey("success") as! NSInteger
                         let sessionID:NSString = jsonData.valueForKey("JSESSIONID") as! NSString
+                        let xtoken:NSString = jsonData.valueForKey("X-Token") as! NSString
                         
                         NSLog("sessionId ==> %@", sessionID);
                         
@@ -161,13 +162,12 @@ class LoginVC: UIViewController,UITextFieldDelegate, NSURLSessionDelegate, NSURL
                         if(success == 1)
                         {
                             NSLog("Login SUCCESS");
-                            
-                            let prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
-                            
+                                                        
                             prefs.setObject(username, forKey: "USERNAME")
                             prefs.setInteger(1, forKey: "ISLOGGEDIN")
                             prefs.setValue(sessionID, forKey: "JSESSIONID")
                             prefs.setValue(deviceId, forKey: "deviceId")
+                            prefs.setValue(xtoken, forKey: "X-Token")
                             
                             print(prefs)
                             prefs.synchronize()

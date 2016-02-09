@@ -16,6 +16,8 @@ import Kanna
 var requestCount = 0
 var pattern_ = "https://([^/]+)(/example/tabularasa.jsp.*?)(/$|$)"
 var pattern_rs = "https://([^/]+)(/example/tabularasa.jsp.*?JSESSIONID=)"
+let prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+let xtoken = prefs.valueForKey("X-Token")
 
 class MyURLProtocol: NSURLProtocol {
 
@@ -23,6 +25,8 @@ class MyURLProtocol: NSURLProtocol {
     var mutableData: NSMutableData!
     var response: NSURLResponse!
     var httpresponse: NSHTTPURLResponse!
+    let prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
+
 
 
     override class func canInitWithRequest(request: NSURLRequest) -> Bool {
@@ -114,11 +118,15 @@ class MyURLProtocol: NSURLProtocol {
     
     
     func connection(connection: NSURLConnection!, willSendRequest request: NSURLRequest, redirectResponse response: NSURLResponse?) -> NSURLRequest? {
-
+        
         if let httpResponse = response as? NSHTTPURLResponse {
         
         if httpResponse.statusCode >= 300 && httpResponse.statusCode < 400
             {
+                let jsonHeaders:NSDictionary = httpResponse.allHeaderFields
+                let xtoken:NSString = jsonHeaders.valueForKey("X-Token") as! NSString
+                prefs.setValue(xtoken, forKey: "X-Token")
+
                 let newRequest = self.request.mutableCopy() as! NSMutableURLRequest
                 NSURLProtocol.setProperty(true, forKey: "MyRedirectHandledKey", inRequest: newRequest)
            //   self.client?.URLProtocol(self, wasRedirectedToRequest: newRequest, redirectResponse: response!)
@@ -134,7 +142,6 @@ class MyURLProtocol: NSURLProtocol {
                     let adminUrl = match.replaceMatches(pattern_rs, inString: url, withString:"https://milo.crabdance.com/login/admin?JSESSIONID=")
                     let sessionID = match.replaceMatches(pattern_rs, inString: url, withString:"")
                     
-                    let prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
                     prefs.setValue(sessionID, forKey: "JSESSIONID")
                     NSLog("SessionId ==> %@", sessionID!)
 

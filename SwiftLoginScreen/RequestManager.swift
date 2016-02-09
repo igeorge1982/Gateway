@@ -48,10 +48,8 @@ class RequestManager: NSObject, NSURLSessionDelegate, NSURLSessionTaskDelegate {
     }
     
     func dataTask(onCompletion: ServiceResponses) {
-        
-        let ciphertext = cipherText.getCipherText()
-        
-        let request = NSMutableURLRequest.requestWithURL(url, method: "GET", queryParameters: nil, bodyParameters: nil, headers: ["Ciphertext": ciphertext])
+                
+        let request = NSMutableURLRequest.requestWithURL(url, method: "GET", queryParameters: nil, bodyParameters: nil, headers: ["Ciphertext": xtoken as! String])
         //let request:NSMutableURLRequest = NSMutableURLRequest(URL: url)
 
         
