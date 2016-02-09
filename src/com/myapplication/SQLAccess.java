@@ -59,7 +59,7 @@ public class SQLAccess {
 	 * @return
 	 * @throws Exception
 	 */
-	public synchronized static boolean new_hash(String pass, String user, ServletContext context) throws Exception {
+	public synchronized static boolean new_hash(String pass, String user, String email, ServletContext context) throws Exception {
 	
 		// Setup the connection with the DB
 		DBConnectionManager dbManager = (DBConnectionManager) context.getAttribute("DBManager");
@@ -68,23 +68,30 @@ public class SQLAccess {
 
 		connect = dbManager.getConnection();
 		
-			String sql = "insert into  login.logins values (default, ?, ?, default)";
+			String sql = "insert into  login.logins values (default, ?, ?, default, ?)";
 		
 			InputStream ps = IOUtils.toInputStream(pass, "UTF-8");
 		    Reader readerP = new BufferedReader(new InputStreamReader(ps));
 		    
 			InputStream us = IOUtils.toInputStream(user, "UTF-8");
 		    Reader readerU = new BufferedReader(new InputStreamReader(us));
+		    
+			InputStream es = IOUtils.toInputStream(email, "UTF-8");
+		    Reader readerE = new BufferedReader(new InputStreamReader(es));
     
 			preparedStatement = connect.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
 			preparedStatement.setCharacterStream(1, readerP);
 			preparedStatement.setCharacterStream(2, readerU);
+			preparedStatement.setCharacterStream(3, readerE);
+
 		      
 			preparedStatement.executeUpdate();		
 			preparedStatement.closeOnCompletion();
 		
 			readerP.close();
 			readerU.close();
+			readerE.close();
+
 	
 			} catch (SQLException ex) {
 				SQLAccess.printSQLException(ex);

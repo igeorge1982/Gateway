@@ -96,7 +96,7 @@ public class HelloWorld extends HttpServlet {
     		M = request.getHeader("M");
 
     		
-    		hmacHash = hmac512.getHmac512(user, pass, deviceId, time);
+    		hmacHash = hmac512.getLoginHmac512(user, pass, deviceId, time);
     		    		
     		log.info("HandShake was given: "+hmac+" & "+hmacHash);
     		
@@ -108,7 +108,7 @@ public class HelloWorld extends HttpServlet {
     		response.sendError(HttpServletResponse.SC_BAD_GATEWAY, "There is a big problem!");
 
 		}
-        
+
         	if(pass.equals(hash1) && devices && hmac.equals(hmacHash)){
         		
         		// Create new session
@@ -135,8 +135,13 @@ public class HelloWorld extends HttpServlet {
 		        String homePage = getServletContext().getInitParameter("homePage");
 
 				ServletContext otherContext = getServletContext().getContext(homePage);
-
+				
+				// X-Token should be sent as json response I guess
+				// native mobile
 						if (ios != null) {
+						try {
+						
+						token2 = SQLAccess.token2(deviceId, context);
 						
 						response.setContentType("application/json"); 
 						response.setCharacterEncoding("utf-8"); 
@@ -144,18 +149,20 @@ public class HelloWorld extends HttpServlet {
 		
 						PrintWriter out = response.getWriter(); 
 						
-						//create Json Object 
 						JSONObject json = new JSONObject(); 
 						
-						// put some value pairs into the JSON object . 				
 						json.put("success", 1);
 						json.put("JSESSIONID", sessionID);
+						json.put("X-Token", token2);
 						
-						// finally output the json string 
 						out.print(json.toString());
 						out.flush();
 						
-						// TODO: custom header that the app will use
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						
+						// mobile webview
 						} else if (WebView.contains("Mobile") && M.equals("M")){ 
 							
 							try {
@@ -163,7 +170,15 @@ public class HelloWorld extends HttpServlet {
 								
 								// The token2 will be used as key-salt-whatever as originally planned.
 								response.addHeader("X-Token", token2);
-				
+												
+								JSONObject json = new JSONObject(); 
+								
+								json.put("Session", "raked"); 
+								json.put("Success", "true"); 
+								
+								// this is necessary because the X-Token header did not appear in the native mobile app
+								json.put("X-Token", token2);
+								
 								response.sendRedirect(otherContext.getContextPath() + "/tabularasa.jsp?JSESSIONID="+sessionID);		
 
 								
@@ -171,26 +186,24 @@ public class HelloWorld extends HttpServlet {
 								e.printStackTrace();
 							}
 						
-						} else {
+						} 
+						// standard path
+						else {
 							try {
 								token2 = SQLAccess.token2(deviceId, context);
 								
 								// The token2 will be used as key-salt-whatever as originally planned.
 								response.addHeader("X-Token", token2);
 								
-								// This seems to be now unnecessary
-								//	response.sendRedirect(encodedURL);
-								
 								PrintWriter out = response.getWriter(); 
 								
-								//create Json Object 
 								JSONObject json = new JSONObject(); 
 								
-								// put some value pairs into the JSON object . 				
 								json.put("Session", "raked"); 
 								json.put("Success", "true"); 
+								// this is necessary because the X-Token header did not appear in the native mobile app
+								json.put("X-Token", token2);
 								
-								// finally output the json string 
 								out.print(json.toString());
 								out.flush();
 								
@@ -210,14 +223,11 @@ public class HelloWorld extends HttpServlet {
 
 				PrintWriter out = response.getWriter(); 
 				
-				//create Json Object 
 				JSONObject json = new JSONObject(); 
 				
-				// put some value pairs into the JSON object . 				
 				json.put("Session creation", "failed"); 
 				json.put("Success", "false"); 
 				
-				// finally output the json string 
 				out.print(json.toString());
 				out.flush();
 	    		

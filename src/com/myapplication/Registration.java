@@ -37,7 +37,7 @@ public class Registration extends HttpServlet {
 	private volatile static String sessionID;
 	
 
-	private volatile static String hash1;
+	private volatile static String email;
 	private volatile static String ios;
 	private volatile static String WebView;
 	private volatile static String M;
@@ -78,6 +78,7 @@ public class Registration extends HttpServlet {
         // Actual logic goes here.
 		user = request.getParameter("user").trim();			
     	pass = request.getParameter("pswrd").trim();
+    	email = request.getParameter("email").trim();
         voucher = request.getParameter("voucher_").trim();
         deviceId = request.getParameter("deviceId").trim();
         
@@ -98,7 +99,7 @@ public class Registration extends HttpServlet {
         if (voucher != null && !voucher.equals("") && !user.equals("") && user.length() > 0) {
         	
         	// TODO: hmac for registration will make use of voucher, too
-        	hmacHash = hmac512.getHmac512(user, pass, deviceId, time);
+        	hmacHash = hmac512.getRegHmac512(user, email, pass, deviceId, time);
     		
     		log.info("HandShake was given: "+hmac+" & "+hmacHash);
         	
@@ -115,7 +116,7 @@ public class Registration extends HttpServlet {
         	//TODO: make registration without voucher               
 			if (SQLAccess.register_voucher(voucher, context)) {
                   
-              if (SQLAccess.new_hash(pass, user, context) && SQLAccess.insert_voucher(voucher, user, pass, context) && SQLAccess.insert_device(deviceId, user, context)) {
+              if (SQLAccess.new_hash(pass, user, email, context) && SQLAccess.insert_voucher(voucher, user, pass, context) && SQLAccess.insert_device(deviceId, user, context)) {
 				
 				session.setAttribute("user", user);				
 				session.setAttribute("deviceId", deviceId);
