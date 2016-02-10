@@ -60,10 +60,11 @@ public class Voucher extends HttpServlet {
     		voucher = request.getParameter("voucher");
     		ServletContext context = request.getServletContext();
     		
-			if (voucher != null && SQLAccess.voucher(voucher, context)) { 	
-	        	String url = getServletContext().getInitParameter("voucherRedirect");
-				String encodedURL = response.encodeRedirectURL(url+voucher);
-				response.sendRedirect(encodedURL);
+			if (voucher != null && SQLAccess.voucher(voucher, context)) {
+
+				response.setContentType("application/json"); 
+				response.setCharacterEncoding("utf-8"); 
+				response.setStatus(200);
 				
 			}
 			else {

@@ -99,7 +99,7 @@ public class Registration extends HttpServlet {
         if (voucher != null && !voucher.equals("") && !user.equals("") && user.length() > 0) {
         	
         	// TODO: hmac for registration will make use of voucher, too
-        	hmacHash = hmac512.getRegHmac512(user, email, pass, deviceId, time);
+        	hmacHash = hmac512.getRegHmac512(user, email, pass, deviceId, voucher, time);
     		
     		log.info("HandShake was given: "+hmac+" & "+hmacHash);
         	
@@ -114,7 +114,7 @@ public class Registration extends HttpServlet {
         try {
 			
         	//TODO: make registration without voucher               
-			if (SQLAccess.register_voucher(voucher, context)) {
+			if (SQLAccess.register_voucher(voucher, context) && hmac.equals(hmacHash)) {
                   
               if (SQLAccess.new_hash(pass, user, email, context) && SQLAccess.insert_voucher(voucher, user, pass, context) && SQLAccess.insert_device(deviceId, user, context)) {
 				
@@ -167,7 +167,7 @@ public class Registration extends HttpServlet {
 
 							
 						} catch (Exception e) {
-							e.printStackTrace();
+							System.out.println(e.getMessage());
 						}
 					
 					} else {
@@ -194,7 +194,7 @@ public class Registration extends HttpServlet {
 							out.flush();
 							
 						} catch (Exception e) {
-							e.printStackTrace();
+							System.out.println(e.getMessage());
 						}
 
 	

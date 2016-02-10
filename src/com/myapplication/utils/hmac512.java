@@ -59,14 +59,15 @@ public class hmac512 {
 	 * @param time
 	 * @return
 	 */
-	public static String getRegHmac512(String user, String email, String pswrd, String deviceId, String time) {
+	public static String getRegHmac512(String user, String email, String pswrd, String deviceId, String voucher, String time) {
 		  
     	secret_ = hmacSecret(user, pswrd); 
 
     try {
     	//TODO: match full URL with hostname (absolute path), 
     	// and more generated constants, like the url that we'll use for hash only
-	    message_ = "/login/register:user="+user+"&email="+email+"&pswrd="+pswrd+"&deviceId="+deviceId+":"+time;
+	    message_ = "/login/register:user="+user+"&email="+email+"&pswrd="+pswrd+"&deviceId="+deviceId+"&voucher_="+voucher+":"+time;
+	    System.out.print(message_);
 
      Mac sha256_HMAC = Mac.getInstance("HmacSHA512");
      SecretKeySpec secret_key = new SecretKeySpec(secret_.getBytes(), "HmacSHA512");
