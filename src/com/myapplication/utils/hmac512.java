@@ -67,7 +67,32 @@ public class hmac512 {
     	//TODO: match full URL with hostname (absolute path), 
     	// and more generated constants, like the url that we'll use for hash only
 	    message_ = "/login/register:user="+user+"&email="+email+"&pswrd="+pswrd+"&deviceId="+deviceId+"&voucher_="+voucher+":"+time;
-	    System.out.print(message_);
+
+     Mac sha256_HMAC = Mac.getInstance("HmacSHA512");
+     SecretKeySpec secret_key = new SecretKeySpec(secret_.getBytes(), "HmacSHA512");
+     sha256_HMAC.init(secret_key);
+
+//     hmachHash = Base64.encodeBase64String(sha256_HMAC.doFinal(message_.getBytes()));
+     hmachHash = new String(Base64.encodeBase64(sha256_HMAC.doFinal(message_.getBytes())));
+
+    	}
+    
+    	catch (Exception e){
+    		System.out.println("1 Error");
+    	}
+    
+    return hmachHash;
+    
+   }
+	
+	public static String getRegWithoutVoucherHmac512(String user, String email, String pswrd, String deviceId, String time) {
+		  
+    	secret_ = hmacSecret(user, pswrd); 
+
+    try {
+    	//TODO: match full URL with hostname (absolute path), 
+    	// and more generated constants, like the url that we'll use for hash only
+	    message_ = "/login/register:user="+user+"&email="+email+"&pswrd="+pswrd+"&deviceId="+deviceId+":"+time;
 
      Mac sha256_HMAC = Mac.getInstance("HmacSHA512");
      SecretKeySpec secret_key = new SecretKeySpec(secret_.getBytes(), "HmacSHA512");

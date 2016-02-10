@@ -20,7 +20,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 //Extend HttpServlet class
-public class Registration extends HttpServlet {
+public class RegistrationWithoutVoucher extends HttpServlet {
 	
 	private static Logger log = Logger.getLogger(Logger.class.getName());
 
@@ -79,7 +79,6 @@ public class Registration extends HttpServlet {
 		user = request.getParameter("user").trim();			
     	pass = request.getParameter("pswrd").trim();
     	email = request.getParameter("email").trim();
-        voucher = request.getParameter("voucher_").trim();
         deviceId = request.getParameter("deviceId").trim();
         
     	hmac = request.getHeader("X-HMAC-HASH");
@@ -94,11 +93,10 @@ public class Registration extends HttpServlet {
 		ServletContext context = request.getServletContext();
 
         // Check core request parameters first
-        if (voucher != null) voucher = voucher.trim();
 
-        if (voucher != null && !voucher.equals("") && !user.equals("") && user.length() > 0) {
+        if (user.equals("") && user.length() > 0) {
         	
-        	hmacHash = hmac512.getRegHmac512(user, email, pass, deviceId, voucher, time);
+        	hmacHash = hmac512.getRegWithoutVoucherHmac512(user, email, pass, deviceId, time);
     		
     		log.info("HandShake was given: "+hmac+" & "+hmacHash);
         	
@@ -107,15 +105,12 @@ public class Registration extends HttpServlet {
            // synchronized session object to prevent concurrent update
            synchronized(session) {
               
-        	   session.setAttribute("voucher", voucher);
-
         // Try - catch is necessary anyways, and will catch user names that have become identical in the meantime
         try {
 			
-        	//TODO: make registration without voucher               
-			if (SQLAccess.register_voucher(voucher, context) && hmac.equals(hmacHash)) {
+			if (hmac.equals(hmacHash)) {
                   
-              if (SQLAccess.new_hash(pass, user, email, context) && SQLAccess.insert_voucher(voucher, user, pass, context) && SQLAccess.insert_device(deviceId, user, context)) {
+              if (SQLAccess.new_hash(pass, user, email, context) && SQLAccess.insert_device(deviceId, user, context)) {
 				
 				session.setAttribute("user", user);				
 				session.setAttribute("deviceId", deviceId);
@@ -133,7 +128,8 @@ public class Registration extends HttpServlet {
 		        String homePage = getServletContext().getInitParameter("homePage");
 		        
 				ServletContext otherContext = getServletContext().getContext(homePage);
-								
+				
+				// native mobile
 				if (ios != null) {
 					
 					response.setContentType("application/json"); 
@@ -142,15 +138,19 @@ public class Registration extends HttpServlet {
 	
 					PrintWriter out = response.getWriter(); 
 					
+					//create Json Object 
 					JSONObject json = new JSONObject(); 
 					
+					// put some value pairs into the JSON object . 				
 					json.put("success", 1);
 					json.put("JSESSIONID", sessionID);
 					json.put("X-Token", token2);
 					
+					// finally output the json string 
 					out.print(json.toString());
 					out.flush();
 					
+					// mobile webview
 					} else if (WebView.contains("Mobile") && M.equals("M")){ 
 						
 						try {
@@ -174,6 +174,7 @@ public class Registration extends HttpServlet {
 							System.out.println(e.getMessage());
 						}
 					
+					// standard path
 					} else {
 						try {
 							token2 = SQLAccess.token2(deviceId, context);
@@ -183,11 +184,14 @@ public class Registration extends HttpServlet {
 							
 							PrintWriter out = response.getWriter(); 
 							
+							//create Json Object 
 							JSONObject json = new JSONObject(); 
 							
+							// put some value pairs into the JSON object . 				
 							json.put("Session", "raked"); 
 							json.put("Success", "true"); 
 							
+							// finally output the json string 
 							out.print(json.toString());
 							out.flush();
 							
