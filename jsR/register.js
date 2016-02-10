@@ -110,9 +110,13 @@ myRegController.controller('RegController', function ($scope, $http, base64, $lo
     $scope.message = '';
     $scope.username = '';
     $scope.password = '';
+    $scope.email = '';
+    $scope.voucher_ = '';
+    $scope.e_url = 'https://milo.crabdance.com/mbook-1/rest/newemail';
     $scope.url = 'https://milo.crabdance.com/mbook-1/rest/newuser';
     $scope.errorMessage = '';
-
+    
+    // The function that will be executed on button click (ng-click="search()")
     $scope.search = function() {
 
         // Create the http post request
@@ -133,12 +137,49 @@ myRegController.controller('RegController', function ($scope, $http, base64, $lo
             });
     }
     
-    $scope.register = function () {
+    // The function that will be executed on button click (ng-click="email_search()")
+    $scope.email_search = function() {
 
+        // Create the http post request
+        // the data holds the keywords
+        // The request is a JSON request.
+    $http.get($scope.e_url+'/'+$scope.email)
+            .success(function(data, status) {
+                $scope.status = status;
+                $scope.errorMessage = data;
+                $scope.data = data;
+                $scope.result = data; // Result
+     })
+            .error(function(data, status) {
+                $scope.data = data || "Request failed";
+                $scope.status = status;
+                $scope.errorMessage = "Email is already taken!";
+
+            });
+    }
+    
+    $scope.register = function () {
+        
+        var voucheR = $scope.voucher_;
+        
+        var encodedString_voucheR = 'voucher=' +
+            encodeURIComponent(voucheR);
+       
+        $http({
+            method: 'POST',
+            url: '/login/voucher',
+            data: encodedString_voucheR,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        }).
+        success(function (data, status, headers, config) {
+            
         // Hash password
         var hash = CryptoJS.SHA3($scope.password, {
             outputLength: 512
         });
+        
 
         // Generate HMAC secret (sha512('username:password'))
         var hmacSec = CryptoJS.HmacSHA512($scope.username, encodeURIComponent(hash));
@@ -193,12 +234,14 @@ myRegController.controller('RegController', function ($scope, $http, base64, $lo
 
         var encodedString = 'user=' +
             encodeURIComponent($scope.username) +
+            '&email=' +
+            $scope.email +
             '&pswrd=' +
             encodeURIComponent(hash) +
             '&deviceId=' +
             encodeURIComponent(uuid) +
             '&voucher_=' +
-            encodeURIComponent(voucher);
+            encodeURIComponent(voucheR);
 
         $scope.username = '';
         $scope.Result = [];
@@ -208,7 +251,7 @@ myRegController.controller('RegController', function ($scope, $http, base64, $lo
             url: '/login/register',
             data: encodedString,
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                 'authorization': 'Basic ' + token
             }
         }).
@@ -235,6 +278,14 @@ myRegController.controller('RegController', function ($scope, $http, base64, $lo
         error(function (data, status, headers, config) {
             $scope.errorMsg = 'Login incorrect';
         });
+
+            
+        }).
+        error(function (data, status, headers, config) {
+            $scope.errorMsg = 'Login incorrect';
+        });
+
+       
     };
 
 });

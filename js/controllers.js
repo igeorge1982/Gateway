@@ -184,15 +184,7 @@ function userApi($http) {
         getUser: function () {
             var url = '/login/admin';
             
-            var iterationCount = 1000;
-var keySize = 128;
-var plaintext = "G";
-var passphrase = "SecretPassphrase";
-var iv = "F27D5C9927726BCEFE7510B1BDD3D137";
-var salt = "3FF2EC019C627B945225DEBAD71A01B6985FE84C95A70EB132882F88C0A59A55";
-
-            var aesUtil = new AesUtil(keySize, iterationCount);
-            var ciphertext = aesUtil.encrypt(salt, iv, passphrase, plaintext);
+            var ciphertext = localStorage.sessionToken;
             
             var config = {headers: {
                     'Ciphertext': ciphertext
