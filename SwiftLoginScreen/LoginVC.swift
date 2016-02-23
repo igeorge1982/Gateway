@@ -169,7 +169,6 @@ class LoginVC: UIViewController,UITextFieldDelegate, NSURLSessionDelegate, NSURL
                             prefs.setValue(deviceId, forKey: "deviceId")
                             prefs.setValue(xtoken, forKey: "X-Token")
                             
-                            print(prefs)
                             prefs.synchronize()
                         }
                         

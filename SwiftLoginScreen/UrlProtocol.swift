@@ -17,7 +17,7 @@ var requestCount = 0
 var pattern_ = "https://([^/]+)(/example/tabularasa.jsp.*?)(/$|$)"
 var pattern_rs = "https://([^/]+)(/example/tabularasa.jsp.*?JSESSIONID=)"
 let prefs:NSUserDefaults = NSUserDefaults.standardUserDefaults()
-let xtoken = prefs.valueForKey("X-Token")
+var xtoken = prefs.valueForKey("X-Token")
 
 class MyURLProtocol: NSURLProtocol {
 
@@ -123,13 +123,17 @@ class MyURLProtocol: NSURLProtocol {
         
         if httpResponse.statusCode >= 300 && httpResponse.statusCode < 400
             {
-                let jsonHeaders:NSDictionary = httpResponse.allHeaderFields
-                let xtoken:NSString = jsonHeaders.valueForKey("X-Token") as! NSString
-                prefs.setValue(xtoken, forKey: "X-Token")
 
                 let newRequest = self.request.mutableCopy() as! NSMutableURLRequest
                 NSURLProtocol.setProperty(true, forKey: "MyRedirectHandledKey", inRequest: newRequest)
            //   self.client?.URLProtocol(self, wasRedirectedToRequest: newRequest, redirectResponse: response!)
+                
+                let jsonHeaders:NSDictionary = httpResponse.allHeaderFields
+                
+                xtoken = jsonHeaders.valueForKey("X-Token") as! NSString
+                NSLog("X-Token: ", xtoken as! NSString);
+
+                prefs.setValue(xtoken, forKey: "X-Token")
                 NSLog("Sending Request from %@ to %@", response!.URL!, request.URL!);
                 
                 
