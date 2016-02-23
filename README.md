@@ -1,23 +1,26 @@
 General Authentication Service @George Gaspar
 (in development)
 
-The complete service system consists of several layers that makes it easy to alter or extend the functionalities.
+The complete service system consists of several layers that makes it easy to alter or extend the functionalities. The server part is deployable as it is, just take care of the web.xml. 
+
+The iOS swift code contains both type of login method, because it is a research code, not a standalone application, but it also demonstrates that they subsequently work and can complement each other (the registration is not implemented yet in the native way, but it will work similarly).
+
+Documentation will be coming soon.
+----
 
 The structure:
-
-- dB layer (MySQL)
 ----
+- dB layer (MySQL)
 - (ORM) service model with Hibernate:
 - Data Access Object layer
 - RESTful service that passes the DAO objects to the controller
 - RESTful controller layer to provide HTTP methods
-----
 - TOMCAT servlet container as middleware component
 - APACHE httpd server with mod_jk connector to front TOMCAT (optional for load-balancing) 
 
 Configured to run on SSL only, which is required as right now the iOS part is configured to use Certificate Authority (CA) -> https://blog.httpwatch.com/2013/12/12/five-tips-for-using-self-signed-ssl-certificates-with-ios/)
 ----
-- as for WWW platform deploy directly your optional UI interface solution onto TOMCAT (Note: the AngularJS is the preferred and tested)
+- as for WWW platform deploy directly your optional UI interface solution (Web app) onto TOMCAT (Note: the AngularJS is the preferred and tested)
 - as for mobiles you can use the registration/login service through webview, too, besides the native way
 
 
@@ -45,7 +48,9 @@ mvn dependency:copy-dependencies -Dclassifier=sources -Dmaven.test.skip=true com
 - Insert initial vouchers with activation flags set into the voucher_states table, if you want to have registration, or just put a username and a hashed password (with the same hashing algorithm that you selected in your client apps) into the logins table. 
 - Registration workflow is implemented with or without voucher activation
 - Unique username and email checking is not implemented yet fully, but the supplied API will perform the check
-- The servlet context also makes it available to check the active users with a designated API call  
+- The servlet context also makes it available to check the active users with a designated API call  (check the context for the available lists)
+
+After you have built and deployed all parts (web app, iOS) of the service, you have to be able to login through WWW (mobile, too), native iOS and iOS webview from the app.
 
 Maintenance:
 - if you want to clear / clean up the dB or of devices, but not of the user, because something went wrong, you need to truncate the following tables:  Last_seen, Tokens, device_states, devices. 
