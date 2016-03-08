@@ -16,8 +16,6 @@ import com.myapplication.SQLAccess;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import com.myapplication.utils.hmac512;
 
 //Extend HttpServlet class
@@ -44,18 +42,6 @@ public class HelloWorld extends HttpServlet {
 
 	private static Logger log = Logger.getLogger(Logger.class.getName());
 
-
-
-	
-    @BeforeClass
-    public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-
-    }
-    
-    @AfterClass
-    public static void close(){
-    	
-    }
 
     public void init() throws ServletException
     {

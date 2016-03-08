@@ -12,7 +12,7 @@ public class DBConnectionManager {
 	private String dbURL;
 	private String user;
 	private String password;
-	private volatile Connection con = null;
+	private volatile Connection con;
 	
 	public DBConnectionManager(String url, String u, String p){
 		
@@ -28,8 +28,9 @@ public class DBConnectionManager {
 		//if (con == null) {
 		Class.forName("com.mysql.jdbc.Driver");
 		con = DriverManager.getConnection(dbURL, user, password);	
-		log.info("dB Connection created");
 		con.setCatalog("login");
+		log.info("dB Connection created, catalog set to \"login\"");
+
 		//}
 		return this.con;
 	}

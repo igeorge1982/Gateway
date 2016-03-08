@@ -11,13 +11,10 @@ import java.io.*;
 import java.util.HashMap;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
 import com.myapplication.SQLAccess;
-
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+
 
 //Extend HttpServlet class
 public class AdminServlet extends HttpServlet {
@@ -34,16 +31,6 @@ public class AdminServlet extends HttpServlet {
 	private static Logger log = Logger.getLogger(Logger.class.getName());
 	private static volatile HashMap<String, HttpSession> activeUsers;
 
-	
-    @BeforeClass
-    public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-
-    }
-    
-    @AfterClass
-    public static void close(){
-    	
-    }
 
     public void init() throws ServletException
     {

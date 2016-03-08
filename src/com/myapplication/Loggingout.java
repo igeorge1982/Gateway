@@ -12,8 +12,6 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.json.JSONObject;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 
 
 //Extend HttpServlet class
@@ -23,16 +21,6 @@ public class Loggingout extends HttpServlet {
 	public volatile static String user;
 	public volatile static HttpSession session;
 	public volatile static String deviceId;
-	
-	  @BeforeClass
-	  public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-	
-	  }
-	  
-	  @AfterClass
-	  public static void close(){
-	  	
-	  }
 	
 	  public void init() throws ServletException
 	  {

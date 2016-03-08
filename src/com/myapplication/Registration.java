@@ -10,14 +10,10 @@ package com.myapplication;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
 import com.myapplication.SQLAccess;
 import com.myapplication.utils.hmac512;
-
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 
 //Extend HttpServlet class
 public class Registration extends HttpServlet {
@@ -41,21 +37,11 @@ public class Registration extends HttpServlet {
 	private volatile static String ios;
 	private volatile static String WebView;
 	private volatile static String M;
-	private volatile static boolean devices;
 	private volatile static String token2;
 	private volatile static String hmac;
 	private volatile static String hmacHash;
 	private volatile static String time;
 	
-    @BeforeClass
-    public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-
-    }
-    
-    @AfterClass
-    public static void close(){
-    	
-    }
 
     public void init() throws ServletException
     {

@@ -10,9 +10,6 @@ package com.myapplication;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import com.myapplication.SQLAccess;
 
 
@@ -24,16 +21,7 @@ public class Voucher extends HttpServlet {
     private static final long serialVersionUID = 1L;
 	private volatile static String voucher;
 	
-    @BeforeClass
-    public void setUp(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-
-    }
-    
-    @AfterClass
-    public static void close(){
-    	
-    }
-
+	
     public void init() throws ServletException
     {
     	

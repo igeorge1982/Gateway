@@ -12,7 +12,6 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.testng.Assert;
 
 public class PropertyUtils {
 
@@ -27,11 +26,9 @@ public class PropertyUtils {
 
 		} catch (FileNotFoundException realCause) {
 
-			Assert.fail("Unable to load file!", realCause);
 
 		} catch (IOException realCause) {
 
-			Assert.fail("Unable to load file!", realCause);
 		}
 	}
 
@@ -58,7 +55,6 @@ public class PropertyUtils {
 		{
 
 			log.info("The property key: " + propertyKey + " is missing!");
-			Assert.fail("The property key: " + propertyKey + " is missing!");
 
 		}
 
