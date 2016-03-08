@@ -15,7 +15,7 @@ The structure:
 - Data Access Object layer
 - RESTful service that passes the DAO objects to the controller
 - RESTful controller layer to provide HTTP methods
-- TOMCAT servlet container as middleware component
+- TOMCAT servlet container as middleware component, with crossContext enabled (required)
 - APACHE httpd server with mod_jk connector to front TOMCAT (optional for load-balancing) 
 
 Configured to run on SSL only, which is required as right now the iOS part is configured to use Certificate Authority (CA) -> https://blog.httpwatch.com/2013/12/12/five-tips-for-using-self-signed-ssl-certificates-with-ios/)
@@ -42,9 +42,10 @@ mvn dependency:copy-dependencies -Dclassifier=sources -Dmaven.test.skip=true com
 
 
 - Run the dB scripts to create the dB schema necessary to operate.
+- Create the dB user for the application
 - Check the web.xml if the configuration is correct, and every class is defined correctly
 - Listeners are initialized with annotations, but you can change it back to use them directly using the web.xml (Please refer to the Java Http Servlet documentation for it)
-- Place the required log configuration file into the right class folder
+- Place the required log configuration file into the right class folder, and configure it for your needs
 - Insert initial vouchers with activation flags set into the voucher_states table, if you want to have registration, or just put a username and a hashed password (with the same hashing algorithm that you selected in your client apps) into the logins table. 
 - Registration workflow is implemented with or without voucher activation
 - Unique username and email checking is not implemented yet fully, but the supplied API will perform the check
