@@ -25,8 +25,8 @@ Configured to run on SSL only, which is required as right now the iOS part is co
 
 
 Notes on Windows:
-- mod_jk - ISAPI redirector - NSAPI redirector is available to front the IIS
-- NHibernate is availabe as an object-relational mapping (ORM) solution for the Microsoft .NET platform. 
+- mod_jk - ISAPI redirector - NSAPI redirector is available as connector for IIS
+- NHibernate is available as an object-relational mapping (ORM) solution for the Microsoft .NET platform. 
 
 Deploy:
 ----
@@ -38,7 +38,7 @@ mvn -Dmaven.test.skip=true compile
 
 If the required dependencies will not be resolved and copied out to the predefined folder set in the pom.xml, then use this command (then rename the dependencies folder manually to "lib", and copy it along with the classes folder to the destination directory):
 
-mvn dependency:copy-dependencies -Dclassifier=sources -Dmaven.test.skip=true compile
+mvn dependency:copy-dependencies -Dmaven.test.skip=true compile
 
 
 - Run the dB scripts to create the dB schema necessary to operate.
