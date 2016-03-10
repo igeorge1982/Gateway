@@ -21,6 +21,7 @@ scripts/login_device_states.sql -text
 scripts/login_devices.sql -text
 scripts/login_logins.sql -text
 scripts/login_routines0.sql -text
+scripts/login_voucher_states.sql -text
 scripts/login_vouchers.sql -text
 src/com/myapplication/AdminServlet.java -text
 src/com/myapplication/DBConnectionManager.java -text

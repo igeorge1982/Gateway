@@ -1,23 +1,13 @@
 package com.myapplication.listeners;
 
-import static org.easymock.EasyMock.mock;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.TreeMap;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
@@ -29,7 +19,7 @@ import com.myapplication.SQLAccess;
 
 
 @WebListener
-public class CustomHttpSessionListener implements HttpSessionListener, Serializable, HttpSessionAttributeListener, ServletRequestListener {
+public class CustomHttpSessionListener implements HttpSessionListener, Serializable, HttpSessionAttributeListener {
 
 	private static final long serialVersionUID = -6951824749917799153L;
 	
@@ -187,12 +177,6 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
 	      name = "Unknown";
 	    value = (String) se.getValue();
 
-	    try {
-			logOutCall();
-		} catch (ServletException | IOException e1) {
-			e1.printStackTrace();
-		}
-
 	    String source = se.getSource().getClass().getName();
 	    String message = new StringBuffer("Attribute unbound from session in ")
 	        .append(source).append("\nThe attribute name: ").append(name)
@@ -283,7 +267,6 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
         log.info("deviceId_ at destroy: "+D_);
         
         try {
-			logOutCall();
         	SQLAccess.logout(id, context);
 	        log.info("SessionID destroyed: " + id.toString());          
 			
@@ -313,27 +296,5 @@ public class CustomHttpSessionListener implements HttpSessionListener, Serializa
         
     }
 
-    private void logOutCall() throws ServletException, IOException {
-        
-    	  HttpServletRequest request = mock(HttpServletRequest.class);
-    	  HttpServletResponse response = mock(HttpServletResponse.class);
-
-    	  RequestDispatcher requestDispatcher = request.getRequestDispatcher("/login/logout");
-    	  requestDispatcher.forward(request, response);
-    	  log.info("d");
-    	  
-      }
-
-
-	@Override
-	public void requestDestroyed(ServletRequestEvent sre) {
-
-	}
-
-
-	@Override
-	public void requestInitialized(ServletRequestEvent sre) {
-		
-	}
 
 }
